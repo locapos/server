@@ -17,7 +17,7 @@ passport.deserializeUser((obj, done) => {
 auth.install(passport);
 
 // setup
-app.use(bodyParser.urlencoded({extended: true});
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('express-session')({
   secret: 'atashi',
   resave: false,
