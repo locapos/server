@@ -32,7 +32,7 @@ app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
-app.user('/', express.static('./public'));
+app.use('/', express.static('./public'));
 
 app.get('/', function(req, res){
   res.send('ok');
