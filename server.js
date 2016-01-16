@@ -22,7 +22,7 @@ app.use(require('express-session')({
   secret: 'atashi',
   resave: false,
   saveUninitialized: false
-});
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', auth);
