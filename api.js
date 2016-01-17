@@ -17,7 +17,7 @@ function enforce(req, res, next){
     return res.sendStatus(400);
   }
   // check token
-  if(easy[auth[i]] === undefined){
+  if(easy[auth[1]] === undefined){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
     return res.sendStatus(401);
   }
