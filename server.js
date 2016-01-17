@@ -53,5 +53,6 @@ const Easy = require('easy-redis')
     , easy = new Easy();
 
 easy.on('update', function(c, msg){
+  console.log(c + ': ' + msg);
   io.emit(msg);
 });
