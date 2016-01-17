@@ -1,7 +1,12 @@
 'use strict';
 
+const crypto = require('crypto');
+
 const express = require('express')
     , router = express.Router();
+
+const Easy = require('easy-redis')
+    , easy = new Easy();
 
 router.get('/authorize', (req, res) => {
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
@@ -16,7 +21,10 @@ router.get('/authorize', (req, res) => {
 
 router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
-  let token = 'AAAAAAAA';
+  let hash = crypto.createHash("sha256");
+  hash.update(Math.random() + Date.now());
+  let token = hash.digest('base64');
+  easy[token] = JSON.stringify(req.user);
   req.session.destroy(() => {
     res.redirect(`${uri}?token=${token}`);
   });
