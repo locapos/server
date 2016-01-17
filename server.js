@@ -2,7 +2,7 @@ const express = require('express')
     , passport = require('passport')
     , bodyParser = require('body-parser')
     , app = express()
-    , server = require('http').Server(app),
+    , server = require('http').Server(app)
     , io = require('socket.io')(server);
 
 const path = require('path');
