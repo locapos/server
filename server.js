@@ -1,7 +1,9 @@
 const express = require('express')
     , passport = require('passport')
     , bodyParser = require('body-parser')
-    , app = express();
+    , app = express()
+    , server = require('http').Server(app),
+    , io = require('socket.io')(server);
 
 const path = require('path');
 
@@ -45,3 +47,11 @@ app.use('/', jadeStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
 app.listen(process.env.PORT);
+
+// --- realtime communication
+const Easy = require('easy-redis')
+    , easy = new Easy();
+
+easy.on('update', function(msg){
+  io.emit(msg);
+});
