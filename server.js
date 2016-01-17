@@ -34,6 +34,8 @@ app.get('/logout', (req, res) => {
 });
 app.use('/', express.static('./public'));
 
+app.use('/oauth', require('./oauth.js'));
+
 app.get('/', function(req, res){
   res.send('ok');
 });
