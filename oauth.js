@@ -10,14 +10,14 @@ router.get('/authorize', (req, res) => {
   // manage session
   req.session.regenerate(() => {
     req.session.redirect_uri = req.query.redirect_uri;
-    res.send('ok');
+    res.render('oauth/authorize');
   });
 });
 
 router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
   let token = 'AAAAAAAA';
-  req.session.destroy() => {
+  req.session.destroy(() => {
     res.redirect(`${uri}?token=${token}`);
   });
 });

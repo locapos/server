@@ -1,10 +1,15 @@
-const express = require('express');
-const app = express();
+const express = require('express')
+    , passport = require('passport')
+    , bodyParser = require('body-parser')
+    , app = express();
 
-const passport = require('passport')
-    , bodyParser = require('body-parser');
+const path = require('path');
+
+const jadeStatic = require('./lib/jade/static');
 
 const auth = require('./lib/auth');
+
+app.set('view engine', 'jade');
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -32,6 +37,8 @@ app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
+
+app.use('/', jadeStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
 app.use('/oauth', require('./oauth.js'));
