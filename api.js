@@ -3,6 +3,9 @@
 const express = require('express')
     , router = express.Router();
 
+const Easy = require('easy-redis')
+    , easy = new Easy();
+
 function enforce(req, res, next){
   if(!req.headers.authorization){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
@@ -14,7 +17,7 @@ function enforce(req, res, next){
     return res.sendStatus(400);
   }
   // check token
-  if(auth[1] !== 'AAAAAAAA'){
+  if(easy[auth[i]] === undefined){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
     return res.sendStatus(401);
   }
