@@ -52,6 +52,6 @@ server.listen(process.env.PORT);
 const Easy = require('easy-redis')
     , easy = new Easy();
 
-easy.on('update', function(msg){
+easy.on('update', function(c, msg){
   io.emit(msg);
 });
