@@ -35,7 +35,7 @@ router.get('/show', enforce, (req, res) => {
     {name: 'C', lat: 145.0, lon: 35.0},
     {name: 'D', lat: 130.0, lon: 35.0},
   ];
-  return obj;
+  res.send(obj);
 });
 
 module.exports = router;
