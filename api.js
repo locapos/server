@@ -32,9 +32,9 @@ router.get('/update', enforce, (req, res) => {
   let obj = {
     provider: req.user.provider,
     id: req.user.id,
-    latitude: req.query.latitude,
-    longitude: req.query.longitude,
-    heading: req.query.heading
+    latitude: parseFloat(req.query.latitude),
+    longitude: parseFloat(req.query.longitude),
+    heading: parseFloat(req.query.heading)
   };
   easy.emit('update', JSON.stringify(obj));
   res.send('ok');
