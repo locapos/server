@@ -38,14 +38,10 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-app.use('/', jadeStatic(path.resolve('./views')));
-app.use('/', express.static('./public'));
-
 app.use('/oauth', require('./oauth.js'));
 app.use('/api', require('./api.js'));
 
-app.get('/', function(req, res){
-  res.send('ok');
-});
+app.use('/', jadeStatic(path.resolve('./views')));
+app.use('/', express.static('./public'));
 
 app.listen(process.env.PORT);
