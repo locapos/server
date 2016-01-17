@@ -14,7 +14,7 @@ function enforce(req, res, next){
     return res.sendStatus(400);
   }
   // check token
-  if(auth[0] !== 'AAAAAAAA'){
+  if(auth[1] !== 'AAAAAAAA'){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
     return res.sendStatus(401);
   }
