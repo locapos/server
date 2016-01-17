@@ -21,10 +21,22 @@ function enforce(req, res, next){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
     return res.sendStatus(401);
   }
+  req.user = JSON.parse(easy[auth[1]]);
   next();
 }
 
 router.get('/update', enforce, (req, res) => {
+  if(req.query.latitude === undefined) return res.sendStatus(400);
+  if(req.query.longitude === undefined) return res.sendStatus(400);
+  if(req.query.heading === undefined) return res.sendStatus(400);
+  let obj = {
+    provider: req.user.provider,
+    id: req.user.id,
+    latitude: req.query.latitude,
+    longitude: req.query.longitude,
+    heading: req.query.heading
+  };
+  easy.emit('update', JSON.stringify(obj));
   res.send('ok');
 });
 
