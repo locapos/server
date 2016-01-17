@@ -22,4 +22,7 @@ router.get('/redirect', (req, res) => {
   });
 });
 
+router.get('/failed', (req, res) => {
+});
+
 module.exports = router;
