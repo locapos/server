@@ -15,5 +15,5 @@ function update(obj){
 var socket = io();
 socket.on('update', function(msg){
   console.log(msg);
-  update(eval(msg));
+  update(JSON.parse(msg));
 });
