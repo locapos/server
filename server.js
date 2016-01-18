@@ -52,7 +52,14 @@ server.listen(process.env.PORT);
 const Easy = require('easy-redis')
     , easy = new Easy();
 
+io.on('connection', socket => {
+  easy.keys('location.*', (err, keys) => {
+    easy.mget(keys || [], (err, values) => {
+	  socket.emit('update', JSON.stringify(values || []));
+	});
+  });
+});
+
 easy.on('update', function(c, msg){
-  console.log(c + ': ' + msg);
-  io.emit(c, msg);
+  io.emit(c, `[${msg}]`);
 });

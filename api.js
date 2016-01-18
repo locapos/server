@@ -36,18 +36,20 @@ router.get('/update', enforce, (req, res) => {
     longitude: parseFloat(req.query.longitude),
     heading: parseFloat(req.query.heading)
   };
-  easy.emit('update', JSON.stringify(obj));
+  let key = `location.${obj.provider}:${obj.id}`;
+  let value = JSON.stringify(obj);
+  easy.emit('update', value);
+  easy[key] = value;
+  easy.client.expire(key, 5 * 60); // expire data after 5 minutes
   res.send('ok');
 });
 
 router.get('/show', enforce, (req, res) => {
-  let obj = [
-    {name: 'A', lat: 135.0, lon: 35.0},
-    {name: 'B', lat: 140.0, lon: 35.0},
-    {name: 'C', lat: 145.0, lon: 35.0},
-    {name: 'D', lat: 130.0, lon: 35.0},
-  ];
-  res.send(obj);
+  easy.keys('location.*', (err, keys) => {
+    easy.mget(keys || [], (err, values) => {
+	  res.send(values || []);
+	});
+  });
 });
 
 module.exports = router;
