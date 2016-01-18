@@ -25,6 +25,7 @@ router.get('/redirect', (req, res) => {
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
   easy[token] = JSON.stringify(req.user);
+  console.log(req.user);
   req.session.destroy(() => {
     res.redirect(`${uri}?token=${token}`);
   });
