@@ -4,10 +4,13 @@ function update(obj){
   var key = obj.provider + ':' + obj.id;
   var opt = {
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
-    label: obj.name
+	labelContent: obj.name,
+	labelAnchor: new google.maps.Point(22, 0),
+	labelClass: 'labels',
+	labelStyle: {opacity: 0.75}
   };
   if(markers[key] === undefined){
-    markers[key] = new google.maps.Marker(opt);
+    markers[key] = new MarkerWithLabel(opt);
     markers[key].setMap(map);
   }
   markers[key].setOptions(opt);

@@ -4,3 +4,13 @@ html, body, #map-canvas
   margin: 0;
   padding: 0;
 }
+
+.labels{
+  color: black;
+  background-color: white;
+  font-size: 10px;
+  text-align: center;
+  width: 60px;
+  border: 2px solid red;
+  white-scape: nowrap;
+}
