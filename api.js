@@ -32,7 +32,7 @@ router.get('/update', enforce, (req, res) => {
   let obj = {
     provider: req.user.provider,
     id: req.user.id,
-	name: req.user.name,
+	name: req.user.username,
     latitude: parseFloat(req.query.latitude),
     longitude: parseFloat(req.query.longitude),
     heading: parseFloat(req.query.heading)
