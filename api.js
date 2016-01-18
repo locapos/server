@@ -39,8 +39,7 @@ router.get('/update', enforce, (req, res) => {
   let key = `location.${obj.provider}:${obj.id}`;
   let value = JSON.stringify(obj);
   easy.emit('update', value);
-  easy[key] = value;
-  easy.client.expire(key, 5 * 60); // expire data after 5 minutes
+  easy.client.setex(key, value, 5 * 60); // expire data after 5 minutes
   res.send('ok');
 });
 
