@@ -45,8 +45,8 @@ router.get('/update', enforce, (req, res) => {
 });
 
 router.get('/show', enforce, (req, res) => {
-  easy.keys('location.*', (err, keys) => {
-    easy.mget(keys || [], (err, values) => {
+  easy.client.keys('location.*', (err, keys) => {
+    easy.client.mget(keys || [], (err, values) => {
 	  res.send(values || []);
 	});
   });

@@ -53,8 +53,8 @@ const Easy = require('easy-redis')
     , easy = new Easy();
 
 io.on('connection', socket => {
-  easy.keys('location.*', (err, keys) => {
-    easy.mget(keys || [], (err, values) => {
+  easy.client.keys('location.*', (err, keys) => {
+    easy.client.mget(keys || [], (err, values) => {
 	  socket.emit('update', JSON.stringify(values || []));
 	});
   });
