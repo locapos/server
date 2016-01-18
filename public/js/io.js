@@ -15,11 +15,13 @@ function update(obj){
   }else{
 	var track = new google.maps.Marker({
 	  position: markers[key].getPosition(),
-	  path: 0,
-	  strokeColor: 'Red',
-	  fillOpacity: 1,
-	  fillColor: 'Red',
-	  scale: 1.5
+	  icon: {
+	    path: 0,
+	    strokeColor: 'Red',
+	    fillOpacity: 1,
+	    fillColor: 'Red',
+	    scale: 1.5
+	  }
 	});
     track.setMap(map);
     markers[key].setOptions(opt);
