@@ -3,7 +3,8 @@ var markers = {};
 function update(obj){
   var key = obj.provider + ':' + obj.id;
   var opt = {
-    position: new google.maps.LatLng(obj.latitude, obj.longitude)
+    position: new google.maps.LatLng(obj.latitude, obj.longitude),
+    label: obj.name
   };
   if(markers[key] === undefined){
     markers[key] = new google.maps.Marker(opt);
