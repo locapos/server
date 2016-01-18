@@ -12,8 +12,18 @@ function update(obj){
   if(markers[key] === undefined){
     markers[key] = new MarkerWithLabel(opt);
     markers[key].setMap(map);
+  }else{
+	var track = new google.maps.Marker({
+	  position: markers[key].getPosition(),
+	  path: 0,
+	  strokeColor: 'Red',
+	  fillOpacity: 1,
+	  fillColor: 'Red',
+	  scale: 1.5
+	});
+    track.setMap(map);
+    markers[key].setOptions(opt);
   }
-  markers[key].setOptions(opt);
 }
 
 var socket = io();
