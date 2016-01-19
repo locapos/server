@@ -2,6 +2,7 @@ var markers = {};
 
 function update(obj){
   var key = obj.provider + ':' + obj.id;
+  var hash = location.hash.split('/')[1];
   var opt = {
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
 	labelContent: obj.name,
@@ -12,6 +13,9 @@ function update(obj){
   if(markers[key] === undefined){
     markers[key] = new MarkerWithLabel(opt);
     markers[key].setMap(map);
+    markers[key].addListener('click', function(){
+      location.hash = '#!/' + key;
+    });
   }else{
 	var track = new google.maps.Marker({
 	  position: markers[key].getPosition(),
@@ -25,6 +29,9 @@ function update(obj){
 	});
     track.setMap(map);
     markers[key].setOptions(opt);
+  }
+  if(hash === key){
+    map.setCenter(markers[key].getPosition());
   }
 }
 
@@ -45,4 +52,10 @@ socket.on('update', function(msg){
 
 socket.on('clear', function(msg){
   clear(msg);
+});
+
+window.addListener('hashchange', function(){
+  var hash = location.hash.split('/');
+  if(!hash || !markers[hash]) return;
+  map.setCenter(markers[key].getPosition());
 });
