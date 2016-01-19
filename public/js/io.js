@@ -31,7 +31,6 @@ function update(obj){
 function clear(key){
   if(markers[key] === undefined) { return; }
   // clear marker from map
-  markers[key] = new MarkerWithLabel(opt);
   markers[key].setMap(undefined);
   delete markers[key];
 }
