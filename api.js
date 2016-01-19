@@ -51,7 +51,7 @@ router.get('/show', enforce, (req, res) => {
   locations.client.select('1', () => {
     locations.client.keys('*', (err, keys) => {
       locations.client.mget(keys || [], (err, values) => {
-        res.send(values || []);
+        res.send(values.map(JSON.parse) || []);
       });
     });
   });

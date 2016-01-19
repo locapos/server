@@ -58,7 +58,7 @@ logs.client.select('1', () => {
   io.on('connection', socket => {
     logs.client.keys('*', (err, keys) => {
       logs.client.mget(keys || [], (err, values) => {
-        socket.emit('update', JSON.stringify(values || []));
+        socket.emit('update', JSON.stringify(values.map(JSON.parse) || []));
       });
     });
   });
