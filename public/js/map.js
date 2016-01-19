@@ -1,9 +1,9 @@
 var canvas = document.getElementById('map-canvas');
 
-var latlng = new google.maps.LatLng(35.792621, 139.806513);
+var latlng = new google.maps.LatLng(35.685825,139.754441);
 
 var mapOptions = {
-  zoom: 15,
+  zoom: 9,
   center: latlng,
 };
 
