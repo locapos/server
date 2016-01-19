@@ -28,10 +28,22 @@ function update(obj){
   }
 }
 
+function clear(key){
+  if(markers[key] === undefined) { return; }
+  // clear marker from map
+  markers[key] = new MarkerWithLabel(opt);
+  markers[key].setMap(undefined);
+  delete markers[key];
+}
+
 var socket = io();
 socket.on('update', function(msg){
   var obj = JSON.parse(msg) || [];
   for(var i = 0; i < obj.length; ++i){
     update(obj[i]);
   }
+});
+
+socket.on('clear', function(msg){
+  clear(msg);
 });
