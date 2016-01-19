@@ -9,14 +9,17 @@ html
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans')
     title
   body
-    header: .navbar.navbar-default.navbar-static-top
-      .container: .navbar-header: p login
+    header
+      .navbar.navbar-default.navbar-static-top
+        .container
+          .navbar-header
+            a.navbar-brand login
+
     .container
-      
+      ul.list-unstyled
+        li: a.btn.btn-info(href='/auth/twitter') twitter
+        li: a.btn.btn-info(href='/auth/facebook') facebook
+        li: a.btn.btn-info(href='/auth/google') google
+        li: a.btn.btn-info(href='/auth/windowslive') windowslive
+        li: a.btn.btn-info(href='/auth/github') github
     script(src='/components/Umi/dist/js/bootstrap.min.js', async)
-    ul
-      li: a.btn(href='/auth/twitter') twitter
-      li: a.btn(href='/auth/facebook') facebook
-      li: a.btn(href='/auth/google') google
-      li: a.btn(href='/auth/windowslive') windowslive
-      li: a.btn(href='/auth/github') github
