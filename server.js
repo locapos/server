@@ -50,16 +50,30 @@ server.listen(process.env.PORT);
 
 // --- realtime communication
 const Easy = require('easy-redis')
-    , easy = new Easy();
+    , easy = new Easy()
+    , channel = new Easy();
 
-io.on('connection', socket => {
-  easy.client.keys('location.*', (err, keys) => {
-    easy.client.mget(keys || [], (err, values) => {
-	  socket.emit('update', JSON.stringify(values || []));
-	});
+// socket.io client management
+easy.client.select('1', () => {
+  io.on('connection', socket => {
+    easy.client.keys('*', (err, keys) => {
+      easy.client.mget(keys || [], (err, values) => {
+        socket.emit('update', JSON.stringify(values || []));
+      });
+    });
+  });
+  
+  easy.on('update', function(c, msg){
+    io.emit(c, `[${msg}]`);
   });
 });
 
-easy.on('update', function(c, msg){
-  io.emit(c, `[${msg}]`);
+// remove marker when client offline
+channel.client.config('set', 'notify-keyspace-events', 'Kg');
+channel.client.psubscribe('__keyspace@1__:*');
+channel.client.on('pmessage', (pattern, channel, msg) => {
+  if(msg === 'del'){
+    io.emit('clear', channel.split(':')[1]);
+  }
 });
+
