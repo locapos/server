@@ -33,7 +33,7 @@ router.get('/update', enforce, (req, res) => {
   let obj = {
     provider: req.user.provider,
     id: req.user.id,
-	name: req.user.username,
+    name: req.user.username,
     latitude: parseFloat(req.query.latitude),
     longitude: parseFloat(req.query.longitude),
     heading: parseFloat(req.query.heading)
@@ -55,6 +55,15 @@ router.get('/show', enforce, (req, res) => {
       });
     });
   });
+});
+
+router.get('/me', enforce, (req, res) => {
+  let obj = {
+    provider: req.user.provider,
+    id: req.user.id,
+    name: req.user.username,
+  };
+  res.send(obj);
 });
 
 module.exports = router;
