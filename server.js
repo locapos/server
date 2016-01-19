@@ -69,7 +69,7 @@ easy.client.select('1', () => {
 });
 
 // remove marker when client offline
-channel.client.config('set', 'notify-keyspace-events', 'Kg');
+//channel.client.config('set', 'notify-keyspace-events', 'Kg');
 channel.client.psubscribe('__keyspace@1__:*');
 channel.client.on('pmessage', (pattern, channel, msg) => {
   if(msg === 'del'){
