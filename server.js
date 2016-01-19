@@ -50,22 +50,22 @@ server.listen(process.env.PORT);
 
 // --- realtime communication
 const Easy = require('easy-redis')
-    , easy = new Easy()
+    , logs = new Easy()
     , channel = new Easy();
 
 // socket.io client management
-easy.client.select('1', () => {
+logs.client.select('1', () => {
   io.on('connection', socket => {
-    easy.client.keys('*', (err, keys) => {
+    logs.client.keys('*', (err, keys) => {
       console.log('keys', err, keys);
-      easy.client.mget(keys || [], (err, values) => {
+      logs.client.mget(keys || [], (err, values) => {
 	console.log('mget', err, values);
         socket.emit('update', JSON.stringify(values || []));
       });
     });
   });
   
-  easy.on('update', function(c, msg){
+  logs.on('update', function(c, msg){
     io.emit(c, `[${msg}]`);
   });
 });
