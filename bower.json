@@ -1,0 +1,22 @@
+{
+  "name": "imakoko",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "yutaka <shigure@refy.net>"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "Umi": "~3.3.6-1"
+  }
+}
