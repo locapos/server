@@ -41,16 +41,16 @@ router.get('/update', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
   let value = JSON.stringify(obj);
   locations.client.select('1', () => {
-    easy.emit('update', value);
-    easy.client.setex(key, 5 * 60, value); // expire data after 5 minutes
+    locations.emit('update', value);
+    locations.client.setex(key, 5 * 60, value); // expire data after 5 minutes
     res.send('ok');
   });
 });
 
 router.get('/show', enforce, (req, res) => {
   locations.client.select('1', () => {
-    easy.client.keys('*', (err, keys) => {
-      easy.client.mget(keys || [], (err, values) => {
+    locations.client.keys('*', (err, keys) => {
+      locations.client.mget(keys || [], (err, values) => {
         res.send(values || []);
       });
     });
