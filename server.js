@@ -57,16 +57,10 @@ const Easy = require('easy-redis')
 logs.client.select('1', () => {
   io.on('connection', socket => {
     logs.client.keys('*', (err, keys) => {
-      console.log('keys', err, keys);
       logs.client.mget(keys || [], (err, values) => {
-	console.log('mget', err, values);
         socket.emit('update', JSON.stringify(values || []));
       });
     });
-  });
-  
-  logs.on('update', function(c, msg){
-    io.emit(c, `[${msg}]`);
   });
 });
 
@@ -77,4 +71,6 @@ channel.client.subscribe('__keyevent@1__:expired');
 channel.client.on('message', (channel, msg) => {
   io.emit('clear', msg);
 });
-
+channel.on('update', function(c, msg){
+  io.emit(c, `[${msg}]`);
+});
