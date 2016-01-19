@@ -48,7 +48,7 @@ router.get('/update', enforce, (req, res) => {
 });
 
 router.get('/show', enforce, (req, res) => {
-  locations.client.select('1'. () => {
+  locations.client.select('1', () => {
     easy.client.keys('*', (err, keys) => {
       easy.client.mget(keys || [], (err, values) => {
         res.send(values || []);
