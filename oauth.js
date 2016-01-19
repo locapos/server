@@ -22,6 +22,10 @@ router.get('/authorize', (req, res) => {
 router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
   let hash = crypto.createHash("sha256");
+  if(!uri){
+    res.sendStatus(400);
+    return;
+  }
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
   easy[token] = JSON.stringify(req.user);
