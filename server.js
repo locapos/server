@@ -69,11 +69,10 @@ easy.client.select('1', () => {
 });
 
 // remove marker when client offline
-channel.client.config('set', 'notify-keyspace-events', 'Kgx');
-channel.client.psubscribe('__keyspace@1__:*');
-channel.client.on('pmessage', (pattern, channel, msg) => {
-  if(msg === 'del' || msg === 'expired'){
-    io.emit('clear', channel.split(':')[1]);
-  }
+channel.client.config('set', 'notify-keyspace-events', 'Egx');
+channel.client.subscribe('__keyevent@1__:del');
+channel.client.subscribe('__keyevent@1__:expired');
+channel.client.on('message', (channel, msg) => {
+  io.emit('clear', msg);
 });
 
