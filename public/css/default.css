@@ -4,7 +4,8 @@
 
 .btn-auth{
   margin-bottom: 8px;
-  width: 180px;
+  width: 160px;
+  text-align: left;
 }
 
 .btn-auth i {
