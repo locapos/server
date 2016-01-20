@@ -1,3 +1,12 @@
 .btn-margin{
   margin-bottom: 8px;
 }
+
+.btn-auth{
+  margin-bottom: 8px;
+  width: 180px;
+}
+
+.btn-auth i {
+  margin-right: 5px;
+}
