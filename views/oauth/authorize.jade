@@ -7,6 +7,7 @@ html
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='stylesheet', href='/components/Umi/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Open+Sans')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css')
     link(rel='stylesheet', href='/css/default.css')
     title login
   body
@@ -18,9 +19,19 @@ html
 
     .container
       ul.list-unstyled
-        li: a.btn.btn-info.btn-margin(href='/auth/twitter') twitter
-        li: a.btn.btn-info.btn-margin(href='/auth/facebook') facebook
-        li: a.btn.btn-info.btn-margin(href='/auth/google') google
-        li: a.btn.btn-info.btn-margin(href='/auth/windowslive') windowslive
-        li: a.btn.btn-info.btn-margin(href='/auth/github') github
+        li: a.btn.btn-info.btn-margin(href='/auth/twitter')
+          i.fa.fa-twitter-square
+          twitter
+        li: a.btn.btn-info.btn-margin(href='/auth/facebook')
+          i.fa.fa-facebook-official
+          facebook
+        li: a.btn.btn-info.btn-margin(href='/auth/google')
+          i.fa.fa-google-plus-square
+          google
+        li: a.btn.btn-info.btn-margin(href='/auth/windowslive')
+          i.fa.fa-windows
+          microsoft
+        li: a.btn.btn-info.btn-margin(href='/auth/github')
+          i.fa.fa-github-square
+          github
     script(src='/components/Umi/dist/js/bootstrap.min.js', async)
