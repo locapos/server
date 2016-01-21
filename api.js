@@ -27,9 +27,6 @@ function enforce(req, res, next){
 }
 
 router.get('/update', enforce, (req, res) => {
-  if(req.query.latitude === undefined) return res.sendStatus(400);
-  if(req.query.longitude === undefined) return res.sendStatus(400);
-  if(req.query.heading === undefined) return res.sendStatus(400);
   let obj = {
     provider: req.user.provider,
     id: req.user.id,
@@ -38,6 +35,11 @@ router.get('/update', enforce, (req, res) => {
     longitude: parseFloat(req.query.longitude),
     heading: parseFloat(req.query.heading)
   };
+  // check values
+  if(isNaN(obj.latitude)) return res.sendStatus(400);
+  if(isNaN(obj.longitude)) return res.sendStatus(400);
+  if(isNaN(obj.heading)) obj.heading = 0;
+  // store data
   let key = `${obj.provider}:${obj.id}`;
   let value = JSON.stringify(obj);
   locations.client.select('1', () => {
