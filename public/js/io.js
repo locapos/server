@@ -3,6 +3,7 @@ var markers = {};
 function update(obj){
   var key = obj.provider + ':' + obj.id;
   var hash = location.hash.split('/')[1];
+  var looking = key === hash;
   var icon = {
     url: '/res/0/' + parseInt(obj.heading) + '.png',
     scaledSize: new google.maps.Size(32, 32)
@@ -11,8 +12,8 @@ function update(obj){
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
     icon: icon,
     labelContent: obj.name,
-    labelAnchor: new google.maps.Point(22, 0),
-    labelClass: 'labels',
+    labelAnchor: new google.maps.Point(32, 0),
+    labelClass: 'labels ' + (looking ? 'looking' : ''),
     labelStyle: {opacity: 0.75}
   };
   if(markers[key] === undefined){
@@ -35,7 +36,7 @@ function update(obj){
     track.setMap(map);
     markers[key].setOptions(opt);
   }
-  if(hash === key){
+  if(looking){
     map.setCenter(markers[key].getPosition());
   }
 }
