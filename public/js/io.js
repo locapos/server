@@ -62,7 +62,7 @@ socket.on('clear', function(msg){
   clear(msg);
 });
 
-window.addListener('hashchange', function(){
+window.addEventListener('hashchange', function(){
   var hash = location.hash.split('/');
   if(!hash || !markers[hash]) return;
   map.setCenter(markers[key].getPosition());
