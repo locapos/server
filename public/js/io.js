@@ -14,7 +14,7 @@ function update(obj){
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
     icon: icon,
     labelContent: obj.name,
-    labelAnchor: new google.maps.Point(32, 0),
+    labelAnchor: new google.maps.Point(32, -10),
     labelClass: 'labels ' + (looking ? 'looking' : ''),
     labelStyle: {opacity: 0.75}
   };
