@@ -68,4 +68,11 @@ router.get('/me', enforce, (req, res) => {
   res.send(obj);
 });
 
+router.get('/delete', enforce, (req, res) => {
+  let key = `${obj.provider}:${obj.id}`;
+  locations.client.del(key);
+  locations.emit('clear', value);
+  res.send('ok');
+});
+
 module.exports = router;

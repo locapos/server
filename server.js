@@ -74,3 +74,6 @@ channel.client.on('message', (channel, msg) => {
 channel.on('update', function(c, msg){
   io.emit(c, `[${msg}]`);
 });
+channel.on('clear', function(c, msg){
+  io.emit(c, `[${msg}]`);
+});
