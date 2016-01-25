@@ -5,7 +5,8 @@ const express = require('express')
     , server = require('http').createServer(app)
     , io = require('socket.io')(server);
 
-const path = require('path');
+const path = require('path')
+    , Q = require('q');
 
 const jadeStatic = require('./lib/jade/static');
 
@@ -49,31 +50,36 @@ app.use('/', express.static('./public'));
 server.listen(process.env.PORT);
 
 // --- realtime communication
-const Easy = require('easy-redis')
-    , logs = new Easy()
-    , channel = new Easy();
+const redis = require('promise-redis')()
+    , channel = redis.createClient()
+    , logs = redis.createClient();
+
+const getLogs = function(){
+  return logs.select('1')
+    .then(v => logs.keys('*'))
+    .then(v => logs.mget(v || []))
+    .then(v => Q(JSON.stringify((values || []).map(JSON.parse)));
+}
 
 // socket.io client management
-logs.client.select('1', () => {
-  io.on('connection', socket => {
-    logs.client.keys('*', (err, keys) => {
-      logs.client.mget(keys || [], (err, values) => {
-        socket.emit('update', JSON.stringify((values || []).map(JSON.parse)));
-      });
-    });
-  });
+io.on('connection', socket => {
+  getLogs.then(v => socket.emit('sync', v));
+  socket.on('sync', () => getLogs.then(v => socket.emit('sync', v)));
 });
 
 // remove marker when client offline
-channel.client.config('set', 'notify-keyspace-events', 'Egx');
-channel.client.subscribe('__keyevent@1__:del');
-channel.client.subscribe('__keyevent@1__:expired');
-channel.client.on('message', (channel, msg) => {
-  io.emit('clear', msg);
-});
-channel.on('update', function(c, msg){
-  io.emit(c, `[${msg}]`);
-});
-channel.on('clear', function(c, msg){
-  io.emit(c, msg);
+channel.config('set', 'notify-keyspace-events', 'Egx');
+// subscribe internal events
+channel.subscribe('__keyevent@1__:del', '__keyevent@1__:expired');
+// subscribe application events
+channel.subscribe('update', 'clear');
+channel.on('message', (channel, msg) => {
+  switch(channel){
+    case '__keyevent@1__:del':
+    case '__keyevent@1__:expired':
+    case 'clear':
+      return io.emit('clear', msg);
+    case 'update':
+      return io.emit('update', `[${msg}]`);
+  }
 });

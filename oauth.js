@@ -1,12 +1,13 @@
 'use strict';
 
-const crypto = require('crypto');
+const crypto = require('crypto')
+    , Q = require('q');
 
 const express = require('express')
     , router = express.Router();
 
-const Easy = require('easy-redis')
-    , easy = new Easy();
+const redis = require('promise-redis')()
+    , users = redis.createClient();
 
 router.get('/authorize', (req, res) => {
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
@@ -21,17 +22,13 @@ router.get('/authorize', (req, res) => {
 
 router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
+  if(!uri) return res.sendStatus(400);
   let hash = crypto.createHash("sha256");
-  if(!uri){
-    res.sendStatus(400);
-    return;
-  }
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
-  easy[token] = JSON.stringify(req.user);
-  req.session.destroy(() => {
-    res.redirect(`${uri}?token=${encodeURIComponent(token)}`);
-  });
+  users.set(token, JSON.stringify(req.user))
+    .then(v => Q.nfcall(req.session.destroy))
+    .then(v => res.redirect(`${uri}?token=${encodeURIComponent(token)}`));
 });
 
 router.get('/failed', (req, res) => {

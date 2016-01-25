@@ -3,27 +3,26 @@
 const express = require('express')
     , router = express.Router();
 
-const Easy = require('easy-redis')
-    , users = new Easy()
-    , locations = new Easy();
+const redis = require('promise-redis')()
+    , users = redis.createClient()
+    , locations = redis.createClient();
 
-function enforce(req, res, next){
-  if(!req.headers.authorization){
+function sendRequireAuthentication(res, code){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
     res.sendStatus(401);
-  }
+}
+
+function enforce(req, res, next){
+  if(!req.headers.authorization) return sendRequireAuthentication(res, 401);
   let auth = req.headers.authorization.split(' ');
-  if(auth[0] !== 'Bearer'){
-    res.setHeader('WWW-Authenticate', 'Bearer realm=""');
-    return res.sendStatus(400);
-  }
+  if(auth[0] !== 'Bearer') return sendRequireAuthentication(res, 400);
   // check token
-  if(!users[auth[1]]){
-    res.setHeader('WWW-Authenticate', 'Bearer realm=""');
-    return res.sendStatus(401);
-  }
-  req.user = JSON.parse(users[auth[1]]);
-  next();
+  users.get(auth[1])
+    .then(value => {
+      if(!value) return sendRequireAuthentication(res, 401);
+      req.user = JSON.parse(users[auth[1]]);
+      next();
+    });
 }
 
 router.get('/update', enforce, (req, res) => {
@@ -42,37 +41,32 @@ router.get('/update', enforce, (req, res) => {
   // store data
   let key = `${obj.provider}:${obj.id}`;
   let value = JSON.stringify(obj);
-  locations.client.select('1', () => {
-    locations.emit('update', value);
-    locations.client.setex(key, 5 * 60, value); // expire data after 5 minutes
-    res.send('ok');
-  });
+  locations.select('1')
+    .then(v => locations.setex(key, 5 * 60, value)) // expire data after 5 minutes
+    .then(v => locations.publish('update', value))
+    .then(v => res.send('ok'));
 });
 
 router.get('/show', enforce, (req, res) => {
-  locations.client.select('1', () => {
-    locations.client.keys('*', (err, keys) => {
-      locations.client.mget(keys || [], (err, values) => {
-        res.send((values || []).map(JSON.parse));
-      });
-    });
-  });
+  locations.select('1')
+    .then(v => locations.keys('*'))
+    .then(v => locations.mget(v || []))
+    .then(v => res.send((values || []).map(JSON.parse)));
 });
 
 router.get('/me', enforce, (req, res) => {
-  let obj = {
+  res.send({
     provider: req.user.provider,
     id: req.user.id,
     name: req.user.username,
-  };
-  res.send(obj);
+  });
 });
 
 router.get('/delete', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
-  locations.client.del(key);
-  locations.emit('clear', value);
-  res.send('ok');
+  locations.del(key)
+    .then(v => locations.publish('clear', value))
+    .then(v => res.send('ok'));
 });
 
 module.exports = router;
