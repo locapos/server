@@ -63,8 +63,8 @@ const getLogs = function(){
 
 // socket.io client management
 io.on('connection', socket => {
-  getLogs.then(v => socket.emit('sync', v));
-  socket.on('sync', () => getLogs.then(v => socket.emit('sync', v)));
+  getLogs().then(v => socket.emit('sync', v));
+  socket.on('sync', () => getLogs().then(v => socket.emit('sync', v)));
 });
 
 // remove marker when client offline
