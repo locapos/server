@@ -1,21 +1,43 @@
 var markers = {};
 
-function update(obj){
-  var key = obj.provider + ':' + obj.id;
-  var hash = location.hash.split('/')[1];
-  var looking = key === hash;
-  var icon = {
-    url: '/res/0/' + parseInt(obj.heading) + '.png',
+function createMarkerIcon(type, angle){
+  return {
+    url: '/res/0/' + parseInt(angle) + '.png',
     scaledSize: new google.maps.Size(32, 32),
     origin: new google.maps.Point(0, 0),
     anchor: new google.maps.Point(16, 16)
   };
+}
+
+function createTrackingDot(_map. _origin){
+  var icon = {
+    path: 0,
+    strokeColor: 'Red',
+    fillOpacity: 1,
+    fillColor: 'Red',
+    scale: 1.5
+  }
+  var dot = new google.maps.Marker({
+    position: _origin.getPosition(),
+    icon: icon
+  });
+  dot.setMap(_map);
+}
+
+function isLooking(id){
+  var hash = location.hash.split('/')[1];
+  return id === hash;
+}
+
+function update(obj){
+  var key = obj.provider + ':' + obj.id;
+  var icon = createMarkerIcon(0, obj.heading);
   var opt = {
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
     icon: icon,
     labelContent: obj.name,
     labelAnchor: new google.maps.Point(32, -10),
-    labelClass: 'labels ' + (looking ? 'looking' : ''),
+    labelClass: 'labels ' + (isLooking() ? 'looking' : ''),
     labelStyle: {opacity: 0.75}
   };
   if(markers[key] === undefined){
@@ -25,17 +47,7 @@ function update(obj){
       location.hash = '#!/' + key;
     });
   }else{
-    var track = new google.maps.Marker({
-      position: markers[key].getPosition(),
-      icon: {
-        path: 0,
-        strokeColor: 'Red',
-        fillOpacity: 1,
-        fillColor: 'Red',
-        scale: 1.5
-      }
-    });
-    track.setMap(map);
+    createTrackingDot(markers[key]);
     markers[key].setOptions(opt);
   }
   if(looking){
