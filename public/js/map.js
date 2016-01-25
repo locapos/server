@@ -20,7 +20,7 @@ function createMarkerIcon(type, angle){
   };
 }
 
-function createTrackingDot(_map. _origin){
+function createTrackingDot(_map, _origin){
   var icon = {
     path: 0,
     strokeColor: 'Red',
