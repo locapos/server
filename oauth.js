@@ -27,8 +27,14 @@ router.get('/redirect', (req, res) => {
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
   users.set(token, JSON.stringify(req.user))
-    .then(v => Q.nfcall(req.session.destroy))
-    .then(v => res.redirect(`${uri}?token=${encodeURIComponent(token)}`));
+    .then(v => {
+      console.log('Q.fncall');
+      return Q.nfcall(req.session.destroy)
+    })
+    .then(v => {
+      console.log('res.redirect');
+      res.redirect(`${uri}?token=${encodeURIComponent(token)}`)
+    });
 });
 
 router.get('/failed', (req, res) => {
