@@ -44,7 +44,7 @@ function update(obj){
     markers[key] = new MarkerWithLabel(opt);
     markers[key].setMap(map);
     markers[key].addListener('click', function(){
-      location.hash = '#!/' + key;
+      location.hash = '#!/' + (isLooking() ? '' : key);
     });
   }else{
     createTrackingDot(markers[key]);
