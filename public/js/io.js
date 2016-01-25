@@ -62,6 +62,18 @@ socket.on('clear', function(msg){
   clear(msg);
 });
 
+socket.on('sync', function(msg){
+  var keys = Object.keys(markers);
+  for(var i = 0; i < keys.length; ++i){
+    markers[keys[i]].setMap(undefined);
+    delete markers[keys[i]];
+  }
+  var obj = JSON.parse(msg) || [];
+  for(var i = 0; i < obj.length; ++i){
+    update(obj[i]);
+  }
+});
+
 window.addEventListener('hashchange', function(){
   var hash = location.hash.split('/');
   if(!hash || !markers[hash]) return;
