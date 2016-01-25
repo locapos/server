@@ -79,3 +79,7 @@ window.addEventListener('hashchange', function(){
   if(!hash || !markers[hash]) return;
   map.setCenter(markers[key].getPosition());
 });
+
+window.setTimeout(function(){
+  socket.emit('sync');
+}, 2.5 * 60 * 1000); // send sync request every 2.5 minutes
