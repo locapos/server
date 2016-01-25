@@ -1,34 +1,5 @@
 var markers = {};
 
-function createMarkerIcon(type, angle){
-  return {
-    url: '/res/0/' + parseInt(angle) + '.png',
-    scaledSize: new google.maps.Size(32, 32),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(16, 16)
-  };
-}
-
-function createTrackingDot(_map. _origin){
-  var icon = {
-    path: 0,
-    strokeColor: 'Red',
-    fillOpacity: 1,
-    fillColor: 'Red',
-    scale: 1.5
-  }
-  var dot = new google.maps.Marker({
-    position: _origin.getPosition(),
-    icon: icon
-  });
-  dot.setMap(_map);
-}
-
-function isLooking(id){
-  var hash = location.hash.split('/')[1];
-  return id === hash;
-}
-
 function update(obj){
   var key = obj.provider + ':' + obj.id;
   var icon = createMarkerIcon(0, obj.heading);
@@ -37,20 +8,18 @@ function update(obj){
     icon: icon,
     labelContent: obj.name,
     labelAnchor: new google.maps.Point(32, -10),
-    labelClass: 'labels ' + (isLooking() ? 'looking' : ''),
+    labelClass: 'labels ' + (Hash.isLooking() ? 'looking' : ''),
     labelStyle: {opacity: 0.75}
   };
   if(markers[key] === undefined){
     markers[key] = new MarkerWithLabel(opt);
     markers[key].setMap(map);
-    markers[key].addListener('click', function(){
-      location.hash = '#!/' + (isLooking() ? '' : key);
-    });
+    markers[key].addListener('click', function(){ Hash.toggleLookingFor(key); });
   }else{
     createTrackingDot(markers[key]);
     markers[key].setOptions(opt);
   }
-  if(looking){
+  if(Hash.islooking()){
     map.setCenter(markers[key].getPosition());
   }
 }
@@ -86,9 +55,9 @@ socket.on('sync', function(msg){
 });
 
 window.addEventListener('hashchange', function(){
-  var hash = location.hash.split('/');
-  if(!hash || !markers[hash]) return;
-  map.setCenter(markers[key].getPosition());
+  var id = Hash.info();
+  if(!id || !markers[id]) return;
+  map.setCenter(markers[id].getPosition());
 });
 
 window.setTimeout(function(){
