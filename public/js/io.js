@@ -77,8 +77,7 @@ socket.on('clear', function(msg){
 socket.on('sync', function(msg){
   var keys = Object.keys(markers);
   for(var i = 0; i < keys.length; ++i){
-    markers[keys[i]].setMap(undefined);
-    delete markers[keys[i]];
+    clear(keys[i]);
   }
   var obj = JSON.parse(msg) || [];
   for(var i = 0; i < obj.length; ++i){
