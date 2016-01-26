@@ -8,7 +8,7 @@ function update(obj){
     icon: icon,
     labelContent: obj.name,
     labelAnchor: new google.maps.Point(32, -10),
-    labelClass: 'labels ' + (Hash.isLooking() ? 'looking' : ''),
+    labelClass: 'labels ' + (Hash.isLooking(key) ? 'looking' : ''),
     labelStyle: {opacity: 0.75}
   };
   if(markers[key] === undefined){
@@ -16,10 +16,10 @@ function update(obj){
     markers[key].setMap(map);
     markers[key].addListener('click', function(){ Hash.toggleLookingFor(key); });
   }else{
-    createTrackingDot(markers[key]);
+    createTrackingDot(map, markers[key]);
     markers[key].setOptions(opt);
   }
-  if(Hash.islooking()){
+  if(Hash.isLooking(key)){
     map.setCenter(markers[key].getPosition());
   }
 }
