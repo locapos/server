@@ -10,7 +10,7 @@ const Q = require('q')
 
 function sendRequireAuthentication(res, code){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
-    res.sendStatus(401);
+    res.sendStatus(code);
 }
 
 function enforce(req, res, next){
@@ -20,6 +20,7 @@ function enforce(req, res, next){
   // check token
   users.get(auth[1])
     .then(value => {
+	  console.log(value);
       if(!value) return sendRequireAuthentication(res, 401);
       req.user = JSON.parse(users[auth[1]]);
       next();
@@ -45,8 +46,7 @@ router.get('/update', enforce, (req, res) => {
   locations.select('1')
     .then(v => locations.setex(key, 5 * 60, value)) // expire data after 5 minutes
     .then(v => locations.publish('update', value))
-    .then(v => res.send('ok'))
-	.catch(e => console.log(e));
+    .then(v => res.send('ok'));
 });
 
 router.get('/show', enforce, (req, res) => {
