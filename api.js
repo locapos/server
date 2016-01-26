@@ -3,7 +3,8 @@
 const express = require('express')
     , router = express.Router();
 
-const redis = require('promise-redis')()
+const Q = require('q')
+    , redis = require('promise-redis')(Q.Promise)
     , users = redis.createClient()
     , locations = redis.createClient();
 

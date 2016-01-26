@@ -50,7 +50,7 @@ app.use('/', express.static('./public'));
 server.listen(process.env.PORT);
 
 // --- realtime communication
-const redis = require('promise-redis')()
+const redis = require('promise-redis')(Q.Promise)
     , channel = redis.createClient()
     , logs = redis.createClient();
 
@@ -58,7 +58,7 @@ const getLogs = function(){
   return logs.select('1')
     .then(v => logs.keys('*'))
     .then(v => logs.mget(v || []))
-    .then(v => new Promise(JSON.stringify((values || []).map(JSON.parse))));
+    .then(v => Q(JSON.stringify((values || []).map(JSON.parse))));
 }
 
 // socket.io client management
