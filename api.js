@@ -45,7 +45,8 @@ router.get('/update', enforce, (req, res) => {
   locations.select('1')
     .then(v => locations.setex(key, 5 * 60, value)) // expire data after 5 minutes
     .then(v => locations.publish('update', value))
-    .then(v => res.send('ok'));
+    .then(v => res.send('ok'))
+	.catch(e => console.log(e));
 });
 
 router.get('/show', enforce, (req, res) => {
