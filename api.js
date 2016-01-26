@@ -44,14 +44,14 @@ router.get('/update', enforce, (req, res) => {
   locations.select('1')
     .then(v => locations.setex(key, 5 * 60, value)) // expire data after 5 minutes
     .then(v => locations.publish('update', value))
-    .done(v => res.send('ok'));
+    .then(v => res.send('ok'));
 });
 
 router.get('/show', enforce, (req, res) => {
   locations.select('1')
     .then(v => locations.keys('*'))
     .then(v => locations.mget(v || []))
-    .done(v => res.send((values || []).map(JSON.parse)));
+    .then(v => res.send((values || []).map(JSON.parse)));
 });
 
 router.get('/me', enforce, (req, res) => {
@@ -66,7 +66,7 @@ router.get('/delete', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
   locations.del(key)
     .then(v => locations.publish('clear', value))
-    .done(v => res.send('ok'));
+    .then(v => res.send('ok'));
 });
 
 module.exports = router;
