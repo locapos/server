@@ -9,6 +9,13 @@ const Q = require('q')
     , redis = require('promise-redis')(Q.Promise)
     , users = redis.createClient();
 
+function R(f){
+  let g = function(h){
+    f(function(p){h(p, {});});
+  }
+  return Q.nfcall(g);
+}
+
 router.get('/authorize', (req, res) => {
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
   if(!req.query.redirect_uri) return res.sendStatus(400);
@@ -27,7 +34,7 @@ router.get('/redirect', (req, res) => {
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
   users.set(token, JSON.stringify(req.user))
-    .then(v => Q.nfcall(req.session.destroy))
+    .then(v => R(req.session.destroy))
 	.then(v => res.redirect(`${uri}?token=${encodeURIComponent(token)}`))
 	.catch(v => console.log(v));
 });
