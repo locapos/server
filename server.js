@@ -58,7 +58,7 @@ const getLogs = function(){
   return logs.select('1')
     .then(v => logs.keys('*'))
     .then(v => logs.mget(v || []))
-    .then(v => Q(JSON.stringify((values || []).map(JSON.parse))));
+    .then(v => Q(JSON.stringify((v || []).map(JSON.parse))));
 }
 
 // socket.io client management
