@@ -57,6 +57,10 @@ socket.on('sync', function(msg){
 window.addEventListener('hashchange', function(){
   var id = Hash.info();
   if(!id || !markers[id]) return;
+  var opt = {
+    labelClass: 'labels ' + (Hash.isLooking(key) ? 'looking' : ''),
+  };
+  map.setOptions(opt); // update style immediately
   map.setCenter(markers[id].getPosition());
 });
 
