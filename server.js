@@ -58,13 +58,13 @@ const getLogs = function(){
   return logs.select('1')
     .then(v => logs.keys('*'))
     .then(v => logs.mget(v || []))
-    .then(v => Q(JSON.stringify((values || []).map(JSON.parse))));
+    .then(v => new Promise(JSON.stringify((values || []).map(JSON.parse))));
 }
 
 // socket.io client management
 io.on('connection', socket => {
-  getLogs().then(v => socket.emit('sync', v));
-  socket.on('sync', () => getLogs().then(v => socket.emit('sync', v)));
+  getLogs().done(v => socket.emit('sync', v));
+  socket.on('sync', () => getLogs().done(v => socket.emit('sync', v)));
 });
 
 // remove marker when client offline
