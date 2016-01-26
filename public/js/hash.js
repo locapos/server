@@ -11,7 +11,7 @@ var Hash = (function(){
   }
 
   Hash.isLooking = function(id){
-    return id === this.info().id;
+    return id !== undefined && id === this.info().id;
   }
 
   Hash.toggleLookingFor = function(id){
