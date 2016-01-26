@@ -11,12 +11,12 @@ var Hash = (function(){
   }
 
   Hash.isLooking = function(id){
-    return id === hashInfo().id;
+    return id === this.info().id;
   }
 
   Hash.toggleLookingFor = function(id){
     var info = {id: (this.isLooking() ? '' : id)};
-    setHashInfo(info);
+    this.setInfo(info);
   }
   
   return Hash;
