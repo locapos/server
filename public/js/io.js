@@ -55,7 +55,7 @@ socket.on('sync', function(msg){
 });
 
 window.addEventListener('hashchange', function(){
-  var id = Hash.info();
+  var id = Hash.info().id;
   if(!id){
     var list = Object.keys(markers)
       .map(function(k){return markers[k];})
