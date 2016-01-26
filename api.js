@@ -20,9 +20,8 @@ function enforce(req, res, next){
   // check token
   users.get(auth[1])
     .then(value => {
-	  console.log(value);
       if(!value) return sendRequireAuthentication(res, 401);
-      req.user = JSON.parse(users[auth[1]]);
+      req.user = JSON.parse(value);
       next();
     });
 }
