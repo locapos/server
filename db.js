@@ -42,8 +42,8 @@ class Db {
 
   storeLocation(key, obj){
     let data = JSON.stringify(obj);
-    return db.setex(`location:${key}`, LocationLifeTime, data)
-      .then(v => db.publish('update', value));
+    return db.setex(`locations:${key}`, LocationLifeTime, data)
+      .then(v => db.publish('update', data));
   }
 
   showLocations(){
