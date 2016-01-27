@@ -47,7 +47,7 @@ router.get('/update', enforce, (req, res) => {
 });
 
 router.get('/show', enforce, (req, res) => {
-  db.keys('locations:*'))
+  db.keys('locations:*')
     .then(v => db.mget(v || []))
     .then(v => res.send((v || []).map(JSON.parse)));
 });

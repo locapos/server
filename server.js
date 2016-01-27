@@ -77,7 +77,7 @@ channel.on('message', (channel, msg) => {
     case '__keyevent@0__:del':
     case '__keyevent@0__:expired':
       if(msg.startsWith("locations:")){
-        io.emit('clear', msg);
+        io.emit('clear', msg.substr(10));
       }
       return;
     case 'update':
