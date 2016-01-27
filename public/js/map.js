@@ -21,6 +21,11 @@ function createMarkerIcon(type, angle){
 }
 
 function createTrackingDot(_map, _origin){
+  // check visible bounds
+  if(!_map.getBounds().contains(_origin.getPosition())){
+    return;
+  }
+  // create tracking dot
   var icon = {
     path: 0,
     strokeColor: 'Red',
