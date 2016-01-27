@@ -44,3 +44,12 @@ function createTrackingDot(_map, _origin){
   });
   dot.setMap(_map);
 }
+
+// Require: Firefox or Chrome(need experimental flags)
+window.addEventListener('devicelight', function(event){
+  var mode = google.maps.MaptypeId.ROADMAP;
+  if(event.value < 300){
+    mode = nightMode;
+  }
+  map.setMapTypeId(mode);
+});
