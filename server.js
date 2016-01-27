@@ -50,15 +50,11 @@ app.use('/', express.static('./public'));
 server.listen(process.env.PORT);
 
 // --- realtime communication
-const redis = require('promise-redis')(Q.Promise)
-    , channel = redis.createClient()
-    , db = redis.createClient();
+const db = require('./db.js');
 
-const sendLogs = function(socket){
-  return db.keys('locations:*')
-    .then(v => db.mget(v || []))
-    .then(v => Q(JSON.stringify((v || []).map(JSON.parse))))
-    .then(v => socket.emit('sync', v));
+function sendLogs(socket){
+  db.showLogs()
+    .then(v => socket.emit('sync', JSON.stringify(v)));
 }
 
 // socket.io client management
@@ -67,21 +63,9 @@ io.on('connection', socket => {
   sendLogs(socket);
 });
 
-// remove marker when client offline
-channel.config('set', 'notify-keyspace-events', 'Egx');
-// subscribe internal events
-channel.subscribe('__keyevent@0__:del', '__keyevent@0__:expired');
-// subscribe application events
-channel.subscribe('update');
-channel.on('message', (channel, msg) => {
-  switch(channel){
-    case '__keyevent@0__:del':
-    case '__keyevent@0__:expired':
-      if(msg.startsWith("locations:")){
-        io.emit('clear', msg.substr(10));
-      }
-      return;
-    case 'update':
-      return io.emit('update', `[${msg}]`);
-  }
+db.on('update', msg => {
+  io.emit('update', msg);
+});
+db.on('delete', msg => {
+  io.emit('clear', msg);
 });

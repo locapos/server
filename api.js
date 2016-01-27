@@ -3,9 +3,7 @@
 const express = require('express')
     , router = express.Router();
 
-const Q = require('q')
-    , redis = require('promise-redis')(Q.Promise)
-    , db = redis.createClient();
+const db = require('./db.js');
 
 function sendRequireAuthentication(res, code){
     res.setHeader('WWW-Authenticate', 'Bearer realm=""');
@@ -17,12 +15,9 @@ function enforce(req, res, next){
   let auth = req.headers.authorization.split(' ');
   if(auth[0] !== 'Bearer') return sendRequireAuthentication(res, 400);
   // check token
-  db.get("users:" + auth[1])
-    .then(value => {
-      if(!value) return sendRequireAuthentication(res, 401);
-      req.user = JSON.parse(value);
-      next();
-    });
+  db.getUser(auth[1])
+    .then(u => { req.user = u; next(); })
+    .catch(e => sendRequireAuthentication(res, 401));
 }
 
 router.get('/update', enforce, (req, res) => {
@@ -40,16 +35,13 @@ router.get('/update', enforce, (req, res) => {
   if(isNaN(obj.heading)) obj.heading = 0;
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  let value = JSON.stringify(obj);
-  db.setex(`locations:${key}`, 5 * 60, value) // expire data after 5 minutes
-    .then(v => db.publish('update', value))
+  db.storeLocation(key, obj)
     .then(v => res.send('ok'));
 });
 
 router.get('/show', enforce, (req, res) => {
-  db.keys('locations:*')
-    .then(v => db.mget(v || []))
-    .then(v => res.send((v || []).map(JSON.parse)));
+  db.showLocations()
+    .then(v => res.send(v));
 });
 
 router.get('/me', enforce, (req, res) => {
@@ -62,7 +54,7 @@ router.get('/me', enforce, (req, res) => {
 
 router.get('/delete', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
-  db.del(`locations:${key}`)
+  db.deleteLocation(key)
     .then(v => res.send('ok'));
 });
 
