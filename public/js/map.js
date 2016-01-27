@@ -6,6 +6,7 @@ var mapOptions = {
   center: new google.maps.LatLng(35.685825,139.754441),
   mapTypeControl: true,
   streetViewControl: false,
+  scaleControl: true,
   mapTypeIds: [
     google.maps.MapTypeId.ROADMAP, nightMode
   ]
