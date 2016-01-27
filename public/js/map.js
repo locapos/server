@@ -47,8 +47,8 @@ function createTrackingDot(_map, _origin){
 
 // Require: Firefox or Chrome(need experimental flags)
 window.addEventListener('devicelight', function(event){
-  var mode = google.maps.MaptypeId.ROADMAP;
-  if(event.value < 300){
+  var mode = google.maps.MapTypeId.ROADMAP;
+  if(event.value < 45){
     mode = nightMode;
   }
   map.setMapTypeId(mode);
