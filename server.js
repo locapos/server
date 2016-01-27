@@ -2,11 +2,9 @@ const express = require('express')
     , passport = require('passport')
     , bodyParser = require('body-parser')
     , app = express()
-    , server = require('http').createServer(app)
-    , io = require('socket.io')(server);
+    , server = require('http').createServer(app);
 
-const path = require('path')
-    , Q = require('q');
+const path = require('path');
 
 const jadeStatic = require('./lib/jade/static');
 
@@ -47,25 +45,8 @@ app.use('/api', require('./api.js'));
 app.use('/', jadeStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
+// install socket.io
+require('./io.js')(server);
+
 server.listen(process.env.PORT);
 
-// --- realtime communication
-const db = require('./db.js');
-
-function sendLogs(socket){
-  db.showLogs()
-    .then(v => socket.emit('sync', JSON.stringify(v)));
-}
-
-// socket.io client management
-io.on('connection', socket => {
-  socket.on('sync', () => sendLogs(socket));
-  sendLogs(socket);
-});
-
-db.on('update', msg => {
-  io.emit('update', msg);
-});
-db.on('delete', msg => {
-  io.emit('clear', msg);
-});
