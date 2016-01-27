@@ -47,7 +47,7 @@ class Db {
   }
 
   showLocations(){
-    return db.keys('locations:*'
+    return db.keys('locations:*')
       .then(v => db.mget(v || []))
       .then(v => (v || []).map(JSON.parse));
   }
