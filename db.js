@@ -37,7 +37,7 @@ class Db {
   }
 
   storeUser(key, obj){
-    return db.set(`users:${token}`, JSON.stringify(obj));
+    return db.set(`users:${key}`, JSON.stringify(obj));
   }
 
   storeLocation(key, obj){
