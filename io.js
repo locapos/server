@@ -3,7 +3,7 @@
 const db = require('./db.js');
 
 function sendLogs(socket){
-  db.showLogs()
+  db.showLocations()
     .then(v => socket.emit('sync', JSON.stringify(v)));
 }
 
