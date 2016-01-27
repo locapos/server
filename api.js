@@ -62,7 +62,7 @@ router.get('/me', enforce, (req, res) => {
 
 router.get('/delete', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
-  db.del("locations:" + key)
+  db.del(`locations:${key}`)
     .then(v => res.send('ok'));
 });
 
