@@ -66,4 +66,4 @@ class Db {
   }
 }
 
-module.exports = Db;
+module.exports = new Db;
