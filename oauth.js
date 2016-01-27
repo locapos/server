@@ -5,7 +5,8 @@ const crypto = require('crypto');
 const express = require('express')
     , router = express.Router();
 
-const db = require('./db.js');
+const db = require('./db.js')
+    , Q = require('q');
 
 router.get('/authorize', (req, res) => {
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
