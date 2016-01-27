@@ -52,12 +52,11 @@ server.listen(process.env.PORT);
 // --- realtime communication
 const redis = require('promise-redis')(Q.Promise)
     , channel = redis.createClient()
-    , logs = redis.createClient();
+    , db = redis.createClient();
 
 const getLogs = function(){
-  return logs.select('1')
-    .then(v => logs.keys('*'))
-    .then(v => logs.mget(v || []))
+  return db.keys('locations:*')
+    .then(v => db.mget(v || []))
     .then(v => Q(JSON.stringify((v || []).map(JSON.parse))));
 }
 
@@ -72,13 +71,15 @@ channel.config('set', 'notify-keyspace-events', 'Egx');
 // subscribe internal events
 channel.subscribe('__keyevent@1__:del', '__keyevent@1__:expired');
 // subscribe application events
-channel.subscribe('update', 'clear');
+channel.subscribe('update');
 channel.on('message', (channel, msg) => {
   switch(channel){
     case '__keyevent@1__:del':
     case '__keyevent@1__:expired':
-    case 'clear':
-      return io.emit('clear', msg);
+      if(msg.startsWith("locations:")){
+        io.emit('clear', msg);
+      }
+      return;
     case 'update':
       return io.emit('update', `[${msg}]`);
   }

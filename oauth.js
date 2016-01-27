@@ -7,7 +7,7 @@ const express = require('express')
 
 const Q = require('q')
     , redis = require('promise-redis')(Q.Promise)
-    , users = redis.createClient();
+    , db  = redis.createClient();
 
 router.get('/authorize', (req, res) => {
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
@@ -26,10 +26,10 @@ router.get('/redirect', (req, res) => {
   let hash = crypto.createHash("sha256");
   hash.update("" + Math.random() + Date.now());
   let token = hash.digest('base64');
-  users.set(token, JSON.stringify(req.user))
+  db.set("users:" + token, JSON.stringify(req.user))
     .then(v => Q.ninvoke(req.session, "destroy"))
-	.then(v => res.redirect(`${uri}?token=${encodeURIComponent(token)}`))
-	.catch(v => res.sendStatus(500)); // if got exception, send 500 err.
+    .then(v => res.redirect(`${uri}?token=${encodeURIComponent(token)}`))
+    .catch(v => res.sendStatus(500)); // if got exception, send 500 err.
 });
 
 router.get('/failed', (req, res) => {
