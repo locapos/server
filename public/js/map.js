@@ -1,15 +1,19 @@
 var canvas = document.getElementById('map-canvas');
 
-var latlng = new google.maps.LatLng(35.685825,139.754441);
-
+var nightMode = "NightMode";
 var mapOptions = {
   zoom: 9,
-  center: latlng,
-  mapTypeControl: false,
+  center: new google.maps.LatLng(35.685825,139.754441),
+  mapTypeControl: true,
   streetViewControl: false,
+  mapTypeIds: [
+    google.maps.MapTypeId.ROADMAP, nightMode
+  ]
 };
+var mapStyles = [ { "stylers": [ { "invert_lightness": true } ] } ];
 
 var map = new google.maps.Map(canvas, mapOptions);
+map.mapTypes.set(nightMode, new google.maps.StyledMapType(mapStyles, {name: nightMode}));
 
 function createMarkerIcon(type, angle){
   return {
