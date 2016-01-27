@@ -54,16 +54,17 @@ const redis = require('promise-redis')(Q.Promise)
     , channel = redis.createClient()
     , db = redis.createClient();
 
-const getLogs = function(){
+const sendLogs = function(socket){
   return db.keys('locations:*')
     .then(v => db.mget(v || []))
-    .then(v => Q(JSON.stringify((v || []).map(JSON.parse))));
+    .then(v => Q(JSON.stringify((v || []).map(JSON.parse))))
+    .then(v => socket.emit('sync', v));
 }
 
 // socket.io client management
 io.on('connection', socket => {
-  getLogs().then(v => socket.emit('sync', v));
-  socket.on('sync', () => getLogs().then(v => socket.emit('sync', v)));
+  socket.on('sync', () => sendLogs(socket));
+  sendLogs(socket);
 });
 
 // remove marker when client offline
