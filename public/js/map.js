@@ -7,9 +7,9 @@ var mapOptions = {
   mapTypeControl: true,
   streetViewControl: false,
   scaleControl: true,
-  mapTypeIds: [
-    google.maps.MapTypeId.ROADMAP, nightMode
-  ]
+  mapTypeControlOptions: {
+    mapTypeIds: [ google.maps.MapTypeId.ROADMAP, nightMode ]
+  }
 };
 var mapStyles = [ { "stylers": [ { "invert_lightness": true } ] } ];
 
