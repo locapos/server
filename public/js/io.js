@@ -56,13 +56,15 @@ socket.on('sync', function(msg){
 
 window.addEventListener('hashchange', function(){
   var id = Hash.info().id;
+  // clear label style
+  var list = Object.keys(markers)
+    .map(function(k){return markers[k];})
+    .filter(function(m){return (m.labelClass||"").indexOf("looking")>=0;});
+  for(var i = 0; i < list.length; ++i){
+    list[i].setOptions({labelClass: 'labels'});
+  }
+  // update label style
   if(!id){
-    var list = Object.keys(markers)
-      .map(function(k){return markers[k];})
-      .filter(function(m){return (m.labelClass||"").indexOf("looking")>=0;});
-    for(var i = 0; i < list.length; ++i){
-      list[i].setOptions({labelClass: 'labels'});
-    }
     return;
   }else if(markers[id]){
     markers[id].setOptions({labelClass: 'labels looking'});
