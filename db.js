@@ -56,7 +56,7 @@ class Db {
     return db.del(`locations:${key}`);
   }
 
-  on(event, hander){
+  on(event, handler){
     if(event === 'update'){
       channel.on('message', HandlerFactory.update(handler));
     }
