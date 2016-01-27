@@ -69,13 +69,13 @@ io.on('connection', socket => {
 // remove marker when client offline
 channel.config('set', 'notify-keyspace-events', 'Egx');
 // subscribe internal events
-channel.subscribe('__keyevent@1__:del', '__keyevent@1__:expired');
+channel.subscribe('__keyevent@0__:del', '__keyevent@0__:expired');
 // subscribe application events
 channel.subscribe('update');
 channel.on('message', (channel, msg) => {
   switch(channel){
-    case '__keyevent@1__:del':
-    case '__keyevent@1__:expired':
+    case '__keyevent@0__:del':
+    case '__keyevent@0__:expired':
       if(msg.startsWith("locations:")){
         io.emit('clear', msg);
       }

@@ -41,7 +41,7 @@ router.get('/update', enforce, (req, res) => {
   // store data
   let key = `${obj.provider}:${obj.id}`;
   let value = JSON.stringify(obj);
-  db.setex("locations:" + key, 5 * 60, value) // expire data after 5 minutes
+  db.setex(`locations:${key}`, 5 * 60, value) // expire data after 5 minutes
     .then(v => db.publish('update', value))
     .then(v => res.send('ok'));
 });
