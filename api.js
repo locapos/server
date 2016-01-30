@@ -41,7 +41,8 @@ router.get('/update', enforce, (req, res) => {
 
 router.get('/show', enforce, (req, res) => {
   db.showLocations()
-    .then(v => res.send(v));
+    .then(v => res.send(v))
+    .catch(e => {console.log(e); res.send(500);});
 });
 
 router.get('/me', enforce, (req, res) => {
