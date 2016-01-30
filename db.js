@@ -1,6 +1,7 @@
 'use strict';
 
-const redis = require('promise-redis')()
+const Q = require('q')
+    , redis = require('promise-redis')()
     , db = redis.createClient()
     , channel = redis.createClient();
 
@@ -48,7 +49,7 @@ class Db {
 
   showLocations(){
     return db.keys('locations:*')
-      .then(v => db.mget(v || []))
+      .then(v => (v || []).length ? db.mget(v) : Q([])) 
       .then(v => (v || []).map(JSON.parse));
   }
 
