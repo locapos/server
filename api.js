@@ -36,13 +36,14 @@ router.get('/update', enforce, (req, res) => {
   // store data
   let key = `${obj.provider}:${obj.id}`;
   db.storeLocation(key, obj)
-    .then(v => res.send('ok'));
+    .then(v => res.send('ok'))
+    .catch(e => res.sendStatus(500));
 });
 
 router.get('/show', enforce, (req, res) => {
   db.showLocations()
     .then(v => res.send(v))
-    .catch(e => {console.log(e); res.send(500);});
+    .catch(e => res.sendStatus(500));
 });
 
 router.get('/me', enforce, (req, res) => {
@@ -56,7 +57,8 @@ router.get('/me', enforce, (req, res) => {
 router.get('/delete', enforce, (req, res) => {
   let key = `${obj.provider}:${obj.id}`;
   db.deleteLocation(key)
-    .then(v => res.send('ok'));
+    .then(v => res.send('ok'))
+    .catch(e => res.sendStatus(500));
 });
 
 module.exports = router;
