@@ -45,10 +45,13 @@ function createTrackingDot(_map, _origin){
 }
 
 // Require: Firefox or Chrome(need experimental flags)
+var preferredMode = google.maps.MapTypeId.ROADMAP;
 window.addEventListener('devicelight', function(event){
   var mode = google.maps.MapTypeId.ROADMAP;
   if(event.value < 45){
     mode = nightMode;
   }
+  if(mode === preferredMode) return;
+  preferredMode = mode;
   map.setMapTypeId(mode);
 });
