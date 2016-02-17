@@ -32,11 +32,10 @@ function createTrackingDot(_map, _origin){
   }
   // create tracking dot
   var icon = {
-    path: 0,
-    strokeColor: 'Red',
-    fillOpacity: 1,
-    fillColor: 'Red',
-    scale: 1.5
+    url: '/res/99/0.png',
+    scaledSize: new google.maps.Size(4, 4),
+    origin: new google.maps.Point(0, 0),
+    anchor: new google.maps.Point(2, 2)
   }
   var dot = new google.maps.Marker({
     position: _origin.getPosition(),
