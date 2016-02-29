@@ -6,7 +6,7 @@ const express = require('express')
 
 const path = require('path');
 
-const jadeStatic = require('./lib/jade/static');
+const jadeStatic = require('jade-static');
 
 const auth = require('./lib/auth');
 
