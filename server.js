@@ -1,16 +1,13 @@
+const path = require('path');
 const express = require('express')
     , passport = require('passport')
     , bodyParser = require('body-parser')
+    , jadeStatic = require('jade-static')
     , app = express()
     , server = require('http').createServer(app);
 
-const path = require('path');
-
-const jadeStatic = require('jade-static');
-
-const auth = require('./lib/auth');
-
 // setup
+const auth = require('./lib/auth');
 auth.install(passport);
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('express-session')({
@@ -39,4 +36,3 @@ app.use('/', express.static('./public'));
 require('./io.js')(server);
 
 server.listen(process.env.PORT);
-
