@@ -2,10 +2,9 @@
 
 const crypto = require('crypto');
 
-const express = require('express')
-    , router = express.Router();
+const router = require('express').Router();
 
-const db = require('./db.js')
+const db = require('../lib/db.js')
     , Q = require('q');
 
 router.get('/authorize', (req, res) => {

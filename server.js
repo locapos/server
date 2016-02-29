@@ -17,7 +17,6 @@ app.use(require('express-session')({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/auth', auth);
 
 // handlers
 app.get('/logout', (req, res) => {
@@ -25,8 +24,10 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
-app.use('/oauth', require('./oauth.js'));
-app.use('/api', require('./api.js'));
+// delegate path
+app.use('/auth', auth);
+app.use('/oauth', require('./oauth'));
+app.use('/api', require('./api'));
 
 app.set('view engine', 'jade');
 app.use('/', jadeStatic(path.resolve('./views')));
