@@ -33,6 +33,11 @@ app.set('view engine', 'jade');
 app.use('/', jadeStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
+// handle groups
+app.get('/(?:[a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})', (req, res) => {
+  res.render('index');
+});
+
 // install socket.io
 require('./io.js')(server);
 
