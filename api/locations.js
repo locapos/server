@@ -31,7 +31,7 @@ router.get('/update', enforce, (req, res) => {
 
 router.get('/delete', enforce, (req, res) => {
   let group = req.query.key || '0';
-  let key = `${obj.provider}:${obj.id}`;
+  let key = `${req.user.provider}:${req.user.id}`;
   db.deleteLocation(key, group)
     .then(v => res.send('ok'))
     .catch(e => res.sendStatus(500));

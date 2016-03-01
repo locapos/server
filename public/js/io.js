@@ -37,7 +37,7 @@ socket.on('connected', function(){
 });
 
 socket.on('update', function(msg){
-  var obj = JSON.parse(msg) || [];
+  var obj = msg || [];
   for(var i = 0; i < obj.length; ++i){
     update(obj[i]);
   }
@@ -52,7 +52,7 @@ socket.on('sync', function(msg){
   for(var i = 0; i < keys.length; ++i){
     clear(keys[i]);
   }
-  var obj = JSON.parse(msg) || [];
+  var obj = msg || [];
   for(var i = 0; i < obj.length; ++i){
     update(obj[i]);
   }

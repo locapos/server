@@ -3,8 +3,8 @@
 const db = require('./lib/db.js');
 
 function sendLogs(socket){
-  db.showLocations(socket.get('group'))
-    .then(v => socket.emit('sync', JSON.stringify(v)));
+  db.showLocations(socket.locapos_gid)
+    .then(v => socket.emit('sync', v));
 }
 
 function Io(server){
@@ -13,19 +13,20 @@ function Io(server){
 
   // socket.io client management
   io.on('connection', socket => {
+    socket.emit('connected');
     socket.on('init', req => {
-      socket.set('group', req || '0');
-      socket.join(socket.get('group'));
+      socket.locapos_gid = req || '0';
+      socket.join(socket.locapos_gid);
       socket.on('sync', () => sendLogs(socket));
       sendLogs(socket);
     });
   });
   db.on('update', msg => {
-    let obj = JSON.parse(msg);
-    io.to(obj.key).emit('update', msg.value);
+    io.to(msg.key).emit('update', msg.value);
   });
   db.on('delete', msg => {
-    io.to(obj.key).emit('clear', msg.value);
+  console.log(msg);
+    io.to(msg.key).emit('clear', msg.value);
   });
 }
 
