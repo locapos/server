@@ -1,9 +1,9 @@
 'use strict';
 
-const db = require('./db.js');
+const db = require('./lib/db.js');
 
 function sendLogs(socket){
-  db.showLocations()
+  db.showLocations(socket.get('group'))
     .then(v => socket.emit('sync', JSON.stringify(v)));
 }
 
@@ -13,15 +13,19 @@ function Io(server){
 
   // socket.io client management
   io.on('connection', socket => {
-    socket.on('sync', () => sendLogs(socket));
-    sendLogs(socket);
+    socket.on('init', req => {
+      socket.set('group', req || '0');
+      socket.join(socket.get('group'));
+      socket.on('sync', () => sendLogs(socket));
+      sendLogs(socket);
+    });
   });
-  
   db.on('update', msg => {
-    io.emit('update', msg);
+    let obj = JSON.parse(msg);
+    io.to(obj.key).emit('update', msg.value);
   });
   db.on('delete', msg => {
-    io.emit('clear', msg);
+    io.to(obj.key).emit('clear', msg.value);
   });
 }
 
