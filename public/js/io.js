@@ -32,6 +32,10 @@ function clear(key){
 }
 
 var socket = io();
+socket.on('connected', function(){
+  socket.emit('init', location.pathname.substr(1));
+});
+
 socket.on('update', function(msg){
   var obj = JSON.parse(msg) || [];
   for(var i = 0; i < obj.length; ++i){
