@@ -3,7 +3,7 @@
 const router = require('express').Router();
 
 const db = require('../lib/db.js')
-      enforce = require('../lib/enforce.js');
+    , enforce = require('../lib/enforce.js');
 
 router.get('/update', enforce, (req, res) => {
   let obj = {
@@ -15,7 +15,7 @@ router.get('/update', enforce, (req, res) => {
     heading: parseFloat(req.query.heading)
   };
   let group = req.query.key || '';
-  let private = req.query.private || '0';
+  let isprivate = req.query.private || '0';
   // check values
   if(isNaN(obj.latitude)) return res.sendStatus(400);
   if(isNaN(obj.longitude)) return res.sendStatus(400);
@@ -24,7 +24,7 @@ router.get('/update', enforce, (req, res) => {
   if(group.length != 0 && group.length != 43) return res.sendStatus(403);
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  db.storeLocation(key, obj, group, private)
+  db.storeLocation(key, obj, group, isprivate)
     .then(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });

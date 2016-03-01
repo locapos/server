@@ -34,11 +34,11 @@ app.use('/', jadeStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
 // handle groups
-app.get('/(?:[a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})', (req, res) => {
+app.get('/([a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})', (req, res) => {
   res.render('index');
 });
 
 // install socket.io
 require('./io.js')(server);
 
-server.listen(process.env.PORT);
+server.listen(process.env.PORT || 3000);
