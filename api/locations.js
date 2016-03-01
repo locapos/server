@@ -14,20 +14,25 @@ router.get('/update', enforce, (req, res) => {
     longitude: parseFloat(req.query.longitude),
     heading: parseFloat(req.query.heading)
   };
+  let group = req.query.key || '';
+  let private = req.query.private || '0';
   // check values
   if(isNaN(obj.latitude)) return res.sendStatus(400);
   if(isNaN(obj.longitude)) return res.sendStatus(400);
   if(isNaN(obj.heading)) obj.heading = 0;
+  // group key must be 43 chars
+  if(group.length != 0 && group.length != 43) return res.sendStatus(403);
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  db.storeLocation(key, obj)
+  db.storeLocation(key, obj, group, private)
     .then(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });
 
 router.get('/delete', enforce, (req, res) => {
+  let group = req.query.key || '0';
   let key = `${obj.provider}:${obj.id}`;
-  db.deleteLocation(key)
+  db.deleteLocation(key, group)
     .then(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });

@@ -7,6 +7,7 @@ const hashgen = require('../lib/hashgen.js')
     , Q = require('q');
 
 router.get('/authorize', (req, res) => {
+  if(req.query.response_type !== 'token') return res.sensStatus(400);
   if(req.query.client_id !== 'AAAAAAAA') return res.sendStatus(400);
   if(!req.query.redirect_uri) return res.sendStatus(400);
 
