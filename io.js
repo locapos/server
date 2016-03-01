@@ -25,7 +25,6 @@ function Io(server){
     io.to(msg.key).emit('update', msg.value);
   });
   db.on('delete', msg => {
-  console.log(msg);
     io.to(msg.key).emit('clear', msg.value);
   });
 }

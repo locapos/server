@@ -5,17 +5,17 @@ const router = require('express').Router();
 const db = require('../lib/db.js')
     , enforce = require('../lib/enforce.js');
 
-router.get('/update', enforce, (req, res) => {
+router.post('/update', enforce, (req, res) => {
   let obj = {
     provider: req.user.provider,
     id: req.user.id,
     name: req.user.username,
-    latitude: parseFloat(req.query.latitude),
-    longitude: parseFloat(req.query.longitude),
-    heading: parseFloat(req.query.heading)
+    latitude: parseFloat(req.body.latitude),
+    longitude: parseFloat(req.body.longitude),
+    heading: parseFloat(req.body.heading)
   };
-  let group = req.query.key || '';
-  let isprivate = req.query.private || '0';
+  let group = req.body.key || '';
+  let isprivate = req.body.private || '0';
   // check values
   if(isNaN(obj.latitude)) return res.sendStatus(400);
   if(isNaN(obj.longitude)) return res.sendStatus(400);
@@ -29,8 +29,8 @@ router.get('/update', enforce, (req, res) => {
     .catch(e => res.sendStatus(500));
 });
 
-router.get('/delete', enforce, (req, res) => {
-  let group = req.query.key || '0';
+router.post('/delete', enforce, (req, res) => {
+  let group = req.body.key || '0';
   let key = `${req.user.provider}:${req.user.id}`;
   db.deleteLocation(key, group)
     .then(v => res.send('ok'))
