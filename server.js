@@ -41,4 +41,4 @@ app.get('/([a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})?', (req, res) => {
 // install socket.io
 require('./io.js')(server);
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000, process.env.ADDR || '127.0.0.1');
