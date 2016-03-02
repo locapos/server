@@ -38,7 +38,7 @@ router.get('/redirect', (req, res) => {
 });
 
 router.get('/failed', (req, res) => {
-  res.redirect('/authorize?error=1');
+  res.render('oauth/failed');
 });
 
 module.exports = router;
