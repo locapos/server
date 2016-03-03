@@ -30,10 +30,11 @@ router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
   if(!uri) return res.sendStatus(400);
   let token = hashgen();
-  let state = req.session.state || '';
+  let state = encodeURIComponent(req.session.state || '');
+  let redirect = `${uri}#access_token=${encodeURIComponent(token)}&token_type=bearer&state=${state}`;
   db.storeUser(token, req.user)
     .then(v => Q.ninvoke(req.session, 'destroy'))
-    .then(v => res.redirect(`${uri}#access_token=${encodeURIComponent(token)}&token_type=bearer&state=${encodeURIComponent(state)}`))
+    .then(v => res.render('oauth/redirect', {uri: redirect}))
     .catch(v => res.sendStatus(500)); // if got exception, send 500 err.
 });
 
