@@ -9,7 +9,7 @@ const hashgen = require('../lib/hashgen.js')
 router.get('/join', (req, res) => {
   let group = req.query.key || '';
   if(group == '') return res.sendStatus(400);
-  res.redirect('locapos-api:///join?key=' + encodeURIComponent(group));
+  res.redirect(`locapos-api:///join?key=${encodeURIComponent(group)}`);
 });
 
 router.get('/new', (req, res) => {
