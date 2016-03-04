@@ -1,10 +1,10 @@
 'use strict';
 
-const db = require('./db.js');
+const db = require('./lib/db.js');
 
 function sendLogs(socket){
-  db.showLocations()
-    .then(v => socket.emit('sync', JSON.stringify(v)));
+  db.showLocations(socket.locapos_gid)
+    .then(v => socket.emit('sync', v));
 }
 
 function Io(server){
@@ -13,15 +13,19 @@ function Io(server){
 
   // socket.io client management
   io.on('connection', socket => {
-    socket.on('sync', () => sendLogs(socket));
-    sendLogs(socket);
+    socket.emit('connected');
+    socket.on('init', req => {
+      socket.locapos_gid = req || '0';
+      socket.join(socket.locapos_gid);
+      socket.on('sync', () => sendLogs(socket));
+      sendLogs(socket);
+    });
   });
-  
   db.on('update', msg => {
-    io.emit('update', msg);
+    io.to(msg.key).emit('update', msg.value);
   });
   db.on('delete', msg => {
-    io.emit('clear', msg);
+    io.to(msg.key).emit('clear', msg.value);
   });
 }
 

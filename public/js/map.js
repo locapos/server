@@ -1,9 +1,28 @@
-var canvas = document.getElementById('map-canvas');
+var args = {};
+var splited = location.search.substr(1).split('&');
+for(var i = 0; i < splited.length; ++i){
+  var kv = splited[i].split('=');
+  args[kv[0]]=kv[1];
+}
 
+var latitude = 35.685825;
+var longitude = 139.754441;
+var zoomLevel = 9;
+
+if(args['center']){
+  var loc = args['center'].split(',');
+  latitude = parseFloat(loc[0]) || latitude;
+  longitude = parseFloat(loc[1]) || longitude;
+}
+if(args['zoom']){
+  zoomLevel = parseInt(args['zoom']) || zoomLevel;
+}
+
+var canvas = document.getElementById('map-canvas');
 var nightMode = "NightMode";
 var mapOptions = {
-  zoom: 9,
-  center: new google.maps.LatLng(35.685825,139.754441),
+  zoom: zoomLevel,
+  center: new google.maps.LatLng(latitude,longitude),
   mapTypeControl: true,
   streetViewControl: false,
   scaleControl: true,
