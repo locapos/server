@@ -34,6 +34,11 @@ var mapStyles = [ { "stylers": [ { "invert_lightness": true } ] } ];
 
 var map = new google.maps.Map(canvas, mapOptions);
 map.mapTypes.set(nightMode, new google.maps.StyledMapType(mapStyles, {name: nightMode}));
+google.maps.event.addListener(map, 'maptypeid_changed', function(){
+  var type = map.getMapTypeId();
+  document.head.children.namedItem("theme-color").content =
+    type === nightMode ? "#263238" : "#4DB6AC";
+});
 
 function createMarkerIcon(type, angle){
   return {
