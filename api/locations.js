@@ -21,11 +21,14 @@ router.post('/update', enforce, (req, res) => {
   if(isNaN(obj.longitude)) return res.sendStatus(400);
   if(isNaN(obj.heading)) obj.heading = 0;
   // group key must be 43 chars
-  if(group.length != 0 && group.length != 43) return res.sendStatus(403);
+  let groups = group.split(',');
+  for(let i = 0; i < groups.length; ++i){
+    if(groups[i].length != 0 && groups[i].length != 43) return res.sendStatus(403);
+  }
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  db.storeLocation(key, obj, group, isprivate)
-    .then(v => res.send('ok'))
+  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate))
+    .spread(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });
 
