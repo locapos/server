@@ -8,6 +8,21 @@ const express = require('express')
     , app = express()
     , server = require('http').createServer(app);
 
+// clustering
+/*
+const cluster = require('cluster');
+if(cluster.isMaster){
+  let cpus = require('os').cpus().length;
+  for(let i = 0; i < cpus; ++i) cluster.fork();
+  cluster.on('exit', function(){
+    cluster.fork();
+  });
+  return;
+}
+
+console.log('worker ' + process.pid);
+*/
+
 // check env vars
 if(!process.env.FACEBOOK_APP_ID) throw 'Env `FACEBOOK_APP_ID` is not set';
 if(!process.env.FACEBOOK_APP_SECRET) throw 'Env `FACEBOOK_APP_SECRET` is not set';
