@@ -27,7 +27,7 @@ router.post('/update', enforce, (req, res) => {
   }
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate))
+  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate)))
     .spread(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });
