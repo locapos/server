@@ -2,7 +2,8 @@
 
 const router = require('express').Router();
 
-const db = require('../lib/db.js')
+const Q = require('q')
+    , db = require('../lib/db.js')
     , enforce = require('../lib/enforce.js');
 
 router.post('/update', enforce, (req, res) => {
@@ -27,7 +28,7 @@ router.post('/update', enforce, (req, res) => {
   }
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate))
+  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate)))
     .spread(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });
