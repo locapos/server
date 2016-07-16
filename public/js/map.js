@@ -54,20 +54,21 @@ controlDiv.style.marginTop = '0px';
 controlDiv.style.backgroundColor = '#fff';
 controlDiv.style.borderRadius = '2px';
 
-// Set CSS for the control border
+var controlLabel = document.createElement('label');
+controlLabel.htmlFor = 'trafficLayer';
+controlLabel.className = 'mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect';
+controlDiv.appendChild(controlLabel);
+
 var controlUI = document.createElement('input');
 controlUI.type = 'checkbox';
 controlUI.id = 'trafficLayer';
-controlUI.style.verticalAlign = 'middle';
-controlUI.style.margin = '0px';
-controlDiv.appendChild(controlUI);
+controlUI.className = 'mdl-checkbox__input';
+controlLabel.appendChild(controlUI);
 
-var controlText = document.createElement('label');
-controlText.htmlFor = 'trafficLayer';
+var controlText = document.createElement('span');
 controlText.innerText = 'Traffic Layer';
-controlText.style.marginLeft = '3px';
-controlText.foreground = '#565656';
-controlDiv.appendChild(controlText);
+controlText.className = 'mdl-checkbox__label';
+controlLabel.appendChild(controlText);
 
 map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlDiv);
 google.maps.event.addDomListener(controlUI, 'change', function(){
