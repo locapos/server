@@ -33,6 +33,7 @@ var mapOptions = {
 var mapStyles = [ { "stylers": [ { "invert_lightness": true } ] } ];
 
 var map = new google.maps.Map(canvas, mapOptions);
+var trafficLayer = new google.maps.TrafficLayer();
 map.mapTypes.set(nightMode, new google.maps.StyledMapType(mapStyles, {name: nightMode}));
 
 google.maps.event.addListenerOnce(map, 'idle', function(){
@@ -43,6 +44,34 @@ google.maps.event.addListener(map, 'maptypeid_changed', function(){
   var type = map.getMapTypeId();
   document.head.children.namedItem("theme-color").content =
     type === nightMode ? "#263238" : "#4DB6AC";
+});
+
+// Create a div to hold the control.
+var controlDiv = document.createElement('div');
+controlDiv.style.margin = '10px';
+controlDiv.style.padding = '8px';
+controlDiv.style.marginTop = '0px';
+controlDiv.style.backgroundColor = '#fff';
+controlDiv.style.borderRadius = '2px';
+
+// Set CSS for the control border
+var controlUI = document.createElement('input');
+controlUI.type = 'checkbox';
+controlUI.id = 'trafficLayer';
+controlUI.style.verticalAlign = 'middle';
+controlUI.style.margin = '0px';
+controlDiv.appendChild(controlUI);
+
+var controlText = document.createElement('label');
+controlText.htmlFor = 'trafficLayer';
+controlText.innerText = 'Traffic Layer';
+controlText.style.marginLeft = '3px';
+controlText.foreground = '#565656';
+controlDiv.appendChild(controlText);
+
+map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlDiv);
+google.maps.event.addDomListener(controlUI, 'change', function(){
+  trafficLayer.setMap(controlUI.checked ? map : null);
 });
 
 function createMarkerIcon(type, angle){
