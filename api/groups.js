@@ -13,7 +13,7 @@ router.get('/join', (req, res) => {
 });
 
 router.get('/new', (req, res) => {
-  let key = hashgen();
+  let key = hashgen.hash();
   res.send({key: key});
 });
 
