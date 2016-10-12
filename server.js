@@ -4,7 +4,7 @@ const path = require('path');
 const express = require('express')
     , passport = require('passport')
     , bodyParser = require('body-parser')
-    , jadeStatic = require('jade-static')
+    , pugStatic = require('pug-static')
     , app = express()
     , server = require('http').createServer(app);
 
@@ -58,8 +58,8 @@ app.use('/auth', auth);
 app.use('/oauth', require('./oauth'));
 app.use('/api', require('./api'));
 
-app.set('view engine', 'jade');
-app.use('/', jadeStatic(path.resolve('./views')));
+app.set('view engine', 'pug');
+app.use('/', pugStatic(path.resolve('./views')));
 app.use('/', express.static('./public'));
 
 // handle groups
