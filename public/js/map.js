@@ -50,7 +50,6 @@ google.maps.event.addListener(map, 'maptypeid_changed', function(){
 var controlDiv = document.createElement('div');
 controlDiv.style.margin = '10px';
 controlDiv.style.padding = '8px';
-controlDiv.style.marginTop = '0px';
 controlDiv.style.backgroundColor = '#fff';
 controlDiv.style.borderRadius = '2px';
 
@@ -70,7 +69,7 @@ controlText.innerText = 'Traffic Layer';
 controlText.className = 'mdl-checkbox__label';
 controlLabel.appendChild(controlText);
 
-map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlDiv);
+map.controls[google.maps.ControlPosition.RIGHT_TOP].push(controlDiv);
 google.maps.event.addDomListener(controlUI, 'change', function(){
   trafficLayer.setMap(controlUI.checked ? map : null);
 });
