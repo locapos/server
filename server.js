@@ -40,7 +40,7 @@ const auth = require('./lib/auth');
 auth.install(passport);
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(require('express-session')({
-  secret: 'atashi',
+  secret: process.env.SessionSecret,
   resave: false,
   saveUninitialized: false
 }));
@@ -68,6 +68,6 @@ app.get('/([a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})?', (req, res) => {
 });
 
 // install socket.io
-require('./io.js')(server);
+require('./lib/io.js')(server);
 
 server.listen(process.env.PORT || 3000, process.env.ADDR || '127.0.0.1');
