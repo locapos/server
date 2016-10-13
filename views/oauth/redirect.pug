@@ -19,9 +19,9 @@ html
     .container
       .bs-callout.bs-callout-success
         h4 認証に成功しました
-        p
-          | アプリケーションに転送しています...
-          | 転送されない場合は#[a(href='#{uri}')ここをクリック]してください
+        p.
+          アプリケーションに転送しています...
+          転送されない場合は#[a(href='#{uri}') ここをクリック]してください
     script(type='text/javascript').
       setTimeout(function(){location.href = '!{uri}'}, 3000);
     script(src='/components/Umi/dist/js/bootstrap.min.js', async)
