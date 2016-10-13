@@ -19,3 +19,10 @@ html, body, #map-canvas
   color: white;
   background-color: red;
 }
+
+.additional-control{
+  margin: 10px;
+  padding: 8px;
+  background-color: #fff;
+  border-radius: 2px;
+}

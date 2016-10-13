@@ -1,4 +1,6 @@
-var Hash = (function(){
+'use strict';
+
+(function(){
   var Hash = {};
   
   Hash.info = function(){
@@ -19,5 +21,5 @@ var Hash = (function(){
     this.setInfo(info);
   }
   
-  return Hash;
+  window.Hash = Hash;
 })();
