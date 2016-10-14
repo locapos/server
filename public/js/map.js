@@ -96,7 +96,7 @@
   MapView.createLabeledMarker = function(opt){
     var marker = new MarkerWithLabel(opt);
     marker.setMap(map);
-    marker.addListener('click', function(){ Hash.toggleLookingFor(key); });
+    marker.addListener('click', function(){ Hash.toggleLookingFor(opt.key); });
     return marker;
   };
   window.MapView = MapView;

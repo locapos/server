@@ -12,7 +12,8 @@
       labelContent: obj.name,
       labelAnchor: new google.maps.Point(32, -10),
       labelClass: 'labels ' + (Hash.isLooking(key) ? 'looking' : ''),
-      labelStyle: {opacity: 0.75}
+      labelStyle: {opacity: 0.75},
+      key: key
     };
     if(markers[key] === undefined){
       markers[key] = MapView.createLabeledMarker(opt);
