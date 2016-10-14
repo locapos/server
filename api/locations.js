@@ -13,7 +13,7 @@ router.post('/update', enforce, (req, res) => {
     name: req.user.username,
     latitude: parseFloat(req.body.latitude),
     longitude: parseFloat(req.body.longitude),
-    heading: parseFloat(req.body.heading)
+    heading: parseFloat(req.body.heading) % 360
   };
   let group = req.body.key || '';
   let isprivate = req.body.private || '0';
@@ -21,6 +21,8 @@ router.post('/update', enforce, (req, res) => {
   if(isNaN(obj.latitude)) return res.sendStatus(400);
   if(isNaN(obj.longitude)) return res.sendStatus(400);
   if(isNaN(obj.heading)) obj.heading = 0;
+  // normalize heading 0 to 360
+  obj.heading = obj.heading < 0 ? 360 + obj.heading : obj.heading;
   // group key must be 43 chars
   let groups = group.split(',');
   for(let i = 0; i < groups.length; ++i){
