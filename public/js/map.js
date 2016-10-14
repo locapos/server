@@ -91,7 +91,7 @@
     dot.setMap(map);
   }
   MapView.moveCenterTo = function(_marker){
-    map.setCenter(_maerker.getPosition());
+    map.setCenter(_marker.getPosition());
   };
   MapView.createLabeledMarker = function(opt){
     var marker = new MarkerWithLabel(opt);
