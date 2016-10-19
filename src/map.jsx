@@ -1,6 +1,10 @@
 'use strict';
 
+const Io = require('./io.jsx');
+
 (function(){
+  const Mdl = require('./dom.jsx');
+
   /* utilities */
   function parseQueryString(){
     var args = {};
@@ -39,7 +43,7 @@
       mapTypeIds: [ google.maps.MapTypeId.ROADMAP, nightMode ]
     }
   };
-  var mapStyles = [ { "stylers": [ { "invert_lightness": true } ] } ];
+  var mapStyles = require('./mapstyle.json');
   var map = new google.maps.Map(canvas, mapOptions);
   map.mapTypes.set(nightMode, new google.maps.StyledMapType(mapStyles, {name: nightMode}));
   var trafficLayer = new google.maps.TrafficLayer();
@@ -100,6 +104,8 @@
     return marker;
   };
   window.MapView = MapView;
+  let io = new Io(MapView);
+  io.start();
 })();
 
 // Require: Firefox or Chrome(need experimental flags)
@@ -111,5 +117,5 @@ window.addEventListener('devicelight', function(event){
   }
   if(mode === preferredMode) return;
   preferredMode = mode;
-  map.setMapTypeId(mode);
+  MapView.setMapTypeId(mode);
 });
