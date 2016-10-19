@@ -20,7 +20,7 @@ router.post('/update', enforce, (req, res) => {
   // check values
   if(isNaN(obj.latitude)) return res.sendStatus(400);
   if(isNaN(obj.longitude)) return res.sendStatus(400);
-  if(isNaN(obj.heading)) obj.heading = 0;
+  if(isNaN(obj.heading)) { obj.heading = undefined; }
   // normalize heading 0 to 360
   obj.heading = obj.heading < 0 ? 360 + obj.heading : obj.heading;
   // group key must be 43 chars
@@ -30,7 +30,7 @@ router.post('/update', enforce, (req, res) => {
   }
   // store data
   let key = `${obj.provider}:${obj.id}`;
-  Q.all(groups.map(g=>db.storeLocation(key, obj, g, isprivate)))
+  Q.all(groups.map(g => db.storeLocation(key, obj, g, isprivate)))
     .spread(v => res.send('ok'))
     .catch(e => res.sendStatus(500));
 });
