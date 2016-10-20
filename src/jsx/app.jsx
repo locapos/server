@@ -30,10 +30,9 @@ google.maps.event.addDomListener(checkTrafficLayer.ui, 'change', function(){
 // Require: Firefox or Chrome(need experimental flags)
 let preferredMode = google.maps.MapTypeId.ROADMAP;
 window.addEventListener('devicelight', function(event){
-  let mode = google.maps.MapTypeId.ROADMAP;
-  if(event.value < 45){
-    mode = nightMode;
-  }
+  let mode = event.value < 45
+    ? MapParams.NIGHT_MODE
+    : google.maps.MapTypeId.ROADMAP;
   if(mode === preferredMode) return;
   preferredMode = mode;
   mapView.setMapType(mode);
