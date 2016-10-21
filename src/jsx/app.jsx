@@ -33,7 +33,14 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   mapView.on('maptypeid_changed', () => {
     let state = mapView.getMapType() == MapParams.NIGHT_MODE;
     ThemeHelper.setColor(state ? "#263238" : "#4DB6AC");
-    document.getElementById('swMapMode').checked = state;
+    $('swMapMode').prop('checked', state);
+    if(state){
+      $('#search-bar').addClass('night');
+      $('.pac-container').addClass('night');
+    }else{
+      $('#search-bar').removeClass('night');
+      $('.pac-container').removeClass('night');
+    }
   });
   handleStateChanged(document.getElementById('swMapMode'), state => {
     mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
