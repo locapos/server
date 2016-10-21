@@ -43,6 +43,10 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   });
   handleStateChanged(document.getElementById('swWeather'), state => {
   });
+  $('#place-search').focusin(() => {
+    let w = $('#place-search').width();
+    $('.pac-container').css('min-width', `${w + 64}px`);
+  });
 
   // Require: Firefox or Chrome(need experimental flags)
   let preferredMode = google.maps.MapTypeId.ROADMAP;
