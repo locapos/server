@@ -47,6 +47,20 @@ class MapView{
     marker.addListener('click', function(){ Hash.toggleLookingFor(opt.key); });
     return marker;
   }
+  enableAutoComplete(element){
+    let autocomplete = new google.maps.places.Autocomplete(element);
+    autocomplete.bindTo('bounds', this.map);
+    google.maps.event.addListener(autocomplete, 'place_changed', () => {
+      var place = autocomplete.getPlace();
+      if (!place.geometry) { return; }
+      if (place.geometry.viewport) {
+        this.map.fitBounds(place.geometry.viewport);
+      } else {
+        this.map.setCenter(place.geometry.location);
+        this.map.setZoom(17);
+      }
+    });
+  }
   addControl(placement, control){
     this.map.controls[placement].push(control);
   }

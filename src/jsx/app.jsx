@@ -18,9 +18,13 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   let canvas = document.getElementById('map-canvas');
   let mapView = new MapView(canvas);
 
+  // layout parts
   let searchBox = document.getElementById('search-bar');
   mapView.addControl(google.maps.ControlPosition.LEFT_TOP, searchBox);
   searchBox.style.display = 'block';
+  let placeSearch = document.getElementById('place-search');
+  mapView.enableAutoComplete(placeSearch);
+  document.getElementById('search-form').onsubmit = () => false;
 
   // build layers
   let trafficLayer = new MapLayer(mapView, new google.maps.TrafficLayer());
