@@ -26,7 +26,7 @@ class MapParams {
     return {
       zoom: this.getZoom(),
       center: new google.maps.LatLng(center[0], center[1]),
-      mapTypeControl: true,
+      mapTypeControl: false,
       streetViewControl: false,
       scaleControl: true,
       mapTypeControlOptions: { mapTypeIds: ids }

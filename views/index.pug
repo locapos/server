@@ -11,7 +11,23 @@ html
     script(src='https://code.getmdl.io/1.1.3/material.min.js', defer)
     title Location Overview
   body
-    #map-canvas: p "loading..."
+    .mdl-layout.mdl-js-layout.layout-root.mdl-layout--fixed-header
+      #search-bar.search-wrapper.mdl-layout__header: .additional-control.search-bar
+          button.mdl-js-button.mdl-js-ripple-effect.mdl-layout__drawer-button
+            i.material-icons menu
+          form: input(placeholder='Search in locapos')
+      .mdl-layout__drawer
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swMapMode')
+          span.mdl-switch__label Night Mode
+          input.mdl-switch__input#swMapMode(type='checkbox')
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swTraffic')
+          span.mdl-switch__label Traffic Layer
+          input.mdl-switch__input#swTraffic(type='checkbox')
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swWeather')
+          span.mdl-switch__label Weather Layer
+          input.mdl-switch__input#swWeather(type='checkbox')
+      .mdl-layout__content
+        #map-canvas: p "loading..."
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.min.js')
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCdl30sDo_R0-BiwMJvhro9Az1VS1ISI0w')
     script(src='https://cdn.sobekrepository.org/includes/gmaps-markerwithlabel/1.9.1/gmaps-markerwithlabel-1.9.1.min.js')

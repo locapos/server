@@ -10,11 +10,6 @@ class MapView{
   buildMap(dom){
     let map = new google.maps.Map(dom, (new MapParams()).get());
     map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, {name: MapParams.NIGHT_MODE}));
-    /* rename roamap name */
-    google.maps.event.addListenerOnce(map, 'idle', function(){
-      map.mapTypes.roadmap.name = 'DayMode';
-      map.setOptions({'mapTypeControl':true});
-    });
     return map;
   }
   createMarkerIcon(type, angle){
