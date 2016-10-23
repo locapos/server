@@ -3,6 +3,7 @@
 const MapView = require('./map-view.jsx')
     , MapParams = require('./map-params.jsx')
     , MapLayer = require('./map-layer.jsx')
+    , NowcastLayer = require('./nowcast-layer.jsx')
     , Events = require('./events.jsx')
     , Io = require('./io.jsx')
     , ThemeHelper = require('./theme-helper.jsx');
@@ -28,6 +29,7 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
 
   // build layers
   let trafficLayer = new MapLayer(mapView, new google.maps.TrafficLayer());
+  let nowcastLayer = new NowcastLayer(mapView);
 
   /* handle map events */
   mapView.on('maptypeid_changed', () => {
@@ -49,6 +51,7 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
     trafficLayer.setVisible(state);
   });
   handleStateChanged(document.getElementById('swWeather'), state => {
+    nowcastLayer.setVisible(state);
   });
   $('#place-search').focusin(() => {
     let w = $('#place-search').width();

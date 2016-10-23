@@ -70,6 +70,9 @@ class MapView{
   hideLayer(layer){
     layer.setMap(null);
   }
+  getMapOverlays(){
+    return this.map.overlayMapTypes;
+  }
   getMapType(){
     return this.map.getMapTypeId();
   }
