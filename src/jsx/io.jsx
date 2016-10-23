@@ -30,7 +30,7 @@ class IoSession{
     window.addEventListener('hashchange', () => {
       let id = Hash.info().id;
       // clear label style
-      that.markers.values()
+      this.markers.values()
         .filter(m => ~(m.labelClass||'').indexOf('looking'))
         .forEach(i => i.setOptions({labelClass: 'labels'}));
       // update label style

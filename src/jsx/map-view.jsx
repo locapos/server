@@ -1,7 +1,8 @@
 'use strict';
 
 const MapStyles = require('./map-styles.jsx')
-    , MapParams = require('./map-params.jsx');
+    , MapParams = require('./map-params.jsx')
+    , Hash = require('./hash.jsx');
 
 class MapView{
   constructor(dom){
