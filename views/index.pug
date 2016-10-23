@@ -3,19 +3,34 @@ html
   head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='viewport', content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no')
+    meta(name='apple-mobile-web-app-capable', content='yes')
     meta(name='theme-color', content='#4DB6AC')
     link(rel='stylesheet', href='https://fonts.googleapis.com/icon?family=Material+Icons')
     link(rel='stylesheet', href='https://code.getmdl.io/1.1.3/material.indigo-pink.min.css')
     link(rel='stylesheet', href='/css/map.css')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.js', defer)
     script(src='https://code.getmdl.io/1.1.3/material.min.js', defer)
     title Location Overview
   body
-    #map-canvas: p "loading..."
+    .mdl-layout.mdl-js-layout.layout-root.mdl-layout--fixed-header
+      #search-bar.search-wrapper.mdl-layout__header: .additional-control.search-bar
+          button.mdl-js-button.mdl-js-ripple-effect.mdl-layout__drawer-button
+            i.material-icons menu
+          form#search-form: input#place-search(placeholder='Search in locapos')
+      .mdl-layout__drawer
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swMapMode')
+          span.mdl-switch__label Night Mode
+          input.mdl-switch__input#swMapMode(type='checkbox')
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swTraffic')
+          span.mdl-switch__label Traffic Layer
+          input.mdl-switch__input#swTraffic(type='checkbox')
+        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swWeather')
+          span.mdl-switch__label Weather Layer
+          input.mdl-switch__input#swWeather(type='checkbox')
+      .mdl-layout__content
+        #map-canvas: p "loading..."
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.min.js')
-    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCdl30sDo_R0-BiwMJvhro9Az1VS1ISI0w')
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyCdl30sDo_R0-BiwMJvhro9Az1VS1ISI0w&libraries=places')
     script(src='https://cdn.sobekrepository.org/includes/gmaps-markerwithlabel/1.9.1/gmaps-markerwithlabel-1.9.1.min.js')
-    script(src='/js/dom.js')
-    script(src='/js/map.js')
-    script(src='/js/hash.js')
-    script(src='/js/io.js')
+    script(src='/js/app.js')

@@ -1,2 +1,4 @@
 node_modules
 public/components
+*.swp
+public/js/*.js
