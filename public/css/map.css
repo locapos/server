@@ -1,4 +1,5 @@
-html, body, #map-canvas
+html, body, #map-canvas, 
+.layout-root, .layout-root .mdl-layout__content
 {
   height: 100%;
   margin: 0;
@@ -54,7 +55,7 @@ html, body, #map-canvas
 
 #search-bar button{
   color: #000;
-  margin: 10px 12px;
+  margin: 8px;
   padding: 0px;
   text-align: center;
 }
@@ -82,10 +83,7 @@ html, body, #map-canvas
   width: 100%;
   height: 100%;
   padding: 0px;
-}
-
-.layout-root, .layout-root .mdl-layout__content {
-  height: 100%;
+  padding-right: 10px;
 }
 
 .mdl-layout__drawer label {
