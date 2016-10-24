@@ -75,6 +75,7 @@ html, body, #map-canvas,
 .search-bar form{
   margin-left: 58px;
   padding-left: 6px;
+  padding-right: 10px;
   height: 100%;
 }
 
@@ -83,7 +84,6 @@ html, body, #map-canvas,
   width: 100%;
   height: 100%;
   padding: 0px;
-  padding-right: 10px;
 }
 
 .mdl-layout__drawer label {
