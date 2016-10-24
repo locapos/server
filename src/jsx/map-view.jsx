@@ -16,8 +16,9 @@ class MapView{
   createMarkerIcon(type, angle){
     let x = parseInt(angle) % 19;
     let y = ~~(parseInt(angle) / 19);
+    let scale = ~~window.devicePixelRatio < 2 ? '' : '@2x';
     return {
-      url: '/res/0/0.png',
+      url: `/res/0/0${scale}.png`,
       scaledSize: new google.maps.Size(608, 608),
       size: new google.maps.Size(32, 32),
       origin: new google.maps.Point(x * 32, y * 32),
