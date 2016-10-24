@@ -14,10 +14,13 @@ class MapView{
     return map;
   }
   createMarkerIcon(type, angle){
+    let x = parseInt(angle) % 19;
+    let y = ~~(parseInt(angle) / 19);
     return {
-      url: '/res/0/' + parseInt(angle) + '.png',
-      scaledSize: new google.maps.Size(32, 32),
-      origin: new google.maps.Point(0, 0),
+      url: '/res/0/0.png',
+      scaledSize: new google.maps.Size(608, 608),
+      size: new google.maps.Size(32, 32),
+      origin: new google.maps.Point(x * 32, y * 32),
       anchor: new google.maps.Point(16, 16)
     };
   }
