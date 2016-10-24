@@ -34,9 +34,9 @@ class IoSession{
         .filter(m => ~(m.labelClass||'').indexOf('looking'))
         .forEach(i => i.setOptions({labelClass: 'labels'}));
       // update label style
-      if(!id || !markers[id]){ return; }
-      markers[id].setOptions({labelClass: 'labels looking'});
-      MapView.moveCenterTo(markers[id]);
+      if(!id || !this.markers.containsKey(id)){ return; }
+      this.markers.get(id).setOptions({labelClass: 'labels looking'});
+      MapView.moveCenterTo(this.markers.get(id));
     });
   
     window.setTimeout(() => socket.emit('sync'), 2.5 * 60 * 1000); // send sync request every 2.5 minutes

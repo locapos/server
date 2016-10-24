@@ -45,4 +45,12 @@ Markers.prototype.values = function(){
   return Object.values(this.markers);
 };
 
+Markers.prototype.containsKey = function(key){
+  return this.markers[key] !== undefined;
+}
+
+Markers.prototype.get = function(key){
+  return this.markers[key];
+}
+
 module.exports = Markers;
