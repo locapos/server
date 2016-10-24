@@ -5,7 +5,7 @@ const router = require('express').Router();
 const hashgen = require('../lib/hashgen.js')
     , db = require('../lib/db.js')
     , SqlDb = require('../lib/sqldb.js')
-    , sdb = new SqlDb('./db/clients.sqlite3')
+    , sdb = new SqlDb()
     , Q = require('q')
     , crypto = require('crypto');
 
@@ -17,10 +17,10 @@ router.get('/gentoken', (req, res) => {
   if(!req.query.id) return res.sendStatus(400);
   let avatar = req.query.avatar || '';
 
-  sdb.get().then(d => d.all('SELECT * FROM secrets WHERE secret = ?', req.query.client_id))
-    .then(ids => ids.length == 0 ? (() => { throw 400; })() : Q(ids[0]))
+  sdb.select('secrets', {client_id: req.query.client_id})
+    .then(ids => ids.length == 0 ? (() => { throw 400; })() : Q(ids[0].secret))
     .then(secret => {
-      let hmac = crypto.createHmac('sha256', secret.appsecret);
+      let hmac = crypto.createHmac('sha256', secret);
       hmac.update(req.query.client_id + req.query.service + req.query.id);
       let sig = hmac.digest('base64');
       if(sig != req.query.signature){ throw 401; }

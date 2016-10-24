@@ -5,7 +5,7 @@ const router = require('express').Router();
 const hashgen = require('../lib/hashgen.js')
     , db = require('../lib/db.js')
     , SqlDb = require('../lib/sqldb.js')
-    , sdb = new SqlDb('./db/clients.sqlite3')
+    , sdb = new SqlDb()
     , Q = require('q');
 
 router.get('/authorize', (req, res) => {
@@ -14,7 +14,7 @@ router.get('/authorize', (req, res) => {
   if(!req.query.redirect_uri) return res.sendStatus(400);
   if(!req.query.client_id) return res.sendStatus(400);
 
-  sdb.get().then(d => d.all('SELECT * FROM secrets WHERE secret = ?', req.query.client_id))
+  sdb.select('secrets', {client_id: req.query.client_id})
     .then(ids => ids.length == 0 ? (function(){throw 400})() : Q(''))
     .then(_ => Q.ninvoke(req.session, 'regenerate'))
     .then(_ => {
