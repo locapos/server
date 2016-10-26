@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "watch": "webpack --watch",
-    "postinstall": "npm run build"
+    "watch": "webpack --watch"
   },
   "author": "",
   "license": "MIT",
@@ -20,6 +19,7 @@
     "passport-facebook": "^2.0.0",
     "passport-github": "^1.0.0",
     "passport-google-oauth": "^0.2.0",
+    "passport-line": "0.0.1",
     "passport-twitter": "^1.0.3",
     "passport-windowslive": "^1.0.1",
     "promise-redis": "0.0.5",
