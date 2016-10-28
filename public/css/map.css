@@ -40,7 +40,7 @@ html, body, #map-canvas,
   box-shadow: none;
 }
 
-.additional-control.search-bar{
+#search-bar .additional-control{
   padding: 0px;
   min-height: 0px;
   height: 48px;
@@ -55,6 +55,7 @@ html, body, #map-canvas,
 
 #search-bar button{
   color: #000;
+  background-color: transparent;
   margin: 8px;
   padding: 0px;
   text-align: center;
@@ -62,6 +63,18 @@ html, body, #map-canvas,
 
 #search-bar input {
   font-size: 15px;
+}
+
+#search-bar input::-ms-clear {
+  display: none;
+}
+
+#search-bar button#clear {
+  display: none;
+}
+
+#search-bar input:focus + button#clear {
+  display: block;
 }
 
 #search-bar button:focus{
@@ -72,14 +85,14 @@ html, body, #map-canvas,
   outline: 0px;
 }
 
-.search-bar form{
+#search-bar form{
   margin-left: 58px;
   padding-left: 6px;
   padding-right: 10px;
   height: 100%;
 }
 
-.search-bar form input{
+#search-bar form input{
   border: none;
   width: 100%;
   height: 100%;
@@ -98,13 +111,9 @@ html, body, #map-canvas,
 }
 
 @media screen and (max-width: 480px) {
-  .additional-control.search-bar{
+  #search-bar .additional-control{
     max-width: 9999px;
   }
-}
-
-.pac-container {
-  margin-left: -64px;
 }
 
 .night .search-bar, .night input {
@@ -116,26 +125,50 @@ html, body, #map-canvas,
   color: #ccc;
 }
 
-.pac-container.night {
-  border-top-color: #666;
+/* styles for complexed search implementations */
+
+#search-bar .ui-autocomplete {
+  margin-left: 8px;
+  left: 0px !important;
+  white-space: nowrap;
+}
+
+#search-bar .ui-menu-item {
+  font-size: 13px;
+}
+
+@media screen and (max-width: 600px) {
+  #search-bar .ui-menu-item {
+    font-size: 15px;
+  }
+}
+
+#search-bar .ui-menu-item > span {
+  display: block;
+  padding: 4px 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#search-bar .ui-menu-item i.fa {
+  font-size: 16px;
+  margin-right: 8px;
+}
+
+#search-bar .ui-menu-item span.secondary {
+  margin-left: 8px;
+  opacity: 0.5;
+}
+
+#search-bar .ui-menu-item:hover {
+  background-color: #5070D0;
+  color: #FFF;
+}
+
+/* styles for night mode */
+#search-bar .ui-autocomplete.night{
   background-color: #405060;
-}
-
-.pac-container.night .pac-item{
-  border-top-color: #777;
-}
-
-.pac-container.night .pac-item:hover{
-  background-color: #607080;
-}
-
-.pac-container.night .pac-item-query{
   color: #ccc;
+  border-color: #666;
 }
 
-.pac-container.night .pac-item-query .pac-matched{
-  color: #fff;
-}
-.pac-container.pac-logo.night:after{
-  color #ccc;
-}

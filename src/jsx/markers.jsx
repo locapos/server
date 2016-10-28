@@ -21,6 +21,7 @@ Markers.prototype.update = function(obj){
   };
   if(this.markers[key] === undefined){
     this.markers[key] = this.map.createLabeledMarker(opt);
+    this.markers[key].rawValue = obj;
   }else{
     this.map.createTrackingDot(this.markers[key]);
     this.markers[key].setOptions(opt);
@@ -42,7 +43,7 @@ Markers.prototype.keys = function(){
 };
 
 Markers.prototype.values = function(){
-  return Object.values(this.markers);
+  return Object.keys(this.markers).map(k => this.markers[k]);
 };
 
 Markers.prototype.containsKey = function(key){

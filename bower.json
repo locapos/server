@@ -17,6 +17,7 @@
     "tests"
   ],
   "dependencies": {
-    "Umi": "~3.3.6-1"
+    "Umi": "~3.3.6-1",
+    "Add-Clear": "add-clear#^2.0.5"
   }
 }
