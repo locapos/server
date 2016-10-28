@@ -1,3 +1,5 @@
+include ./mdl/switch.pug
+
 doctype
 html
   head
@@ -20,15 +22,9 @@ html
             i.material-icons menu
           form#search-form: input#place-search(placeholder='Search in locapos')
       .mdl-layout__drawer
-        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swMapMode')
-          span.mdl-switch__label Night Mode
-          input.mdl-switch__input#swMapMode(type='checkbox')
-        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swTraffic')
-          span.mdl-switch__label Traffic Layer
-          input.mdl-switch__input#swTraffic(type='checkbox')
-        label.mdl-switch.mdl-js-switch.mdl-js-ripple-effect(for='swWeather')
-          span.mdl-switch__label Weather Layer
-          input.mdl-switch__input#swWeather(type='checkbox')
+        .nav-switch: +mdlSwitch('swMapMode', 'Night Mode')
+        .nav-switch: +mdlSwitch('swTraffic', 'Traffic Layer')
+        .nav-switch: +mdlSwitch('swWeather', 'Weather Layer')
       .mdl-layout__content
         #map-canvas: p "loading..."
     script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.6/socket.io.min.js')

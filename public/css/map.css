@@ -86,7 +86,7 @@ html, body, #map-canvas,
   padding: 0px;
 }
 
-.mdl-layout__drawer label {
+.nav-switch {
   margin: 10px;
   height: 48px;
 }
