@@ -4,7 +4,7 @@ class CustomLayer{
   constructor(mapView){
     this.map = mapView;
     this.layer = new google.maps.ImageMapType({
-      getTileUrl: (coord, zoom) => this.getTileUrl(coord, zoom),{
+      getTileUrl: (coord, zoom) => this.getTileUrl(coord, zoom),
       tileSize: new google.maps.Size(256, 256),
       opacity: 0.5,
       isPng: true
