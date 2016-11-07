@@ -2,6 +2,7 @@
 
 const MapView = require('./map-view.jsx')
     , MapParams = require('./map-params.jsx')
+    , Markers = require('./markers.jsx')
     , MapLayer = require('./map-layer.jsx')
     , NowcastLayer = require('./nowcast-layer.jsx')
     , Events = require('./events.jsx')
@@ -18,13 +19,15 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   /* setup map */
   let canvas = document.getElementById('map-canvas');
   let mapView = new MapView(canvas);
+  let markers = new Markers(mapView);
 
   // layout parts
   let searchBox = document.getElementById('search-bar');
   mapView.addControl(google.maps.ControlPosition.LEFT_TOP, searchBox);
   searchBox.style.display = 'block';
   let placeSearch = document.getElementById('place-search');
-  mapView.enableAutoComplete(placeSearch);
+  mapView.enableAutoComplete(placeSearch, markers);
+  $(placeSearch).addClear();
   document.getElementById('search-form').onsubmit = () => false;
 
   // build layers
@@ -38,10 +41,10 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
     $('swMapMode').prop('checked', state);
     if(state){
       $('#search-bar').addClass('night');
-      $('.pac-container').addClass('night');
+      $('#search-bar .ui-autocomplete').addClass('night');
     }else{
       $('#search-bar').removeClass('night');
-      $('.pac-container').removeClass('night');
+      $('#search-bar .ui-autocomplete').removeClass('night');
     }
   });
   handleStateChanged(document.getElementById('swMapMode'), state => {
@@ -53,9 +56,10 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   handleStateChanged(document.getElementById('swWeather'), state => {
     nowcastLayer.setVisible(state);
   });
-  $('#place-search').focusin(() => {
-    let w = $('#place-search').width();
-    $('.pac-container').css('min-width', `${w + 64}px`);
+  $(placeSearch).focusin(() => {
+    let w = $('.search-bar').width();
+    $('.ui-autocomplete').css('min-width', `${w}px`);
+    $('.ui-autocomplete').css('max-width', `${w}px`);
   });
 
   // Require: Firefox or Chrome(need experimental flags)
@@ -69,5 +73,5 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
     mapView.setMapType(mode);
   });
 
-  (new Io(mapView)).start();
+  (new Io(markers)).start();
 });
