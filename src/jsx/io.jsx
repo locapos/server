@@ -1,11 +1,10 @@
 'use strict';
 
-const Markers = require('./markers.jsx')
-    , Hash = require('./hash.jsx');
+const Hash = require('./hash.jsx');
 
 class IoSession{
-  constructor(map){
-    this.markers = new Markers(map);
+  constructor(markers){
+    this.markers = markers;
   }
 
   start(){
