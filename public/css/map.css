@@ -172,3 +172,12 @@ html, body, #map-canvas,
   border-color: #666;
 }
 
+#focus_trick {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}

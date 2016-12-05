@@ -48,7 +48,7 @@ class Autocomplete{
       Hash.setInfo({id: ui.item.userId});
       this.map.setCenter(new google.maps.LatLng(ui.item.raw.latitude, ui.item.raw.longitude));
     }
-    window.setTimeout(() => this.element.blur(), 0);
+    window.setTimeout(() => $('#focus_trick').focus(), 0);
   }
 
   runQuery(req, callback){
