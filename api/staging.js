@@ -28,7 +28,7 @@ router.get('/gentoken', (req, res) => {
         id: req.query.id, provider: req.query.service, avatar: avatar});
     })
     .then(user => {
-      let prefix = hashgen.hmac(`${user.provider}:${user.id}`, process.env.CryptoHashKey);
+      let prefix = hashgen.hmac(`${req.query.client_id}:${user.provider}:${user.id}`, process.env.CryptoHashKey);
       let token = `${prefix}!${hashgen.hash()}`;
       return db.searchUserToken(prefix)
         .then(v => {

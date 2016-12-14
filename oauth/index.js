@@ -19,6 +19,7 @@ router.get('/authorize', (req, res) => {
     .then(_ => Q.ninvoke(req.session, 'regenerate'))
     .then(_ => {
       // manage session
+      req.session.clien_id = req.query.client_id;
       req.session.redirect_uri = req.query.redirect_uri;
       req.session.state = req.query.state || '';
       res.render('oauth/authorize');
@@ -29,7 +30,7 @@ router.get('/authorize', (req, res) => {
 router.get('/redirect', (req, res) => {
   let uri = req.session.redirect_uri;
   if(!uri) return res.sendStatus(400);
-  let prefix = hashgen.hmac(`${req.user.provider}:${req.user.id}`, process.env.CryptoHashKey);
+  let prefix = hashgen.hmac(`${req.session.client_id}:${req.user.provider}:${req.user.id}`, process.env.CryptoHashKey);
   let token = `${prefix}!${hashgen.hash()}`;
   let state = encodeURIComponent(req.session.state || '');
   let redirect = `${uri}#access_token=${encodeURIComponent(token)}&token_type=bearer&state=${state}`;
