@@ -75,6 +75,48 @@ class MapView{
   setMapType(type){
     this.map.setMapTypeId(type);
   }
+  enableLocation(){
+    if(!("geolocation" in navigator)){
+      return;
+    }
+    const watchId = navigator.geolocation.watchPosition(position => {
+      this.updateLocation(position.coords);
+    });
+  }
+  updateLocation(coords){
+    const position = new google.maps.LatLng(coords.latitude, coords.longitude);
+    if(!this.currentLocation){
+      // create accuracy circle
+      const circle = new google.maps.Circle({
+        center: position,
+        map: this.map,
+        radius: coords.accuracy,
+        fillColor: '#4187f5',
+        fillOpacity: 0.2,
+        strokeOpacity: 0,
+      });
+      // create current location marker
+      const image = {
+        url: '/img/pos.png',
+        size: new google.maps.Size(26, 26),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(7.5, 7.5),
+        scaledSize: new google.maps.Size(13, 13),
+      }
+      const marker = new google.maps.Marker({
+        position: position,
+        map: this.map,
+        icon: image,
+        zIndex: 0xfffffffff,
+      });
+      // bind property
+      circle.bindTo('center', marker, 'position');
+      this.currentLocation = marker;
+      this.currentLocation.accuracy = circle;
+    }
+    this.currentLocation.position = position;
+    this.currentLocation.accuracy.radius = coords.accuracy;
+  }
   on(event, handler){
     google.maps.event.addListener(this.map, event, handler);
   }

@@ -27,6 +27,7 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   searchBox.style.display = 'block';
   let placeSearch = document.getElementById('place-search');
   mapView.enableAutoComplete(placeSearch, markers);
+  mapView.enableLocation();
   $(placeSearch).addClear();
   document.getElementById('search-form').onsubmit = () => false;
 
