@@ -30,8 +30,6 @@ if(!process.env.GITHUB_CLIENT_ID) throw 'Env `GITHUB_CLIENT_ID` is not set';
 if(!process.env.GITHUB_CLIENT_SECRET) throw 'Env `GITHUB_CLIENT_SECRET` is not set';
 if(!process.env.GOOGLE_CLIENT_ID) throw 'Env `GOOGLE_CLIENT_ID` is not set';
 if(!process.env.GOOGLE_CLIENT_SECRET) throw 'Env `GOOGLE_CLIENT_SECRET` is not set';
-if(!process.env.TWITTER_CONSUMER_KEY) throw 'Env `TWITTER_CONSUMER_KEY` is not set';
-if(!process.env.TWITTER_CONSUMER_SECRET) throw 'Env `TWITTER_CONSUMER_SECRET` is not set';
 if(!process.env.WINDOWS_LIVE_CLIENT_ID) throw 'Env `WINDOWS_LIVE_CLIENT_ID` is not set';
 if(!process.env.WINDOWS_LIVE_CLIENT_SECRET) throw 'Env `WINDOWS_LIVE_CLIENT_SECRET` is not set';
 
