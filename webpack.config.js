@@ -10,17 +10,24 @@ module.exports = {
     filename: '[name].js'
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin()
+    // new webpack.optimize.UglifyJsPlugin()
   ],
+  optimization: {
+    minimize: true,
+  },
   module: {
-    loaders: [
+    rules: [
       { 
         test: /\.jsx$/, 
         exclude: /node_modules/, 
-        loader: "babel", 
-        query:{
-          presets: ['react', 'es2015']
-        }
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+            }
+          }
+        ]
       }
     ]
   }
