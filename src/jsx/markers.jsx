@@ -13,7 +13,7 @@ Markers.prototype.update = function(obj){
   let opt = {
     position: new google.maps.LatLng(obj.latitude, obj.longitude),
     icon: icon,
-    labelContent: obj.name,
+    labelContent: obj.name || '(undefined)',
     labelAnchor: new google.maps.Point(32, -10),
     labelClass: 'labels ' + (Hash.isLooking(key) ? 'looking' : ''),
     labelStyle: {opacity: 0.75},
