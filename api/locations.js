@@ -13,7 +13,8 @@ router.post('/update', enforce, (req, res) => {
     name: req.user.username,
     latitude: parseFloat(req.body.latitude),
     longitude: parseFloat(req.body.longitude),
-    heading: parseFloat(req.body.heading) % 360
+    heading: parseFloat(req.body.heading) % 360,
+    posMode: req.body.posMode,
   };
   let group = req.body.key || '';
   let isprivate = req.body.private || '0';
