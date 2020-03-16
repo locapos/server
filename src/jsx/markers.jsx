@@ -23,7 +23,7 @@ Markers.prototype.update = function(obj){
     this.markers[key] = this.map.createLabeledMarker(opt);
     this.markers[key].rawValue = obj;
   }else{
-    this.map.createTrackingDot(this.markers[key]);
+    this.map.createTrackingDot(this.markers[key], obj.posMode || 'A');
     this.markers[key].setOptions(opt);
   }
   if(Hash.isLooking(key)){

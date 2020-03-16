@@ -26,14 +26,15 @@ class MapView{
       anchor: new google.maps.Point(16, 16)
     };
   }
-  createTrackingDot(_origin){
+  createTrackingDot(_origin, mode){
     // check visible bounds
     if(!this.map.getBounds().contains(_origin.getPosition())){
       return;
     }
     // create tracking dot
+    const m = mode == 'E' ? 'E' : 'A';
     let icon = {
-      url: '/res/99/0.png',
+      url: `/res/99/${m}.png`,
       scaledSize: new google.maps.Size(4, 4),
       origin: new google.maps.Point(0, 0),
       anchor: new google.maps.Point(2, 2)
