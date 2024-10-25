@@ -11,6 +11,7 @@ class MapView{
   }
   buildMap(dom){
     let map = new google.maps.Map(dom, (new MapParams()).get());
+    map.set('isFractionalZoomEnabled', true);
     map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, {name: MapParams.NIGHT_MODE}));
     return map;
   }
@@ -83,6 +84,12 @@ class MapView{
     const watchId = navigator.geolocation.watchPosition(position => {
       this.updateLocation(position.coords);
     });
+  }
+  setTilt(tilt){
+    this.map.setTilt(tilt);
+  }
+  getTilt(){
+    return this.map.getTilt();
   }
   updateLocation(coords){
     const position = new google.maps.LatLng(coords.latitude, coords.longitude);

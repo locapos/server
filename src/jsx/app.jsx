@@ -51,9 +51,10 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   handleStateChanged(document.getElementById('swMapMode'), state => {
     mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
   });
-  handleStateChanged(document.getElementById('swSatellite', state => {
+  handleStateChanged(document.getElementById('swSatellite'), state => {
     mapView.setMapType(state ? google.maps.MapTypeId.SATELLITE : google.maps.MapTypeId.ROADMAP);
-  }));
+    mapView.setTilt(0);
+  });
   handleStateChanged(document.getElementById('swTraffic'), state => {
     trafficLayer.setVisible(state);
   });

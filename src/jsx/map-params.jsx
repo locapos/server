@@ -29,11 +29,12 @@ class MapParams {
       mapTypeControl: false,
       streetViewControl: false,
       scaleControl: true,
-      mapTypeControlOptions: { mapTypeIds: ids }
+      mapTypeControlOptions: { mapTypeIds: ids },
+      mapId: "2b801dd0b48c1f30"
     };
   }
 }
 
-MapParams.NIGHT_MODE = 'NightMode';
+MapParams.NIGHT_MODE = 'Night Mode';
 
 module.exports = MapParams;
