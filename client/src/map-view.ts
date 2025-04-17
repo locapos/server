@@ -1,24 +1,30 @@
-'use strict';
+import MapStyles from './map-styles';
+import MapParams from './map-params';
+import Autocomplete from './autocomplete';
+import Hash from './hash';
+import Markers from './markers';
+import { MarkerWithLabel, MarkerWithLabelOptions } from '@googlemaps/markerwithlabel';
 
-const MapStyles = require('./map-styles.jsx')
-    , MapParams = require('./map-params.jsx')
-    , Autocomplete = require('./autocomplete.jsx')
-    , Hash = require('./hash.jsx');
+export default class MapView {
+  private map: google.maps.Map;
+  private currentLocation: google.maps.Marker | null = null;
+  private currentAccuracy: google.maps.Circle | null = null;
 
-class MapView{
-  constructor(dom){
+  constructor(dom: HTMLElement) {
     this.map = this.buildMap(dom);
   }
-  buildMap(dom){
-    let map = new google.maps.Map(dom, (new MapParams()).get());
+
+  buildMap(dom: HTMLElement) {
+    const map = new google.maps.Map(dom, (new MapParams()).get());
     map.set('isFractionalZoomEnabled', true);
-    map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, {name: MapParams.NIGHT_MODE}));
+    map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, { name: MapParams.NIGHT_MODE }));
     return map;
   }
-  createMarkerIcon(type, angle){
-    let x = parseInt(angle) % 19;
-    let y = ~~(parseInt(angle) / 19);
-    let scale = ~~window.devicePixelRatio < 2 ? '' : '@2x';
+
+  createMarkerIcon(_type: unknown, angle: string) {
+    const x = parseInt(angle) % 19;
+    const y = ~~(parseInt(angle) / 19);
+    const scale = ~~window.devicePixelRatio < 2 ? '' : '@2x';
     return {
       url: `/res/0/0${scale}.png`,
       scaledSize: new google.maps.Size(608, 608),
@@ -27,73 +33,87 @@ class MapView{
       anchor: new google.maps.Point(16, 16)
     };
   }
-  createTrackingDot(_origin, mode){
+
+  createTrackingDot(origin: google.maps.Marker, mode: string) {
     // check visible bounds
-    if(!this.map.getBounds().contains(_origin.getPosition())){
+    if (!this.map.getBounds()?.contains(origin.getPosition()!)) {
       return;
     }
     // create tracking dot
     const m = mode == 'E' ? 'E' : 'A';
-    let icon = {
+    const icon = {
       url: `/res/99/${m}.png`,
       scaledSize: new google.maps.Size(4, 4),
       origin: new google.maps.Point(0, 0),
       anchor: new google.maps.Point(2, 2)
     }
-    let dot = new google.maps.Marker({
-      position: _origin.getPosition(),
+    const dot = new google.maps.Marker({
+      position: origin.getPosition()!,
       icon: icon
     });
     dot.setMap(this.map);
   }
-  moveCenterTo(_marker){
-    this.map.setCenter(_marker.getPosition());
+
+  moveCenterTo(marker: google.maps.Marker) {
+    this.map.setCenter(marker.getPosition()!);
   }
-  createLabeledMarker(opt){
-    let marker = new MarkerWithLabel(opt);
+
+  createLabeledMarker(opt: MarkerWithLabelOptions & { key: string }) {
+    const marker = new MarkerWithLabel(opt);
     marker.setMap(this.map);
-    marker.addListener('click', function(){ Hash.toggleLookingFor(opt.key); });
+    marker.addListener('click', function () { Hash.toggleLookingFor(opt.key); });
     return marker;
   }
-  enableAutoComplete(element, markers){
-    let autocomplete = new Autocomplete(this.map, markers);
+
+  enableAutoComplete(element, markers: Markers) {
+    const autocomplete = new Autocomplete(this.map, markers);
     autocomplete.enable(element);
   }
-  addControl(placement, control){
+
+  addControl(placement, control) {
     this.map.controls[placement].push(control);
   }
-  showLayer(layer){
+
+  showLayer(layer) {
     layer.setMap(this.map);
   }
-  hideLayer(layer){
+
+  hideLayer(layer) {
     layer.setMap(null);
   }
-  getMapOverlays(){
+
+  getMapOverlays() {
     return this.map.overlayMapTypes;
   }
-  getMapType(){
+
+  getMapType() {
     return this.map.getMapTypeId();
   }
-  setMapType(type){
+
+  setMapType(type) {
     this.map.setMapTypeId(type);
   }
-  enableLocation(){
-    if(!("geolocation" in navigator)){
+
+  enableLocation() {
+    if (!("geolocation" in navigator)) {
       return;
     }
     const watchId = navigator.geolocation.watchPosition(position => {
       this.updateLocation(position.coords);
     });
   }
-  setTilt(tilt){
+
+  setTilt(tilt: number) {
     this.map.setTilt(tilt);
   }
-  getTilt(){
+
+  getTilt() {
     return this.map.getTilt();
   }
-  updateLocation(coords){
+
+  updateLocation(coords: GeolocationCoordinates) {
     const position = new google.maps.LatLng(coords.latitude, coords.longitude);
-    if(!this.currentLocation){
+    if (!this.currentLocation || !this.currentAccuracy) {
       // create accuracy circle
       const circle = new google.maps.Circle({
         center: position,
@@ -120,14 +140,13 @@ class MapView{
       // bind property
       circle.bindTo('center', marker, 'position');
       this.currentLocation = marker;
-      this.currentLocation.accuracy = circle;
+      this.currentAccuracy = circle;
     }
-    this.currentLocation.position = position;
-    this.currentLocation.accuracy.radius = coords.accuracy;
+    this.currentLocation.setPosition(position);
+    this.currentAccuracy.setRadius(coords.accuracy);
   }
-  on(event, handler){
+
+  on(event: string, handler: Function) {
     google.maps.event.addListener(this.map, event, handler);
   }
 }
-
-module.exports = MapView;

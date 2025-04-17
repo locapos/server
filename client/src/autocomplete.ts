@@ -1,64 +1,74 @@
-'use strict';
+import Hash from './hash';
+import Markers from './markers';
 
-const Hash = require('./hash.jsx');
+type AutocompleteItem = {
+  label: string;
+  secondary: string;
+  value: string;
+  type: "user" | "map-marker";
+  placeId?: string;
+  userId?: string;
+  raw: any;
+};
 
-class Autocomplete{
-  constructor(map, markers){
+export default class Autocomplete {
+  private autocomplete: google.maps.places.AutocompleteService;
+  private places: google.maps.places.PlacesService;
+  private element: HTMLElement;
+
+  constructor(private map: google.maps.Map, private markers: Markers) {
     this.autocomplete = new google.maps.places.AutocompleteService();
     this.places = new google.maps.places.PlacesService(map);
-    this.map = map;
-    this.markers = markers;
-    this.prev = '';
   }
 
-  enable(element){
+  enable(element: HTMLElement) {
     this.element = element;
-    let source = (req, callback) => this.runQuery(req.term, callback);
+    const source = (req, callback) => this.runQuery(req.term, callback);
     $(this.element).autocomplete({
       source: source,
       appendTo: '#search-bar',
-      select: (a,b) => this.selectItem(a,b),
+      select: (a, b) => this.selectItem(a, b),
       open: () => {
         $('.ui-autocomplete').off('hover mouseover mouseenter');
-      }
-    })
-    .autocomplete('instance')._renderItem = (ul, item) => {
-      let secondary = $('<span>' + item.secondary + '</span>').addClass('secondary');
-      let icon = $('<i>').addClass('fa').addClass('fa-' + item.type).attr('aria-hidden', 'true');
-      let content = $('<span>' + item.label + '</span>')
+      },
+
+    }).data('ui-autocomplete')._renderItem = (ul, item) => {
+      const secondary = $('<span>' + item.secondary + '</span>').addClass('secondary');
+      const icon = $('<i>').addClass('fa').addClass('fa-' + item.type).attr('aria-hidden', 'true');
+      const content = $('<span>' + item.label + '</span>')
         .append(secondary).prepend(icon);
-      let li = $('<li></li>').append(content);
+      const li = $('<li></li>').append(content);
       li.addClass('item-' + item.type);
       return li.appendTo(ul);
     };
   }
 
-  selectItem(element, ui){
-    if(ui.item.placeId){
-      this.places.getDetails({placeId: ui.item.placeId}, (place, status) => {
-        if (!place.geometry) { return; }
+  selectItem(_element: JQueryEventObject, ui: JQueryUI.AutocompleteUIParams) {
+    if (ui.item.placeId) {
+      this.places.getDetails({ placeId: ui.item.placeId }, (place, status) => {
+        if (!place?.geometry) { return; }
         if (place.geometry.viewport) {
           this.map.fitBounds(place.geometry.viewport);
-        } else {
+        } else if (place.geometry.location) {
           this.map.setCenter(place.geometry.location);
           this.map.setZoom(17);
         }
       });
-    }else{
-      Hash.setInfo({id: ui.item.userId});
+    } else {
+      Hash.setInfo({ id: ui.item.userId });
       this.map.setCenter(new google.maps.LatLng(ui.item.raw.latitude, ui.item.raw.longitude));
     }
     window.setTimeout(() => $('#focus_trick').focus(), 0);
   }
 
-  runQuery(req, callback){
-    this.autocomplete.getPlacePredictions({input: req, bounds: this.map.getBounds()}, (results, status) => {
-      let users = this.queryUsers(req);
-      let locations = (results || []).map(x => ({
+  runQuery(req, callback) {
+    this.autocomplete.getPlacePredictions({ input: req, bounds: this.map.getBounds() }, (results, status) => {
+      const users = this.queryUsers(req);
+      const locations = (results || []).map(x => ({
         label: this.format(x.structured_formatting),
         secondary: x.structured_formatting.secondary_text,
         value: x.description,
-        type: 'map-marker',
+        type: 'map-marker' as const,
         placeId: x.place_id,
         raw: x
       }));
@@ -66,45 +76,46 @@ class Autocomplete{
     });
   }
 
-  queryUsers(req){
-    let center = this.map.getCenter();
-    let reqLower = req.toLowerCase();
+  queryUsers(req): Array<AutocompleteItem> {
+    const center = this.map.getCenter();
+    const reqLower = req.toLowerCase();
     return this.markers.values()
       .map(x => x.rawValue)
       .filter(x => ~x.name.toLowerCase().indexOf(reqLower))
       .sort((a, b) => {
+        if (!center) return 0;
         return Math.sqrt(Math.pow(center.lat() - a.latitude, 2) + Math.pow(center.lng() - a.longitude, 2))
-             - Math.sqrt(Math.pow(center.lat() - b.latitude, 2) + Math.pow(center.lng() - b.longitude, 2));
+          - Math.sqrt(Math.pow(center.lat() - b.latitude, 2) + Math.pow(center.lng() - b.longitude, 2));
       })
       .map(x => ({
         label: this.formatUser(req, x.name),
         secondary: `${x.latitude},${x.longitude}`,
         value: x.name,
-        type: 'user',
+        type: 'user' as const,
         userId: `${x.provider}:${x.id}`,
         raw: x
       }));
   }
 
-  format(item){
+  format(item) {
     let p = 0;
     let s = '';
-    for(let i = 0; i < item.main_text_matched_substrings.length; ++i){
-      let f = item.main_text_matched_substrings[i];
-      if(p < f.offset){
+    for (let i = 0; i < item.main_text_matched_substrings.length; ++i) {
+      const f = item.main_text_matched_substrings[i];
+      if (p < f.offset) {
         s += item.main_text.substring(p, f.offset - p);
       }
       s += '<strong>' + item.main_text.substring(f.offset, f.offset + f.length) + '</strong>';
       p = f.offset + f.length;
     }
-    if(p < item.main_text.length){
+    if (p < item.main_text.length) {
       s += item.main_text.substring(p);
     }
     return s;
   }
 
-  formatUser(req, name){
-    let index = name.toLowerCase().indexOf(req);
+  formatUser(req, name) {
+    const index = name.toLowerCase().indexOf(req);
     return this.format({
       main_text: name,
       main_text_matched_substrings: [
@@ -113,5 +124,3 @@ class Autocomplete{
     });
   }
 }
-
-module.exports = Autocomplete;

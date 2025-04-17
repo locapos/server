@@ -1,14 +1,10 @@
-'use strict';
-
-class Events {
-  static handleEventOnce(element, event, handler){
-    element.addEventListener(event, (function(){
-      return function f(){
+export default class Events {
+  static handleEventOnce(element: HTMLElement | Document, event: string, handler: () => void) {
+    element.addEventListener(event, (function () {
+      return function f() {
         element.removeEventListener(event, f, false);
         handler();
       };
     })());
   }
 }
-
-module.exports = Events;

@@ -1,35 +1,40 @@
-'use strict';
+import MapView from './map-view';
+import MapParams from './map-params';
+import Markers from './markers';
+import MapLayer from './map-layer';
+import NowcastLayer from './nowcast-layer';
+import Events from './events';
+import Io from './io';
+import ThemeHelper from './theme-helper';
 
-const MapView = require('./map-view.jsx')
-    , MapParams = require('./map-params.jsx')
-    , Markers = require('./markers.jsx')
-    , MapLayer = require('./map-layer.jsx')
-    , NowcastLayer = require('./nowcast-layer.jsx')
-    , Events = require('./events.jsx')
-    , Io = require('./io.jsx')
-    , ThemeHelper = require('./theme-helper.jsx');
-
-function handleStateChanged(element, handler){
-  google.maps.event.addDomListener(element, 'change', function(){
-    if(typeof(handler) === 'function') handler(element.checked);
+function handleStateChanged(element, handler) {
+  google.maps.event.addDomListener(element, 'change', function () {
+    if (typeof (handler) === 'function') handler(element.checked);
   });
 }
 
-Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
+Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
   /* setup map */
-  let canvas = document.getElementById('map-canvas');
-  let mapView = new MapView(canvas);
-  let markers = new Markers(mapView);
+  const canvas = document.getElementById('map-canvas');
+  if (!canvas) throw new Error('#map-canvas not found');
+  const mapView = new MapView(canvas);
+  const markers = new Markers(mapView);
 
   // layout parts
-  let searchBox = document.getElementById('search-bar');
+  const searchBox = document.getElementById('search-bar');
+  if (!searchBox) throw new Error('#search-bar not found');
   mapView.addControl(google.maps.ControlPosition.LEFT_TOP, searchBox);
   searchBox.style.display = 'block';
-  let placeSearch = document.getElementById('place-search');
+  const placeSearch = document.getElementById('place-search');
+  if (!placeSearch) throw new Error('#place-search not found');
   mapView.enableAutoComplete(placeSearch, markers);
   mapView.enableLocation();
-  $(placeSearch).addClear();
-  document.getElementById('search-form').onsubmit = () => false;
+  ($(placeSearch) as any).addClear();
+  const searchForm = document.getElementById('search-form');
+  if (!searchForm) throw new Error('#search-form not found');
+  searchForm.onsubmit = (e) => {
+    e.preventDefault();
+  };
 
   // build layers
   let trafficLayer = new MapLayer(mapView, new google.maps.TrafficLayer());
@@ -40,10 +45,10 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
     let state = mapView.getMapType() == MapParams.NIGHT_MODE;
     ThemeHelper.setColor(state ? "#263238" : "#4DB6AC");
     $('swMapMode').prop('checked', state);
-    if(state){
+    if (state) {
       $('#search-bar').addClass('night');
       $('#search-bar .ui-autocomplete').addClass('night');
-    }else{
+    } else {
       $('#search-bar').removeClass('night');
       $('#search-bar .ui-autocomplete').removeClass('night');
     }
@@ -68,15 +73,16 @@ Events.handleEventOnce(document, 'mdl-componentupgraded',() => {
   });
 
   // Require: Firefox or Chrome(need experimental flags)
-  let preferredMode = google.maps.MapTypeId.ROADMAP;
-  window.addEventListener('devicelight', function(event){
+  let preferredMode: string = google.maps.MapTypeId.ROADMAP;
+  window.addEventListener('devicelight', function (event) {
+    if (!("value" in event) || typeof event.value !== 'number') return;
     let mode = event.value < 45
       ? MapParams.NIGHT_MODE
       : google.maps.MapTypeId.ROADMAP;
-    if(mode === preferredMode) return;
+    if (mode === preferredMode) return;
     preferredMode = mode;
     mapView.setMapType(mode);
   });
 
-  (new Io(markers)).start();
+  (new Io(mapView, markers)).start();
 });

@@ -1,14 +1,16 @@
-'use strict';
+import MapView from "./map-view";
 
-class MapLayer {
-  constructor(view, layer){
-    this.view = view;
+export default class MapLayer {
+  private map: MapView;
+  private layer: google.maps.ImageMapType | google.maps.TrafficLayer;
+
+
+  constructor(map: MapView, layer: google.maps.ImageMapType | google.maps.TrafficLayer) {
+    this.map = map;
     this.layer = layer;
   }
-  setVisible(b){
-    if(b)this.view.showLayer(this.layer);
-    else this.view.hideLayer(this.layer);
+  setVisible(b) {
+    if (b) this.map.showLayer(this.layer);
+    else this.map.hideLayer(this.layer);
   }
 }
-
-module.exports = MapLayer;

@@ -1,9 +1,10 @@
-'use strict';
+const ThemeColor = "theme-color";
 
-class ThemeHelper {
-  static setColor(color){
-    document.head.children.namedItem("theme-color").content = color;
+export default class ThemeHelper {
+  static setColor(color) {
+    const meta = document.head.children.namedItem(ThemeColor);
+    if (meta instanceof HTMLMetaElement) {
+      meta.content = color;
+    }
   }
 }
-
-module.exports = ThemeHelper;

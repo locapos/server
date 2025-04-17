@@ -1,28 +1,30 @@
-'use strict';
+export default class MapParams {
+  static NIGHT_MODE = 'Night Mode';
 
-class MapParams {
-  parseQueryString(){
-    return this.qsCache || (this.qsCache = location.search.substr(1).split('&')
-      .map(s => s.split('='))
-      .reduce((p, c) => ((p[c[0]] = c[1]), p), {}));
+  private qsCache: URLSearchParams | null = null;
+
+  parseQueryString() {
+    if (this.qsCache) return this.qsCache;
+    return this.qsCache = new URLSearchParams(location.search);
   }
 
-  getCenter(){
-    const latitude = 35.685825
-        , longitude = 139.754441;
-    let loc = (this.parseQueryString()['center'] || '').split(',');
-    loc[0] = parseFloat(loc[0]) || latitude;
-    loc[1] = parseFloat(loc[1]) || longitude;
-    return loc;
+  getCenter() {
+    const latitude = 35.685825;
+    const longitude = 139.754441;
+    const [loc0, loc1] = (this.parseQueryString()['center'] || '').split(',');
+    return [
+      parseFloat(loc0) || latitude,
+      parseFloat(loc1) || longitude
+    ];
   }
 
-  getZoom(){
+  getZoom() {
     return parseInt(this.parseQueryString()['zoom']) || 9;
   }
 
-  get(){
-    let ids = [ google.maps.MapTypeId.ROADMAP, MapParams.NIGHT_MODE ];
-    let center = this.getCenter();
+  get() {
+    const ids = [google.maps.MapTypeId.ROADMAP, MapParams.NIGHT_MODE];
+    const center = this.getCenter();
     return {
       zoom: this.getZoom(),
       center: new google.maps.LatLng(center[0], center[1]),
@@ -34,7 +36,3 @@ class MapParams {
     };
   }
 }
-
-MapParams.NIGHT_MODE = 'Night Mode';
-
-module.exports = MapParams;

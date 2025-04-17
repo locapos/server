@@ -1,23 +1,21 @@
-'use strict';
-  
-class Hash{
-  info(){
-    let hash = location.hash.split('/');
-    return {id: hash[1]};
+class Hash {
+  info() {
+    const hash = location.hash.split('/');
+    return { id: hash[1] };
   }
 
-  setInfo(info){
+  setInfo(info) {
     location.hash = '#!/' + info.id;
   }
 
-  isLooking(id){
+  isLooking(id) {
     return id !== undefined && id === this.info().id;
   }
 
-  toggleLookingFor(id){
-    let info = {id: (this.isLooking(id) ? '' : id)};
+  toggleLookingFor(id) {
+    const info = { id: (this.isLooking(id) ? '' : id) };
     this.setInfo(info);
   }
 }
 
-module.exports = new Hash();
+export default new Hash();
