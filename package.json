@@ -1,40 +1,40 @@
 {
-  "name": "imakoko",
+  "name": "locapos-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "bower install && npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "watch": "webpack --watch"
+    "build": "npm run build:client && npm run build:templates",
+    "build:templates": "sh scripts/build-templates.sh",
+    "build:client": "npm run build:client:app && npm run build:client:static",
+    "build:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js",
+    "build:client:static": "cp -r client/static/* dist/",
+    "dev": "wrangler dev",
+    "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tmyt/locapos-server.git"
+  },
+  "keywords": [],
   "author": "",
-  "license": "MIT",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tmyt/locapos-server/issues"
+  },
+  "homepage": "https://github.com/tmyt/locapos-server#readme",
+  "description": "",
   "dependencies": {
-    "body-parser": "^1.19.0",
-    "express": "^4.17.1",
-    "express-session": "^1.16.1",
-    "passport": "^0.3.2",
-    "passport-facebook": "^2.0.0",
-    "passport-github": "^1.0.0",
-    "passport-google-oauth": "^0.2.0",
-    "passport-line": "0.0.1",
-    "passport-windowslive": "^1.0.1",
-    "promise-redis": "0.0.5",
-    "pug": "^2.0.3",
-    "pug-static": "^1.0.1",
-    "q": "^1.5.1",
-    "socket.io": "^2.2.0",
-    "sqlite": "^3.0.3"
+    "@googlemaps/markerwithlabel": "^2.0.28",
+    "hono": "^4.7.7",
+    "socket.io-client": "^4.8.1",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "@babel/preset-react": "^7.0.0",
-    "babel-loader": "^8.0.6",
-    "bower": "^1.8.8",
-    "webpack": "^4.32.2",
-    "webpack-cli": "^3.3.2"
+    "@types/google.maps": "^3.58.1",
+    "@types/jquery": "^3.5.32",
+    "@types/jqueryui": "^1.12.24",
+    "bower": "^1.8.14",
+    "esbuild": "^0.25.2",
+    "pug-cli": "^1.0.0-alpha6"
   }
 }
