@@ -1,11 +1,12 @@
 import { hash } from "../lib/hashgen";
 import { createHono } from "../lib/factory";
+import { HTTPException } from "hono/http-exception";
 
 const app = createHono();
 
 app.get("/join", async (c) => {
   const key = c.req.query("key");
-  if (!key) return c.text("key is required", 400);
+  if (!key) throw new HTTPException(400, { message: "key is required" });
   return c.redirect(`locapos-api:///join?key=${encodeURIComponent(key)}`);
 });
 

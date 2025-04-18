@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/d1";
 import { createHono } from "../lib/factory";
 import { accessTokensTable, secretsTable } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
-import { deleteCookie, setSignedCookie } from "hono/cookie";
+import { deleteCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
 import { getSession, setSession } from "../util/session";
 import { hash, hmac } from "../lib/hashgen";

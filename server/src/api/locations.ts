@@ -1,5 +1,7 @@
 import { createHono } from "../lib/factory";
 import { Location, Storage } from "../durable-objects/storage";
+import { HTTPException } from "hono/http-exception";
+import { enforce } from "../middleware/enforce";
 type UpdateRequestBody = {
   latitude: string;
   longitude: string;
@@ -11,12 +13,13 @@ type UpdateRequestBody = {
 
 const app = createHono();
 
-app.post("/update", async (c) => {
+app.post("/update", enforce, async (c) => {
   const body = await c.req.parseBody<UpdateRequestBody>();
+  const user = c.get("user");
   const obj: Location = {
-    provider: "stub_provider",
-    id: "stub_user",
-    name: "stub_name",
+    provider: user.provider,
+    id: user.id,
+    name: user.username,
     latitude: parseFloat(body.latitude),
     longitude: parseFloat(body.longitude),
     heading: parseFloat(body.heading) % 360,
@@ -25,8 +28,8 @@ app.post("/update", async (c) => {
   const group = body.key || '';
   const isPrivate = body.private === "true";
   // check values
-  if (isNaN(obj.latitude)) return c.status(400);
-  if (isNaN(obj.longitude)) return c.status(400);
+  if (isNaN(obj.latitude)) throw new HTTPException(400);
+  if (isNaN(obj.longitude)) throw new HTTPException(400);
   if (obj.heading != null && isNaN(obj.heading)) {
     obj.heading = undefined;
   }
@@ -37,7 +40,9 @@ app.post("/update", async (c) => {
   // group key must be 43 characters
   const groups = group.split(",");
   for (const g of groups) {
-    if (g.length !== 0 && g.length !== 43) return c.status(403);
+    if (g.length !== 0 && g.length !== 43) {
+      throw new HTTPException(403, { message: "group key must be 43 characters" });
+    }
   }
   // store location
   const storage = c.env.STORAGE_DO.idFromName(Storage.DEFAULT);
@@ -46,13 +51,14 @@ app.post("/update", async (c) => {
   return c.text("ok");
 });
 
-app.post("/delete", async (c) => {
+app.post("/delete", enforce, async (c) => {
   const body = await c.req.parseBody<{ key: string }>();
+  const user = c.get("user");
   const group = body.key || '0';
   // delete location
   const storage = c.env.STORAGE_DO.idFromName(Storage.DEFAULT);
   const stub = c.env.STORAGE_DO.get(storage);
-  stub.deleteLocation("stub_provider", "stub_user", group);
+  stub.deleteLocation(user.provider, user.id, group);
   return c.text("ok");
 });
 
