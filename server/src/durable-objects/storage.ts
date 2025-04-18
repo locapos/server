@@ -1,6 +1,6 @@
 
 import { DurableObject } from "cloudflare:workers";
-import { hash } from "../lib/hashgen";
+import { hash, uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
 
 export { Location } from "../repositories/LocationRepository";
@@ -32,7 +32,7 @@ export class Storage extends DurableObject<Env> {
   }
 
   async storeLocation(obj: Location, group: string, isPrivate: boolean) {
-    const primary = isPrivate ? this.getShareKey(obj) : '0';
+    const primary = isPrivate ? uniqueId(this.env, obj) : '0';
     await this.updateAndPublish(primary, obj);
     group && await this.updateAndPublish(group, obj);
   }
@@ -58,11 +58,6 @@ export class Storage extends DurableObject<Env> {
       await this.deleteAndPublish(provider, id, mapKey);
     }
     await this.schedule();
-  }
-
-  private getShareKey(user: Location): string {
-    const { provider, id } = user;
-    return hash(`${this.env.CRYPTO_HASH_KEY}${provider}${id}`, 'sha224');
   }
 
   private async updateAndPublish(group: string, obj: Location) {

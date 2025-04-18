@@ -6,8 +6,9 @@ import { and, eq, lt } from "drizzle-orm";
 
 type User = {
   id: string;
-  username: string;
   provider: string;
+  username: string;
+  default_username: string;
 };
 
 export const enforce = createMiddleware<{
@@ -44,8 +45,9 @@ export const enforce = createMiddleware<{
   // set user in context
   c.set("user", {
     id: user.id,
-    username: user.username,
     provider: user.provider,
+    username: user.username,
+    default_username: user.defaultUsername,
   });
   // chain requeset
   return next();
