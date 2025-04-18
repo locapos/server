@@ -27,7 +27,9 @@
   "description": "",
   "dependencies": {
     "@googlemaps/markerwithlabel": "^2.0.28",
+    "drizzle-orm": "^0.42.0",
     "hono": "^4.7.7",
+    "hono-session": "^1.2.0",
     "socket.io-client": "^4.8.1",
     "typescript": "^5.8.3"
   },
@@ -37,6 +39,7 @@
     "@types/jqueryui": "^1.12.24",
     "@types/node": "^22.14.1",
     "bower": "^1.8.14",
+    "drizzle-kit": "^0.31.0",
     "esbuild": "^0.25.2",
     "pug-cli": "^1.0.0-alpha6"
   }
