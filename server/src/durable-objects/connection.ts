@@ -3,6 +3,11 @@ import { DurableObject } from "cloudflare:workers";
 import { Location, Storage } from "./storage";
 
 export class Connection extends DurableObject<Env> {
+  static stub(env: Env, hash: string) {
+    const id = env.CONNECTION_DO.idFromName(hash);
+    return env.CONNECTION_DO.get(id);
+  }
+
   private connections: Map<WebSocket, WebSocket>;
 
   constructor(ctx: DurableObjectState, env: Env) {
@@ -44,8 +49,7 @@ export class Connection extends DurableObject<Env> {
   }
 
   async sync(socket: WebSocket) {
-    const storage = this.env.STORAGE_DO.idFromName(Storage.DEFAULT);
-    const stub = this.env.STORAGE_DO.get(storage);
+    const stub = Storage.stub(this.env);
     const locations = await stub.showLocations(await this.getName());
     socket.send(JSON.stringify({ event: "sync", data: locations }));
   }

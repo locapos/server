@@ -45,8 +45,7 @@ app.post("/update", enforce, async (c) => {
     }
   }
   // store location
-  const storage = c.env.STORAGE_DO.idFromName(Storage.DEFAULT);
-  const stub = c.env.STORAGE_DO.get(storage);
+  const stub = Storage.stub(c.env);
   stub.storeLocation(obj, group, isPrivate);
   return c.text("ok");
 });
@@ -56,8 +55,7 @@ app.post("/delete", enforce, async (c) => {
   const user = c.get("user");
   const group = body.key || '0';
   // delete location
-  const storage = c.env.STORAGE_DO.idFromName(Storage.DEFAULT);
-  const stub = c.env.STORAGE_DO.get(storage);
+  const stub = Storage.stub(c.env);
   stub.deleteLocation(user.provider, user.id, group);
   return c.text("ok");
 });

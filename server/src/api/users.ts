@@ -11,8 +11,7 @@ const app = createHono();
 
 app.get("/show", enforce, async (c) => {
   const key = c.req.query("key") || "0";
-  const storage = c.env.STORAGE_DO.idFromName(Storage.DEFAULT);
-  const stub = c.env.STORAGE_DO.get(storage);
+  const stub = Storage.stub(c.env);
   return c.json(stub.showLocations(key));
 });
 

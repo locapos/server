@@ -2,11 +2,16 @@
 import { DurableObject } from "cloudflare:workers";
 import { hash, uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
+import { Connection } from "./connection";
 
 export { Location } from "../repositories/LocationRepository";
 
 export class Storage extends DurableObject<Env> {
   static readonly DEFAULT = "default";
+  static stub(env: Env){
+    const id = env.STORAGE_DO.idFromName(Storage.DEFAULT);
+    return env.STORAGE_DO.get(id);
+  }
 
   private locationRepository: LocationRepository;
 
@@ -90,8 +95,7 @@ export class Storage extends DurableObject<Env> {
   private async publish(event: "update" | "delete", dataKey: PrimaryKey, location?: Location) {
     const [_, key, userId] = dataKey.split("#");
     console.log(`publish ${event} ${key} ${userId}`);
-    const connectionId = this.env.CONNECTION_DO.idFromName(key);
-    const stub = this.env.CONNECTION_DO.get(connectionId);
+    const stub = Connection.stub(this.env, key);
     switch (event) {
       case "update":
         location && await stub.onUpdate(location);
