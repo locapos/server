@@ -4,15 +4,15 @@ CREATE TABLE `access_tokens` (
 	`client_id` text NOT NULL,
 	`username` text NOT NULL,
 	`default_username` text NOT NULL,
-	`id` text,
-	`provider` text,
-	`expire_at` integer
+	`id` text NOT NULL,
+	`provider` text NOT NULL,
+	`expire_at` integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `secrets` (
 	`client_id` text PRIMARY KEY NOT NULL,
 	`secret` text NOT NULL,
-	`appname` text,
-	`author` text,
-	`callback_uri` text
+	`appname` text NOT NULL,
+	`author` text NOT NULL,
+	`callback_uri` text DEFAULT '' NOT NULL
 );

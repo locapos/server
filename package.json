@@ -29,7 +29,6 @@
     "@googlemaps/markerwithlabel": "^2.0.28",
     "drizzle-orm": "^0.42.0",
     "hono": "^4.7.7",
-    "hono-session": "^1.2.0",
     "socket.io-client": "^4.8.1",
     "typescript": "^5.8.3"
   },

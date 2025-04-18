@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "66bfb907-e9d3-426f-939b-d191c34ad4cf",
+  "id": "65383f5b-2324-4287-a1a4-bd0cfd3b3cfd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "access_tokens": {
@@ -46,21 +46,21 @@
           "name": "id",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "provider": {
           "name": "provider",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "expire_at": {
           "name": "expire_at",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
@@ -91,22 +91,23 @@
           "name": "appname",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "author": {
           "name": "author",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "callback_uri": {
           "name": "callback_uri",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
+          "notNull": true,
+          "autoincrement": false,
+          "default": "''"
         }
       },
       "indexes": {},
