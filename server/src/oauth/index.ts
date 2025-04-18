@@ -54,7 +54,7 @@ app.get("/redirect", async (c) => {
   const token = encodeURIComponent(`${prefix}!${uniqueHash}`);
   const state = encodeURIComponent(session.state || "");
   let redirect = `${uri}#access_token=${token}&token_type=bearer&state=${state}`;
-  // 
+  // put users
   const db = drizzle(c.env.SDB);
   const ids = await db.select().from(accessTokensTable).where(eq(accessTokensTable.hash, prefix));
   if (ids.length === 0) {
@@ -66,7 +66,7 @@ app.get("/redirect", async (c) => {
       id: user.id,
       username: user.name,
       defaultUsername: user.name,
-      expireAt: Math.floor(Date.now() / 1000) + 30 * 86400,
+      expireAt: Date.now() + 30 * 86400 * 1000,
     });
   } else {
     // extend token expiration

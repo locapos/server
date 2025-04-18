@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/d1";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
 import { accessTokensTable } from "../../drizzle/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, lt } from "drizzle-orm";
 
 type User = {
   id: string;
@@ -23,6 +23,9 @@ export const enforce = createMiddleware<{
   }
   // Validate token
   const [prefix, hash] = token.split("!");
+  if (!prefix || !hash) {
+    throw new HTTPException(401);
+  }
   const db = drizzle(c.env.SDB);
   const ids = await db
     .select()
@@ -31,11 +34,17 @@ export const enforce = createMiddleware<{
   if (ids.length === 0) {
     throw new HTTPException(401);
   }
-  // Get user
+  // Extend expiration
   const user = ids[0];
+  await db.update(accessTokensTable)
+    .set({ expireAt: Date.now() + 30 * 86400 * 1000 });
+  // cleanup expired tokens
+  await db.delete(accessTokensTable)
+    .where(lt(accessTokensTable.expireAt, Date.now()));
+  // set user in context
   c.set("user", {
     id: user.id,
-    username: user.username ,
+    username: user.username,
     provider: user.provider,
   });
   // chain requeset
