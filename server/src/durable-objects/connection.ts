@@ -1,6 +1,7 @@
 
 import { DurableObject } from "cloudflare:workers";
 import { Location, Storage } from "./storage";
+import { isConstructorDeclaration } from "typescript";
 
 export class Connection extends DurableObject<Env> {
   static stub(env: Env, hash: string) {
@@ -50,6 +51,7 @@ export class Connection extends DurableObject<Env> {
 
   async sync(socket: WebSocket) {
     const stub = Storage.stub(this.env);
+    console.log("sync", await this.getName());
     const locations = await stub.showLocations(await this.getName());
     socket.send(JSON.stringify({ event: "sync", data: locations }));
   }

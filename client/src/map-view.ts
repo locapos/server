@@ -4,6 +4,7 @@ import Autocomplete from './autocomplete';
 import Hash from './hash';
 import Markers from './markers';
 import { MarkerWithLabel, MarkerWithLabelOptions } from '@googlemaps/markerwithlabel';
+import { MapLayerLike } from './map-layer';
 
 export default class MapView {
   private map: google.maps.Map;
@@ -21,9 +22,9 @@ export default class MapView {
     return map;
   }
 
-  createMarkerIcon(_type: unknown, angle: string) {
-    const x = parseInt(angle) % 19;
-    const y = ~~(parseInt(angle) / 19);
+  createMarkerIcon(_type: unknown, angle: number) {
+    const x = angle % 19;
+    const y = ~~(angle / 19);
     const scale = ~~window.devicePixelRatio < 2 ? '' : '@2x';
     return {
       url: `/res/0/0${scale}.png`,
@@ -65,20 +66,20 @@ export default class MapView {
     return marker;
   }
 
-  enableAutoComplete(element, markers: Markers) {
+  enableAutoComplete(element: HTMLElement, markers: Markers) {
     const autocomplete = new Autocomplete(this.map, markers);
     autocomplete.enable(element);
   }
 
-  addControl(placement, control) {
+  addControl(placement: google.maps.ControlPosition, control: HTMLElement) {
     this.map.controls[placement].push(control);
   }
 
-  showLayer(layer) {
+  showLayer(layer: MapLayerLike) {
     layer.setMap(this.map);
   }
 
-  hideLayer(layer) {
+  hideLayer(layer: MapLayerLike) {
     layer.setMap(null);
   }
 
@@ -90,7 +91,7 @@ export default class MapView {
     return this.map.getMapTypeId();
   }
 
-  setMapType(type) {
+  setMapType(type: string) {
     this.map.setMapTypeId(type);
   }
 

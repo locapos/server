@@ -26,7 +26,8 @@ type LocationStorageType = Location & {
 
 const userId = (provider: string, id: string): UserId => `${provider}.${id}`;
 
-const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
+// const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
+const LocationLifeTime = 5 * 1000; // debug: 5 seconds
 
 const Keys = {
   primaryKey: (mapKey: string, provider: string, id: string): PrimaryKey => `locations#${mapKey}#${userId(provider, id)}`,
@@ -95,8 +96,9 @@ export class LocationRepository {
     return removed;
   }
 
-  listByMapKey(mapKey: string) {
-    return this.db.list<Location>({ prefix: Prefixes.primaryKey(mapKey) });
+  async listByMapKey(mapKey: string) {
+    console.log("listByMapKey", Prefixes.primaryKey(mapKey));
+    return (await this.db.list<Location>({ prefix: Prefixes.primaryKey(mapKey) })).values().toArray();
   }
 
   listByUserId(provider: string, id: string) {
@@ -106,6 +108,6 @@ export class LocationRepository {
   async listExpirations() {
     const now = Date.now();
     const expirations = await this.db.list<Expiration>({ prefix: Prefixes.expirations() });
-    return [...expirations.entries()].filter(([_, value]) => value.ttl < now).map(([_, value]) => value);
+    return [...expirations.entries()].filter(([_, value]) => value.ttl <= now).map(([_, value]) => value);
   }
 }

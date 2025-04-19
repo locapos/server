@@ -2,25 +2,33 @@ import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
 import Hash from './hash';
 import MapView from './map-view';
 
-type TODO = any;
+export type Location = {
+  provider: string;
+  id: string;
+  name: string;
+  latitude: number;
+  longitude: number;
+  heading: number;
+  posMode: string;
+};
 
 export default class Markers {
   private map: MapView;
-  private markers: { [key: string]: MarkerWithLabel & { rawValue?: TODO } };
+  private markers: { [key: string]: MarkerWithLabel & { rawValue?: Location } };
 
   constructor(map: MapView) {
     this.map = map;
     this.markers = {};
   }
 
-  update(obj: TODO) {
-    const key = `${obj.provider}:${obj.id}`;
+  update(obj: Location) {
+    const key = `${obj.provider}.${obj.id}`;
     const icon = this.map.createMarkerIcon(0, obj.heading);
     const opt = {
       position: new google.maps.LatLng(obj.latitude, obj.longitude),
       icon: icon,
       labelContent: obj.name || '(undefined)',
-      labelAnchor: new google.maps.Point(32, -10),
+      labelAnchor: new google.maps.Point(-32, 10),
       labelClass: 'labels ' + (Hash.isLooking(key) ? 'looking' : ''),
       labelStyle: { opacity: 0.75 },
       key: key
@@ -52,11 +60,11 @@ export default class Markers {
     return Object.keys(this.markers).map(k => this.markers[k]);
   }
 
-  containsKey(key) {
+  containsKey(key: string) {
     return this.markers[key] !== undefined;
   }
 
-  get(key) {
+  get(key: string) {
     return this.markers[key];
   }
 }

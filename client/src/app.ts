@@ -4,11 +4,11 @@ import Markers from './markers';
 import MapLayer from './map-layer';
 import NowcastLayer from './nowcast-layer';
 import Events from './events';
-import Io from './io';
 import ThemeHelper from './theme-helper';
+import { WsSession } from './ws';
 
-function handleStateChanged(element, handler) {
-  google.maps.event.addDomListener(element, 'change', function () {
+function handleStateChanged(element: HTMLFormElement, handler: (checked: boolean) => void) {
+  element.addEventListener('change', function () {
     if (typeof (handler) === 'function') handler(element.checked);
   });
 }
@@ -53,21 +53,21 @@ Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
       $('#search-bar .ui-autocomplete').removeClass('night');
     }
   });
-  handleStateChanged(document.getElementById('swMapMode'), state => {
+  handleStateChanged(document.getElementById('swMapMode') as HTMLFormElement, state => {
     mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
   });
-  handleStateChanged(document.getElementById('swSatellite'), state => {
+  handleStateChanged(document.getElementById('swSatellite') as HTMLFormElement, state => {
     mapView.setMapType(state ? google.maps.MapTypeId.SATELLITE : google.maps.MapTypeId.ROADMAP);
     mapView.setTilt(0);
   });
-  handleStateChanged(document.getElementById('swTraffic'), state => {
+  handleStateChanged(document.getElementById('swTraffic') as HTMLFormElement, state => {
     trafficLayer.setVisible(state);
   });
-  handleStateChanged(document.getElementById('swWeather'), state => {
+  handleStateChanged(document.getElementById('swWeather') as HTMLFormElement, state => {
     nowcastLayer.setVisible(state);
   });
   $(placeSearch).focusin(() => {
-    let w = $('.search-bar').width();
+    const w = $('.search-bar').width();
     $('.ui-autocomplete').css('min-width', `${w}px`);
     $('.ui-autocomplete').css('max-width', `${w}px`);
   });
@@ -84,5 +84,6 @@ Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
     mapView.setMapType(mode);
   });
 
-  (new Io(mapView, markers)).start();
+  // (new Io(mapView, markers)).start();
+  (new WsSession(mapView, markers)).start();
 });

@@ -1,15 +1,18 @@
 import MapView from "./map-view";
 
+export type MapLayerLike = {
+  setMap(map: google.maps.Map | null): void;
+}
+
 export default class MapLayer {
   private map: MapView;
-  private layer: google.maps.ImageMapType | google.maps.TrafficLayer;
+  private layer: MapLayerLike;
 
-
-  constructor(map: MapView, layer: google.maps.ImageMapType | google.maps.TrafficLayer) {
+  constructor(map: MapView, layer: MapLayerLike) {
     this.map = map;
     this.layer = layer;
   }
-  setVisible(b) {
+  setVisible(b: boolean) {
     if (b) this.map.showLayer(this.layer);
     else this.map.hideLayer(this.layer);
   }

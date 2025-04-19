@@ -1,18 +1,22 @@
+type InfoType = {
+  id: string | undefined;
+};
+
 class Hash {
-  info() {
+  info(): InfoType {
     const hash = location.hash.split('/');
     return { id: hash[1] };
   }
 
-  setInfo(info) {
+  setInfo(info: InfoType) {
     location.hash = '#!/' + info.id;
   }
 
-  isLooking(id) {
+  isLooking(id: string | undefined) {
     return id !== undefined && id === this.info().id;
   }
 
-  toggleLookingFor(id) {
+  toggleLookingFor(id: string | undefined) {
     const info = { id: (this.isLooking(id) ? '' : id) };
     this.setInfo(info);
   }

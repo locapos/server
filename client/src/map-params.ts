@@ -11,7 +11,7 @@ export default class MapParams {
   getCenter() {
     const latitude = 35.685825;
     const longitude = 139.754441;
-    const [loc0, loc1] = (this.parseQueryString()['center'] || '').split(',');
+    const [loc0, loc1] = (this.parseQueryString().get('center') || '').split(',');
     return [
       parseFloat(loc0) || latitude,
       parseFloat(loc1) || longitude
@@ -19,7 +19,7 @@ export default class MapParams {
   }
 
   getZoom() {
-    return parseInt(this.parseQueryString()['zoom']) || 9;
+    return parseInt(this.parseQueryString().get('zoom') || "9");
   }
 
   get() {

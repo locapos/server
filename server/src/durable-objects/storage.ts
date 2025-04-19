@@ -8,7 +8,7 @@ export { Location } from "../repositories/LocationRepository";
 
 export class Storage extends DurableObject<Env> {
   static readonly DEFAULT = "default";
-  static stub(env: Env){
+  static stub(env: Env) {
     const id = env.STORAGE_DO.idFromName(Storage.DEFAULT);
     return env.STORAGE_DO.get(id);
   }
@@ -32,7 +32,11 @@ export class Storage extends DurableObject<Env> {
       // 間近のExpireをスケジュールする
       const next = await locationRepository.getNextExpiration();
       if (next == null) return;
-      ctx.storage.setAlarm(next);
+      if (next <= Date.now()) {
+        setImmediate(() => this.alarm());
+      } else {
+        ctx.storage.setAlarm(next);
+      }
     });
   }
 
@@ -89,7 +93,11 @@ export class Storage extends DurableObject<Env> {
   private async schedule() {
     const next = await this.locationRepository.getNextExpiration();
     if (next == null) return;
-    this.ctx.storage.setAlarm(next);
+    if (next <= Date.now()) {
+      setImmediate(() => this.alarm());
+    } else {
+      this.ctx.storage.setAlarm(next);
+    }
   }
 
   private async publish(event: "update" | "delete", dataKey: PrimaryKey, location?: Location) {

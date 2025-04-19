@@ -9,6 +9,7 @@
     "build:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js",
     "build:client:static": "cp -r client/static/* dist/",
     "build:client:bower": "bower install",
+    "watch:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js --watch",
     "dev": "wrangler dev",
     "types:gen": "wrangler types @types/worker-configuration.d.ts",
     "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts"

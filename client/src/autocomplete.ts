@@ -14,7 +14,7 @@ type AutocompleteItem = {
 export default class Autocomplete {
   private autocomplete: google.maps.places.AutocompleteService;
   private places: google.maps.places.PlacesService;
-  private element: HTMLElement;
+  private element: HTMLElement | null = null;
 
   constructor(private map: google.maps.Map, private markers: Markers) {
     this.autocomplete = new google.maps.places.AutocompleteService();
@@ -23,7 +23,7 @@ export default class Autocomplete {
 
   enable(element: HTMLElement) {
     this.element = element;
-    const source = (req, callback) => this.runQuery(req.term, callback);
+    const source = (req: { term: string }, callback: (data: AutocompleteItem[]) => void) => this.runQuery(req.term, callback);
     $(this.element).autocomplete({
       source: source,
       appendTo: '#search-bar',
@@ -32,7 +32,7 @@ export default class Autocomplete {
         $('.ui-autocomplete').off('hover mouseover mouseenter');
       },
 
-    }).data('ui-autocomplete')._renderItem = (ul, item) => {
+    }).data('ui-autocomplete')._renderItem = (ul: JQuery, item: AutocompleteItem) => {
       const secondary = $('<span>' + item.secondary + '</span>').addClass('secondary');
       const icon = $('<i>').addClass('fa').addClass('fa-' + item.type).attr('aria-hidden', 'true');
       const content = $('<span>' + item.label + '</span>')
@@ -61,7 +61,7 @@ export default class Autocomplete {
     window.setTimeout(() => $('#focus_trick').focus(), 0);
   }
 
-  runQuery(req, callback) {
+  runQuery(req: string, callback: (data: AutocompleteItem[]) => void) {
     this.autocomplete.getPlacePredictions({ input: req, bounds: this.map.getBounds() }, (results, status) => {
       const users = this.queryUsers(req);
       const locations = (results || []).map(x => ({
@@ -76,11 +76,11 @@ export default class Autocomplete {
     });
   }
 
-  queryUsers(req): Array<AutocompleteItem> {
+  queryUsers(req: string): Array<AutocompleteItem> {
     const center = this.map.getCenter();
     const reqLower = req.toLowerCase();
     return this.markers.values()
-      .map(x => x.rawValue)
+      .map(x => x.rawValue!)
       .filter(x => ~x.name.toLowerCase().indexOf(reqLower))
       .sort((a, b) => {
         if (!center) return 0;
@@ -97,7 +97,7 @@ export default class Autocomplete {
       }));
   }
 
-  format(item) {
+  format(item: { main_text: string; main_text_matched_substrings: Array<{ offset: number; length: number }> }) {
     let p = 0;
     let s = '';
     for (let i = 0; i < item.main_text_matched_substrings.length; ++i) {
@@ -114,7 +114,7 @@ export default class Autocomplete {
     return s;
   }
 
-  formatUser(req, name) {
+  formatUser(req: string, name: string) {
     const index = name.toLowerCase().indexOf(req);
     return this.format({
       main_text: name,
