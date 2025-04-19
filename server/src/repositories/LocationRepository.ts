@@ -26,8 +26,7 @@ type LocationStorageType = Location & {
 
 const userId = (provider: string, id: string): UserId => `${provider}.${id}`;
 
-// const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
-const LocationLifeTime = 5 * 1000; // debug: 5 seconds
+const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
 
 const Keys = {
   primaryKey: (mapKey: string, provider: string, id: string): PrimaryKey => `locations#${mapKey}#${userId(provider, id)}`,
