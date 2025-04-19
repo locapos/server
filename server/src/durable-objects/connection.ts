@@ -8,11 +8,11 @@ export class Connection extends DurableObject<Env> {
     return env.CONNECTION_DO.get(id);
   }
 
-  private connections: Map<WebSocket, WebSocket>;
+  private connections: Set<WebSocket>;
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.connections = new Map<WebSocket, WebSocket>();
+    this.connections = new Set<WebSocket>();
   }
 
   async fetch(req: Request) {
@@ -23,7 +23,7 @@ export class Connection extends DurableObject<Env> {
     const [client, server] = Object.values(websocketPair);
 
     this.ctx.acceptWebSocket(server);
-    this.connections.set(client, server);
+    this.connections.add(client);
 
     return new Response(null, {
       status: 101,
@@ -65,7 +65,7 @@ export class Connection extends DurableObject<Env> {
 
   private async broadcast(event: string, data: unknown) {
     const payload = JSON.stringify({ event, data });
-    for (const ws of this.connections.values()) {
+    for (const ws of this.ctx.getWebSockets()) {
       try {
         console.log("sending to", ws);
         ws.send(payload);
