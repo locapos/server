@@ -18,21 +18,22 @@
       }
     ]
   },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": [
+        "Storage",
+        "Connection"
+      ]
+    }
+  ],
   "vars": {
-    "REDIRECT_URI_BASE": "http://localhost:8787"
+    "REDIRECT_URI_BASE": "https://${custom_domain}",
+    "GITHUB_CLIENT_ID": "${github_client_id}",
+    "GOOGLE_CLIENT_ID": "${google_client_id}",
+    "MSA_CLIENT_ID":"${msa_client_id}",
+    "LINE_CHANNEL_ID":"${line_channel_id}",
   },
-  // "kv_namespaces": [
-  //   {
-  //     "binding": "MY_KV_NAMESPACE",
-  //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  //   }
-  // ],
-  // "r2_buckets": [
-  //   {
-  //     "binding": "MY_BUCKET",
-  //     "bucket_name": "my-bucket"
-  //   }
-  // ],
   "d1_databases": [
     {
       "binding": "SDB",
@@ -40,16 +41,19 @@
       "database_id": "${database_id}",
     }
   ],
-  // "ai": {
-  //   "binding": "AI"
-  // },
-  // "observability": {
-  //   "enabled": true,
-  //   "head_sampling_rate": 1
-  // }
   "assets":{
     "directory": "./dist",
     "binding": "ASSETS",
+  },
+  "routes": [
+    {
+      "pattern": "${custom_domain}",
+      "custom_domain": true,
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
   },
   "dev": {
     "ip": "*"
