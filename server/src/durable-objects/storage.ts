@@ -3,6 +3,7 @@ import { DurableObject } from "cloudflare:workers";
 import { hash, uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
 import { Connection } from "./connection";
+import geo from "../lib/geo";
 
 export { Location } from "../repositories/LocationRepository";
 
@@ -70,8 +71,9 @@ export class Storage extends DurableObject<Env> {
   }
 
   private async updateAndPublish(group: string, obj: Location) {
-    const updated = await this.locationRepository.put(group, obj);
-    await this.publish("update", updated, obj);
+    const withHeading = await this.ensureHeading(group, obj);
+    const updated = await this.locationRepository.put(group, withHeading);
+    await this.publish("update", updated, withHeading);
     await this.schedule();
   }
 
@@ -88,6 +90,16 @@ export class Storage extends DurableObject<Env> {
     for (const key of removed) {
       await this.publish("delete", key);
     }
+  }
+
+  private async ensureHeading(group: string, next: Location) {
+    const current = await this.locationRepository.get(group, next.provider, next.id);
+    if (current == null) return next;
+    if (next.heading != null) return next;
+    return {
+      ...next,
+      heading: geo.heading(current, next)
+    };
   }
 
   private async schedule() {
