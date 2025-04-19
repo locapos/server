@@ -3,12 +3,24 @@
   "name": "locapos-server",
   "main": "server/src/index.ts",
   "compatibility_date": "2025-04-17",
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "STORAGE_DO",
+        "class_name": "Storage"
+      },
+      {
+        "name": "CONNECTION_DO",
+        "class_name": "Connection"
+      }
+    ]
+  },
+  "vars": {
+    "REDIRECT_URI_BASE": "http://localhost:8787"
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
@@ -21,13 +33,13 @@
   //     "bucket_name": "my-bucket"
   //   }
   // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
-  //   }
-  // ],
+  "d1_databases": [
+    {
+      "binding": "SDB",
+      "database_name": "locapos-db",
+      "database_id": "cd937188-1979-4abd-84a8-7aeeec6fa936",
+    }
+  ],
   // "ai": {
   //   "binding": "AI"
   // },
@@ -35,6 +47,10 @@
   //   "enabled": true,
   //   "head_sampling_rate": 1
   // }
+  "assets":{
+    "directory": "./dist",
+    "binding": "ASSETS",
+  },
   "dev": {
     "ip": "*"
   }

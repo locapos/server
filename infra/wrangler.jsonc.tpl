@@ -18,9 +18,9 @@
       }
     ]
   },
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
+  "vars": {
+    "REDIRECT_URI_BASE": "http://localhost:8787"
+  },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
@@ -50,7 +50,6 @@
   "assets":{
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": true
   },
   "dev": {
     "ip": "*"
