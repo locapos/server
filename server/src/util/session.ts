@@ -23,6 +23,6 @@ export const getSession = async (c: Context<{ Bindings: Env }>): Promise<Session
   }
 };
 
-export const setSession = async (c: Context<{ Bindings: Env }>, session: Session | null) => {
+export const setSession = async (c: Context<{ Bindings: Env }>, session: Session) => {
   await setSignedCookie(c, COOKIE_NAME, JSON.stringify(session), c.env.COOKIE_SECRET);
 };

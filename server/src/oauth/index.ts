@@ -6,6 +6,7 @@ import { deleteCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
 import { getSession, setSession } from "../util/session";
 import { hash, hmac } from "../lib/hashgen";
+import { getAuthUser } from "../util/auth-session";
 
 class ElementHandler implements HTMLRewriterElementContentHandlers {
   constructor(private uri: string) { }
@@ -43,11 +44,10 @@ app.get("/authorize", async (c) => {
 });
 
 app.get("/redirect", async (c) => {
-  // stub user
-  const user = { provider: "stub_provider", id: "stub_user", name: "stub_name" };
-
+  const user = await getAuthUser(c);
   const session = await getSession(c)
   const uri = session?.redirect_uri;
+  if (!user) throw new HTTPException(400);
   if (!session || !uri) throw new HTTPException(400);
   const prefix = hmac(`${session.client_id}#${user.provider}.${user.id}`, c.env.CRYPTO_HASH_KEY);
   const uniqueHash = hash();

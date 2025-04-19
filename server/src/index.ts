@@ -2,6 +2,7 @@ import { Hono } from 'hono'
 import { api } from './api';
 import { oauth } from './oauth';
 import { Connection } from './durable-objects/connection';
+import { auth } from './auth';
 
 export { Storage } from "./durable-objects/storage";
 export { Connection } from "./durable-objects/connection";
@@ -10,6 +11,7 @@ const app = new Hono<{ Bindings: Env }>()
 
 app.route('/api', api);
 app.route('/oauth', oauth);
+app.route('/auth', auth);
 
 app.get('/ws/:hash?', (c) => {
   const hash = c.req.param('hash') || "0";
