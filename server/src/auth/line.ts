@@ -13,7 +13,7 @@ app.get("/", async (c) => {
     client_id: c.env.LINE_CHANNEL_ID,
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/line/callback`,
     state,
-    scope: "profile openid email"
+    scope: "profile"
   });
   return c.redirect(`https://access.line.me/oauth2/v2.1/authorize?${params.toString()}`);
 });
@@ -30,7 +30,6 @@ app.get("/callback", async (c) => {
   }
   const tokenRes = await fetch("https://api.line.me/oauth2/v2.1/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       grant_type: "authorization_code",
       code,
@@ -40,12 +39,12 @@ app.get("/callback", async (c) => {
     })
   });
   if (!tokenRes.ok) {
+    console.log("tokenRes", await tokenRes.text());
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
-  const accessToken = tokenJson.access_token;
   const userRes = await fetch("https://api.line.me/v2/profile", {
-    headers: { Authorization: `Bearer ${accessToken}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });

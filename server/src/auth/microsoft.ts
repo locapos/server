@@ -15,7 +15,7 @@ app.get("/", async (c) => {
     response_type: "code",
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/microsoft/callback`,
     response_mode: "query",
-    scope: "openid email profile User.Read",
+    scope: "openid profile",
     state
   });
   return c.redirect(`${MS_AUTHORITY}/authorize?${params.toString()}`);
@@ -33,7 +33,6 @@ app.get("/callback", async (c) => {
   }
   const tokenRes = await fetch(`${MS_AUTHORITY}/token`, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       client_id: c.env.MSA_CLIENT_ID,
       client_secret: c.env.MSA_CLIENT_SECRET,
@@ -47,9 +46,8 @@ app.get("/callback", async (c) => {
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
-  const accessToken = tokenJson.access_token;
   const userRes = await fetch("https://graph.microsoft.com/v1.0/me", {
-    headers: { Authorization: `Bearer ${accessToken}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });

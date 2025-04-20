@@ -12,9 +12,8 @@ app.get("/", async (c) => {
     client_id: c.env.GOOGLE_CLIENT_ID,
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/google/callback`,
     response_type: "code",
-    scope: "openid email profile",
+    scope: "profile",
     state,
-    access_type: "offline",
     prompt: "consent"
   });
   return c.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
@@ -32,7 +31,6 @@ app.get("/callback", async (c) => {
   }
   const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: new URLSearchParams({
       code,
       client_id: c.env.GOOGLE_CLIENT_ID,
@@ -45,9 +43,8 @@ app.get("/callback", async (c) => {
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
-  const accessToken = tokenJson.access_token;
   const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-    headers: { Authorization: `Bearer ${accessToken}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
