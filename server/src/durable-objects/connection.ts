@@ -1,12 +1,12 @@
 
 import { DurableObject } from "cloudflare:workers";
 import { Location, Storage } from "./storage";
-import { isConstructorDeclaration } from "typescript";
+import { createLoggerProxy } from "../lib/logger";
 
 export class Connection extends DurableObject<Env> {
   static stub(env: Env, hash: string) {
     const id = env.CONNECTION_DO.idFromName(hash);
-    return env.CONNECTION_DO.get(id);
+    return createLoggerProxy("Connection", env.CONNECTION_DO.get(id));
   }
 
   private connections: Set<WebSocket>;

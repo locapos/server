@@ -1,9 +1,10 @@
 
 import { DurableObject } from "cloudflare:workers";
-import { hash, uniqueId } from "../lib/hashgen";
+import { uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
 import { Connection } from "./connection";
 import geo from "../lib/geo";
+import { createLoggerProxy } from "../lib/logger";
 
 export { Location } from "../repositories/LocationRepository";
 
@@ -11,7 +12,7 @@ export class Storage extends DurableObject<Env> {
   static readonly DEFAULT = "default";
   static stub(env: Env) {
     const id = env.STORAGE_DO.idFromName(Storage.DEFAULT);
-    return env.STORAGE_DO.get(id);
+    return createLoggerProxy("Storage", env.STORAGE_DO.get(id));
   }
 
   private locationRepository: LocationRepository;
