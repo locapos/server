@@ -8,8 +8,13 @@ export class WsSession {
 
   start() {
     const socket = new WebSocket(WsSession.url);
+    let syncInterval: number | null = null;
+    let pingInterval: number | null = null;
+
     socket.addEventListener("open", () => {
       socket.send(JSON.stringify({ event: "sync" }));
+      pingInterval = window.setInterval(() => socket.send(JSON.stringify({ event: "ping" })), 15 * 1000); // send ping every minute
+      syncInterval = window.setInterval(() => socket.send(JSON.stringify({ event: "sync" })), 2.5 * 60 * 1000); // send sync request every 2.5 minutes
     });
 
     socket.addEventListener("message", (event) => {
@@ -33,6 +38,8 @@ export class WsSession {
     socket.addEventListener("close", (event) => {
       console.log("WebSocket closed:", event);
       console.log("Reconnecting in 5 seconds...");
+      window.clearInterval(pingInterval);
+      window.clearInterval(syncInterval);
       setTimeout(() => {
         this.start();
       }, 5000);
@@ -52,8 +59,6 @@ export class WsSession {
       this.markers.get(id).setOptions({ labelClass: "labels looking" } satisfies Partial<MarkerWithLabelOptions> as any);
       this.mapView.moveCenterTo(this.markers.get(id));
     });
-
-    window.setInterval(() => socket.send(JSON.stringify({ event: "sync" })), 2.5 * 60 * 1000); // send sync request every 2.5 minutes
   }
 
   private static get protocol() {
