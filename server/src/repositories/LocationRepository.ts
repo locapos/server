@@ -96,7 +96,6 @@ export class LocationRepository {
   }
 
   async listByMapKey(mapKey: string) {
-    console.log("listByMapKey", Prefixes.primaryKey(mapKey));
     return (await this.db.list<Location>({ prefix: Prefixes.primaryKey(mapKey) })).values().toArray();
   }
 

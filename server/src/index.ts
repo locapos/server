@@ -15,7 +15,6 @@ app.route('/auth', auth);
 
 app.get('/ws/:hash?', (c) => {
   const hash = c.req.param('hash') || "0";
-  console.log(hash);
   return Connection.stub(c.env, hash).fetch(c.req.raw);
 });
 

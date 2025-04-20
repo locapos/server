@@ -114,7 +114,6 @@ export class Storage extends DurableObject<Env> {
 
   private async publish(event: "update" | "delete", dataKey: PrimaryKey, location?: Location) {
     const [_, key, userId] = dataKey.split("#");
-    console.log(`publish ${event} ${key} ${userId}`);
     const stub = Connection.stub(this.env, key);
     switch (event) {
       case "update":
