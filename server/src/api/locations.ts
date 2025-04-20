@@ -46,7 +46,7 @@ app.post("/update", enforce, async (c) => {
   }
   // store location
   const stub = Storage.stub(c.env);
-  stub.storeLocation(obj, group, isPrivate);
+  await stub.storeLocation(obj, group, isPrivate);
   return c.text("ok");
 });
 
@@ -56,7 +56,7 @@ app.post("/delete", enforce, async (c) => {
   const group = body.key || '0';
   // delete location
   const stub = Storage.stub(c.env);
-  stub.deleteLocation(user.provider, user.id, group);
+  await stub.deleteLocation(user.provider, user.id, group);
   return c.text("ok");
 });
 

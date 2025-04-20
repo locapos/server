@@ -20,8 +20,8 @@
   },
   "migrations": [
     {
-      "tag": "v1",
-      "new_classes": [
+      "tag": "v2",
+      "new_sqlite_classes": [
         "Storage",
         "Connection"
       ]
@@ -53,7 +53,10 @@
   ],
   "observability": {
     "enabled": true,
-    "head_sampling_rate": 1
+    "head_sampling_rate": 0.1,
+    "logs": {
+      "invocation_logs": true,
+    }
   },
   "dev": {
     "ip": "*"

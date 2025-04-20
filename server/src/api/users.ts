@@ -12,7 +12,7 @@ const app = createHono();
 app.get("/show", enforce, async (c) => {
   const key = c.req.query("key") || "0";
   const stub = Storage.stub(c.env);
-  return c.json(stub.showLocations(key));
+  return c.json(await stub.showLocations(key));
 });
 
 app.get("/me", enforce, async (c) => {

@@ -1,12 +1,11 @@
 
 import { DurableObject } from "cloudflare:workers";
 import { Location, Storage } from "./storage";
-import { createLoggerProxy } from "../lib/logger";
 
 export class Connection extends DurableObject<Env> {
   static stub(env: Env, hash: string) {
     const id = env.CONNECTION_DO.idFromName(hash);
-    return createLoggerProxy("Connection", env.CONNECTION_DO.get(id));
+    return env.CONNECTION_DO.get(id);
   }
 
   private connections: Set<WebSocket>;
@@ -42,10 +41,12 @@ export class Connection extends DurableObject<Env> {
     this.connections.delete(ws);
   }
 
-  webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): void | Promise<void> {
+  async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): Promise<void> {
     const data = JSON.parse(message.toString());
     if (data.event === "sync") {
-      this.sync(ws);
+      await this.sync(ws);
+    } else if (data.event === "ping") {
+      ws.send(JSON.stringify({ event: "pong", channel: await this.getName() }));
     }
   }
 

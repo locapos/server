@@ -4,7 +4,6 @@ import { uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
 import { Connection } from "./connection";
 import geo from "../lib/geo";
-import { createLoggerProxy } from "../lib/logger";
 
 export { Location } from "../repositories/LocationRepository";
 
@@ -12,7 +11,7 @@ export class Storage extends DurableObject<Env> {
   static readonly DEFAULT = "default";
   static stub(env: Env) {
     const id = env.STORAGE_DO.idFromName(Storage.DEFAULT);
-    return createLoggerProxy("Storage", env.STORAGE_DO.get(id));
+    return env.STORAGE_DO.get(id);
   }
 
   private locationRepository: LocationRepository;
@@ -116,6 +115,7 @@ export class Storage extends DurableObject<Env> {
   private async publish(event: "update" | "delete", dataKey: PrimaryKey, location?: Location) {
     const [_, key, userId] = dataKey.split("#");
     const stub = Connection.stub(this.env, key);
+    console.log({ action: "publish", event, dataKey, location, key, userId });
     switch (event) {
       case "update":
         location && await stub.onUpdate(location);
