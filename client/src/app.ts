@@ -66,7 +66,7 @@ Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
   handleStateChanged(document.getElementById('swWeather') as HTMLFormElement, state => {
     nowcastLayer.setVisible(state);
   });
-  $(placeSearch).focusin(() => {
+  $(placeSearch).on('focusin', () => {
     const w = $('.search-bar').width();
     $('.ui-autocomplete').css('min-width', `${w}px`);
     $('.ui-autocomplete').css('max-width', `${w}px`);
