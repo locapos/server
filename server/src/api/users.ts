@@ -2,10 +2,8 @@ import { HTTPException } from "hono/http-exception";
 import { Storage } from "../durable-objects/storage";
 import { createHono } from "../lib/factory";
 import { enforce } from "../middleware/enforce";
-import { drizzle } from "drizzle-orm/d1";
-import { accessTokensTable } from "../../drizzle/schema";
 import { uniqueId } from "../lib/hashgen";
-import { eq } from "drizzle-orm";
+import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 
 const app = createHono();
 
@@ -32,21 +30,19 @@ app.get("/share", enforce, async (c) => {
 app.post("/update", enforce, async (c) => {
   const body = await c.req.parseBody<{ screen_name?: string }>();
   const user = c.get("user");
-  let ok = false;
+  let newUsername = "";
+
   if (body.screen_name) {
-    user.username = body.screen_name;
-    ok = true;
+    newUsername = body.screen_name;
+  } else if (body.screen_name === "" && user.default_username) {
+    newUsername = user.default_username;
+  } else {
+    throw new HTTPException(403);
   }
-  if (body.screen_name === "" && user.default_username) {
-    user.username = user.default_username;
-    ok = true;
-  }
-  if (!ok) throw new HTTPException(403);
-  // store user
-  const db = drizzle(c.env.SDB);
-  await db.update(accessTokensTable)
-    .set({ username: user.username })
-    .where(eq(accessTokensTable.hash, uniqueId(c.env, user)));
+
+  const tokenRepository = new AccessTokenRepository(c.env.SDB);
+  await tokenRepository.updateUsername(user.hash, newUsername);
+
   c.text("ok");
 });
 

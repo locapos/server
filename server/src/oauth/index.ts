@@ -1,12 +1,11 @@
-import { drizzle } from "drizzle-orm/d1";
 import { createHono } from "../lib/factory";
-import { accessTokensTable, secretsTable } from "../../drizzle/schema";
-import { eq } from "drizzle-orm";
 import { deleteCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
 import { getSession, setSession } from "../util/session";
 import { hash, hmac } from "../lib/hashgen";
 import { getAuthUser } from "../util/auth-session";
+import { ClientRepository } from "../repositories/ClientRepository";
+import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 
 class ElementHandler implements HTMLRewriterElementContentHandlers {
   constructor(private uri: string) { }
@@ -28,10 +27,11 @@ app.get("/authorize", async (c) => {
   if (!redirectUri) throw new HTTPException(400);
   if (!clientId) throw new HTTPException(400);
 
-  // Validate client_id
-  const db = drizzle(c.env.SDB);
-  const ids = await db.select().from(secretsTable).where(eq(secretsTable.clientId, clientId));
-  if (ids.length === 0) throw new HTTPException(400);
+  // Validate client_id using ClientRepository
+  const clientRepository = new ClientRepository(c.env.SDB);
+  const client = await clientRepository.getById(clientId);
+  if (!client) throw new HTTPException(400);
+
   await setSession(c, {
     client_id: clientId,
     redirect_uri: redirectUri,
@@ -45,22 +45,25 @@ app.get("/authorize", async (c) => {
 
 app.get("/redirect", async (c) => {
   const user = await getAuthUser(c);
-  const session = await getSession(c)
+  const session = await getSession(c);
   const uri = session?.redirect_uri;
-  if (!user) throw new HTTPException(400);
-  if (!session || !uri) throw new HTTPException(400);
-  const prefix = hmac(`${session.client_id}#${user.provider}.${user.id}`, c.env.CRYPTO_HASH_KEY);
-  const uniqueHash = hash();
-  const token = encodeURIComponent(`${prefix}!${uniqueHash}`);
+  if (!user || !session || !uri) throw new HTTPException(400);
+
+  const userHash = hmac(`${session.client_id}#${user.provider}.${user.id}`, c.env.CRYPTO_HASH_KEY);
+  const tokenHash = hash();
+  const accessToken = encodeURIComponent(`${userHash}.${tokenHash}`);
   const state = encodeURIComponent(session.state || "");
-  let redirect = `${uri}#access_token=${token}&token_type=bearer&state=${state}`;
-  // put users
-  const db = drizzle(c.env.SDB);
-  const ids = await db.select().from(accessTokensTable).where(eq(accessTokensTable.hash, prefix));
-  if (ids.length === 0) {
-    await db.insert(accessTokensTable).values({
-      hash: prefix,
-      token: uniqueHash,
+  let redirect = `${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`;
+
+  // Check existing token
+  const tokenRepository = new AccessTokenRepository(c.env.SDB);
+  const existingToken = await tokenRepository.getByHash(userHash);
+
+  if (!existingToken) {
+    // Create new token
+    await tokenRepository.create({
+      hash: userHash,
+      token: tokenHash,
       clientId: session.client_id,
       provider: user.provider,
       id: user.id,
@@ -69,15 +72,17 @@ app.get("/redirect", async (c) => {
       expireAt: Date.now() + 30 * 86400 * 1000,
     });
   } else {
-    // extend token expiration
-    await db.update(accessTokensTable).set({
-      expireAt: Math.floor(Date.now() / 1000) + 30 * 86400,
-    }).where(eq(accessTokensTable.hash, prefix));
-    const reusedToken = encodeURIComponent(`${prefix}!${ids[0].token}`);
+    // Extend token expiration
+    await tokenRepository.extendExpiration(userHash);
+
+    // Use existing token
+    const reusedToken = encodeURIComponent(`${userHash}.${existingToken.token}`);
     redirect = `${uri}#access_token=${reusedToken}&token_type=bearer&state=${state}`;
   }
+
   // drop session
   deleteCookie(c, "session");
+
   // render redirect page
   const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_redirect.html");
   const rewriter = new HTMLRewriter()
@@ -89,6 +94,7 @@ app.get("/redirect", async (c) => {
 app.get("/failed", async (c) => {
   // drop session
   deleteCookie(c, "session");
+
   // Proxy content
   const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_failed.html");
   return c.newResponse(asset.body, asset);

@@ -1,20 +1,13 @@
-import { drizzle } from "drizzle-orm/d1";
 import { createMiddleware } from "hono/factory";
 import { HTTPException } from "hono/http-exception";
-import { accessTokensTable } from "../../drizzle/schema";
-import { and, eq, lt } from "drizzle-orm";
+import { AccessTokenRepository, User } from "../repositories/AccessTokenRepository";
 
-type User = {
-  id: string;
-  provider: string;
-  username: string;
-  default_username: string;
-};
+type AuthUser = User & { hash: string; };
 
 export const enforce = createMiddleware<{
   Bindings: Env,
   Variables: {
-    user: User;
+    user: AuthUser;
   }
 }>(async (c, next) => {
   const authorization = c.req.header("Authorization");
@@ -23,32 +16,31 @@ export const enforce = createMiddleware<{
     throw new HTTPException(401);
   }
   // Validate token
-  const [prefix, hash] = token.split("!");
+  const [prefix, hash] = token.split(".");
   if (!prefix || !hash) {
     throw new HTTPException(401);
   }
-  const db = drizzle(c.env.SDB);
-  const ids = await db
-    .select()
-    .from(accessTokensTable)
-    .where(and(eq(accessTokensTable.hash, prefix), eq(accessTokensTable.token, hash)));
-  if (ids.length === 0) {
+
+  const tokenRepository = new AccessTokenRepository(c.env.SDB);
+
+  // Cleanup expired tokens first
+  await tokenRepository.deleteExpired();
+
+  // Find token in database
+  const accessToken = await tokenRepository.getByToken(prefix, hash);
+  if (!accessToken) {
     throw new HTTPException(401);
   }
+
   // Extend expiration
-  const user = ids[0];
-  await db.update(accessTokensTable)
-    .set({ expireAt: Date.now() + 30 * 86400 * 1000 });
-  // cleanup expired tokens
-  await db.delete(accessTokensTable)
-    .where(lt(accessTokensTable.expireAt, Date.now()));
-  // set user in context
+  await tokenRepository.extendExpiration(prefix);
+
+  // Set user in context
   c.set("user", {
-    id: user.id,
-    provider: user.provider,
-    username: user.username,
-    default_username: user.defaultUsername,
+    ...tokenRepository.mapToUser(accessToken),
+    hash: prefix,
   });
-  // chain requeset
+
+  // Chain request
   return next();
 });
