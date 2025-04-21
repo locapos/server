@@ -25,7 +25,7 @@ app.post("/update", enforce, async (c) => {
     heading: parseFloat(body.heading) % 360,
     posMode: body.posMode,
   };
-  const group = body.key || '';
+  const group = body.key;
   const isPrivate = body.private === "true";
   // check values
   if (isNaN(obj.latitude)) throw new HTTPException(400);
@@ -38,7 +38,7 @@ app.post("/update", enforce, async (c) => {
     obj.heading = obj.heading < 0 ? obj.heading + 360 : obj.heading;
   }
   // group key must be 43 characters
-  const groups = group.split(",");
+  const groups = group.split(",").filter(g => g.length !== 0);
   for (const g of groups) {
     if (g.length !== 0 && g.length !== 43) {
       throw new HTTPException(403, { message: "group key must be 43 characters" });
@@ -46,14 +46,14 @@ app.post("/update", enforce, async (c) => {
   }
   // store location
   const stub = Storage.stub(c.env);
-  await stub.storeLocation(obj, group, isPrivate);
+  await stub.storeLocation(obj, groups, isPrivate);
   return c.text("ok");
 });
 
 app.post("/delete", enforce, async (c) => {
   const body = await c.req.parseBody<{ key: string }>();
   const user = c.get("user");
-  const group = body.key || '0';
+  const group = body.key;
   // delete location
   const stub = Storage.stub(c.env);
   await stub.deleteLocation(user.provider, user.id, group);

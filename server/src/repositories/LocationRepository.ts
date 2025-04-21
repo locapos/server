@@ -12,7 +12,7 @@ export type Location = {
   posMode: string;
 };
 
-export type Expiration = {
+type Expiration = {
   provider: string;
   id: string;
   mapKey: string;
@@ -99,8 +99,8 @@ export class LocationRepository {
     return (await this.db.list<Location>({ prefix: Prefixes.primaryKey(mapKey) })).values().toArray();
   }
 
-  listByUserId(provider: string, id: string) {
-    return this.db.list<Location>({ prefix: Prefixes.secondaryKey(provider, id) });
+  async listByUserId(provider: string, id: string) {
+    return (await this.db.list<Location>({ prefix: Prefixes.secondaryKey(provider, id) })).values().toArray();
   }
 
   async listExpirations() {

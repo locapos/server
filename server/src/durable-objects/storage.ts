@@ -41,10 +41,12 @@ export class Storage extends DurableObject<Env> {
     });
   }
 
-  async storeLocation(obj: Location, group: string, isPrivate: boolean) {
+  async storeLocation(obj: Location, groups: string[], isPrivate: boolean) {
     const primary = isPrivate ? uniqueId(this.env, obj) : '0';
-    await this.updateAndPublish(primary, obj);
-    group && await this.updateAndPublish(group, obj);
+    await Promise.all([
+      this.updateAndPublish(primary, obj),
+      ...groups.map(group => this.updateAndPublish(group, obj))
+    ]);
   }
 
   showLocations(group: string) {
