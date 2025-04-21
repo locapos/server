@@ -58,6 +58,9 @@
       "invocation_logs": true,
     }
   },
+  "placement": {
+    "mode": "smart"
+  },
   "dev": {
     "ip": "*"
   }
