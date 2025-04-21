@@ -25,7 +25,7 @@ app.post("/update", enforce, async (c) => {
     heading: parseFloat(body.heading) % 360,
     posMode: body.posMode,
   };
-  const group = body.key;
+  const group = body.key || "";
   const isPrivate = body.private === "true";
   // check values
   if (isNaN(obj.latitude)) throw new HTTPException(400);

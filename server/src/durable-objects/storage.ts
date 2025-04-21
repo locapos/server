@@ -19,19 +19,18 @@ export class Storage extends DurableObject<Env> {
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
 
-    const locationRepository = new LocationRepository(ctx.storage);
     this.locationRepository = new LocationRepository(ctx.storage);
 
     ctx.blockConcurrencyWhile(async () => {
       // すでにExpireしているデータを削除する
-      const expirations = await locationRepository.listExpirations();
+      const expirations = await this.locationRepository.listExpirations();
       for (const expired of expirations) {
         const { provider, id, mapKey } = expired;
-        await locationRepository.delete(mapKey, provider, id);
+        await this.locationRepository.delete(mapKey, provider, id);
       }
 
       // 間近のExpireをスケジュールする
-      const next = await locationRepository.getNextExpiration();
+      const next = await this.locationRepository.getNextExpiration();
       if (next == null) return;
       if (next <= Date.now()) {
         setImmediate(() => this.alarm());
@@ -49,9 +48,9 @@ export class Storage extends DurableObject<Env> {
     ]);
   }
 
-  showLocations(group: string) {
+  async showLocations(group: string) {
     const key = group || "0";
-    return this.locationRepository.listByMapKey(key);
+    return await this.locationRepository.listByMapKey(key);
   }
 
   async deleteLocation(provider: string, id: string, group: string) {
@@ -120,7 +119,8 @@ export class Storage extends DurableObject<Env> {
     console.log({ action: "publish", event, dataKey, location, key, userId });
     switch (event) {
       case "update":
-        location && await stub.onUpdate(location);
+        if(!location) return;
+        await stub.onUpdate(location);
         break;
       case "delete":
         await stub.onDelete(userId);

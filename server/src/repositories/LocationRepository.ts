@@ -1,4 +1,4 @@
-export type UserId = `${string}.${string}`;
+export type UserId = `${string}:${string}`;
 export type PrimaryKey = `locations#${string}#${UserId}`;
 export type SecondaryKey = `locations#${UserId}#${string}`;
 
@@ -24,7 +24,7 @@ type LocationStorageType = Location & {
   ttl: number;
 };
 
-const userId = (provider: string, id: string): UserId => `${provider}.${id}`;
+const userId = (provider: string, id: string): UserId => `${provider}:${id}`;
 
 const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
 

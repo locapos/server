@@ -49,11 +49,8 @@ app.get("/redirect", async (c) => {
   const uri = session?.redirect_uri;
   if (!user || !session || !uri) throw new HTTPException(400);
 
-  const userHash = hmac(`${session.client_id}#${user.provider}.${user.id}`, c.env.CRYPTO_HASH_KEY);
+  const userHash = hmac(`${session.client_id}#${user.provider}:${user.id}`, c.env.CRYPTO_HASH_KEY);
   const tokenHash = hash();
-  const accessToken = encodeURIComponent(`${userHash}.${tokenHash}`);
-  const state = encodeURIComponent(session.state || "");
-  let redirect = `${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`;
 
   // Check existing token
   const tokenRepository = new AccessTokenRepository(c.env.SDB);
@@ -74,19 +71,22 @@ app.get("/redirect", async (c) => {
   } else {
     // Extend token expiration
     await tokenRepository.extendExpiration(userHash);
-
-    // Use existing token
-    const reusedToken = encodeURIComponent(`${userHash}.${existingToken.token}`);
-    redirect = `${uri}#access_token=${reusedToken}&token_type=bearer&state=${state}`;
   }
 
   // drop session
   deleteCookie(c, "session");
 
   // render redirect page
+  const state = encodeURIComponent(session.state || "");
+  const accessToken = existingToken
+    ? encodeURIComponent(`${userHash}.${existingToken.token}`)
+    : encodeURIComponent(`${userHash}.${tokenHash}`);
+
   const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_redirect.html");
   const rewriter = new HTMLRewriter()
-    .on("body", new ElementHandler(redirect))
+    .on("body", new ElementHandler(
+      `${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`
+    ))
     .transform(asset);
   return c.newResponse(rewriter.body, asset);
 });
