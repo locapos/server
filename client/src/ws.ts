@@ -44,21 +44,6 @@ export class WsSession {
         this.start();
       }, 5000);
     });
-
-    window.addEventListener("hashchange", () => {
-      let id = Hash.info().id;
-      // clear label style
-      this.markers
-        .values()
-        .filter((m) => ~(m.labelClass || "").indexOf("looking"))
-        .forEach((i) => i.setOptions({ labelClass: "labels" } satisfies Partial<MarkerWithLabelOptions> as any));
-      // update label style
-      if (!id || !this.markers.containsKey(id)) {
-        return;
-      }
-      this.markers.get(id).setOptions({ labelClass: "labels looking" } satisfies Partial<MarkerWithLabelOptions> as any);
-      this.mapView.moveCenterTo(this.markers.get(id));
-    });
   }
 
   private static get protocol() {

@@ -6,6 +6,8 @@ import NowcastLayer from './nowcast-layer';
 import Events from './events';
 import ThemeHelper from './theme-helper';
 import { WsSession } from './ws';
+import Hash from "./hash";
+import { MarkerWithLabelOptions } from '@googlemaps/markerwithlabel';
 
 function handleStateChanged(element: HTMLFormElement, handler: (checked: boolean) => void) {
   element.addEventListener('change', function () {
@@ -32,9 +34,7 @@ Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
   ($(placeSearch) as any).addClear();
   const searchForm = document.getElementById('search-form');
   if (!searchForm) throw new Error('#search-form not found');
-  searchForm.onsubmit = (e) => {
-    e.preventDefault();
-  };
+  searchForm.onsubmit = (e) => e.preventDefault();
 
   // build layers
   let trafficLayer = new MapLayer(mapView, new google.maps.TrafficLayer());
@@ -84,6 +84,21 @@ Events.handleEventOnce(document, 'mdl-componentupgraded', () => {
     mapView.setMapType(mode);
   });
 
-  // (new Io(mapView, markers)).start();
   (new WsSession(mapView, markers)).start();
+
+  // handle hash change
+  window.addEventListener("hashchange", () => {
+    let id = Hash.info().id;
+    // clear label style
+    markers
+      .values()
+      .filter((m) => ~(m.labelClass || "").indexOf("looking"))
+      .forEach((i) => i.setOptions({ labelClass: "labels" } satisfies Partial<MarkerWithLabelOptions> as any));
+    // update label style
+    if (!id || !markers.containsKey(id)) {
+      return;
+    }
+    markers.get(id).setOptions({ labelClass: "labels looking" } satisfies Partial<MarkerWithLabelOptions> as any);
+    mapView.moveCenterTo(markers.get(id));
+  });
 });
