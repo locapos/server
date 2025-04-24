@@ -19,6 +19,9 @@ export default class MapView {
     const map = new google.maps.Map(dom, (new MapParams()).get());
     map.set('isFractionalZoomEnabled', true);
     map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, { name: MapParams.NIGHT_MODE }));
+    dom.addEventListener('touchmove', function (e) {
+      e.preventDefault();
+    }, { passive: false });
     return map;
   }
 
