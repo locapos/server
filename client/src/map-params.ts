@@ -32,7 +32,6 @@ export default class MapParams {
       streetViewControl: false,
       scaleControl: true,
       mapTypeControlOptions: { mapTypeIds: ids },
-      mapId: "2b801dd0b48c1f30"
     };
   }
 }
