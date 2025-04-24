@@ -22,7 +22,7 @@ export default class Markers {
   }
 
   update(obj: Location) {
-    const key = `${obj.provider}.${obj.id}`;
+    const key = `${obj.provider}:${obj.id}`;
     const icon = this.map.createMarkerIcon(0, obj.heading);
     const opt = {
       position: new google.maps.LatLng(obj.latitude, obj.longitude),
