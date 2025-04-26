@@ -9,22 +9,6 @@ export const Default: google.maps.MapTypeStyle[] = [
     ]
   },
   {
-    "featureType": "administrative.land_parcel",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "administrative.neighborhood",
-    "stylers": [
-      {
-        "visibility": "off"
-      }
-    ]
-  },
-  {
     "featureType": "landscape",
     "elementType": "labels",
     "stylers": [
@@ -34,11 +18,20 @@ export const Default: google.maps.MapTypeStyle[] = [
     ]
   },
   {
-    "featureType": "landscape.natural",
+    "featureType": "landscape.natural.landcover",
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#eef6f2"
+        "color": "#FFFEF5"
+      }
+    ]
+  },
+  {
+    "featureType": "landscape.natural.terrain",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "visibility": "simplified"
       }
     ]
   },
@@ -51,11 +44,28 @@ export const Default: google.maps.MapTypeStyle[] = [
     ]
   },
   {
-    "featureType": "poi",
-    "elementType": "labels.text",
+    "featureType": "poi.park",
+    "stylers": [
+      {
+        "visibility": "visible"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "labels",
     "stylers": [
       {
         "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.park",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#D9F2DA"
       }
     ]
   },
@@ -65,15 +75,6 @@ export const Default: google.maps.MapTypeStyle[] = [
     "stylers": [
       {
         "visibility": "off"
-      }
-    ]
-  },
-  {
-    "featureType": "road",
-    "elementType": "labels.icon",
-    "stylers": [
-      {
-        "visibility": "simplified"
       }
     ]
   },
