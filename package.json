@@ -42,6 +42,7 @@
     "bower": "^1.8.14",
     "drizzle-kit": "^0.31.0",
     "esbuild": "^0.25.2",
-    "pug-cli": "^1.0.0-alpha6"
+    "pug-cli": "^1.0.0-alpha6",
+    "wrangler": "^4.13.2"
   }
 }
