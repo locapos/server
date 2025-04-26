@@ -78,6 +78,24 @@ export const Default: google.maps.MapTypeStyle[] = [
     ]
   },
   {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#8CDEB8"
+      }
+    ]
+  },
+  {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.stroke",
+    "stylers": [
+      {
+        "color": "#50A589"
+      }
+    ]
+  },
+  {
     "featureType": "water",
     "elementType": "labels.text",
     "stylers": [
