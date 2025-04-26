@@ -1,3 +1,5 @@
+import { Default } from "./map-styles";
+
 export default class MapParams {
   static NIGHT_MODE = 'Night Mode';
 
@@ -22,7 +24,7 @@ export default class MapParams {
     return parseInt(this.parseQueryString().get('zoom') || "9");
   }
 
-  get() {
+  get(): google.maps.MapOptions {
     const ids = [google.maps.MapTypeId.ROADMAP, MapParams.NIGHT_MODE];
     const center = this.getCenter();
     return {
@@ -32,6 +34,7 @@ export default class MapParams {
       streetViewControl: false,
       scaleControl: true,
       mapTypeControlOptions: { mapTypeIds: ids },
+      styles: Default
     };
   }
 }

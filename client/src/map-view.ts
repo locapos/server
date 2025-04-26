@@ -1,4 +1,4 @@
-import MapStyles from './map-styles';
+import { Night } from './map-styles';
 import MapParams from './map-params';
 import Autocomplete from './autocomplete';
 import Hash from './hash';
@@ -18,7 +18,7 @@ export default class MapView {
   buildMap(dom: HTMLElement) {
     const map = new google.maps.Map(dom, (new MapParams()).get());
     map.set('isFractionalZoomEnabled', true);
-    map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(MapStyles, { name: MapParams.NIGHT_MODE }));
+    map.mapTypes.set(MapParams.NIGHT_MODE, new google.maps.StyledMapType(Night, { name: MapParams.NIGHT_MODE }));
     dom.addEventListener('touchmove', function (e) {
       e.preventDefault();
     }, { passive: false });
