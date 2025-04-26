@@ -26,7 +26,7 @@ export default class Autocomplete {
     const source = (req: { term: string }, callback: (data: AutocompleteItem[]) => void) => this.runQuery(req.term, callback);
     $(this.element).autocomplete({
       source: source,
-      appendTo: '#search-bar',
+      appendTo: '.search-bar',
       select: (a, b) => this.selectItem(a, b),
       open: () => {
         $('.ui-autocomplete').off('hover mouseover mouseenter');

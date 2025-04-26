@@ -1,3 +1,7 @@
+:root, html body, html body .gm-style {
+  font-family: "Noto Sans JP";
+}
+
 html, body, #map-canvas, 
 .layout-root, .layout-root .mdl-layout__content
 {
@@ -24,10 +28,9 @@ html, body, #map-canvas,
 .additional-control{
   margin: 8px;
   padding: 8px;
-  background-color: #fff;
-  border-radius: 2px;
-  -webkit-box-shadow: 0px 1px 4px -1px rgba(0,0,0,0.3);
-  -moz-box-shadow: 0px 1px 4px -1px rgba(0,0,0,0.3);
+  background-color: rgb(255 255 255 / 0.5);
+  backdrop-filter: blur(50px) saturate(1.5);
+  border-radius: 15px;
   box-shadow: 0px 1px 4px -1px rgba(0,0,0,0.3);
 }
 
@@ -42,11 +45,17 @@ html, body, #map-canvas,
 
 #search-bar .additional-control{
   padding: 0px;
-  min-height: 0px;
-  height: 48px;
+  min-height: 48px;
   max-width: 320px;
   width: auto;
   position: relative;
+}
+
+.additional-control.search-bar::after {
+  content: "";
+  display: block;
+  height: 0px;
+  border-bottom: 0.0001px solid transparent;
 }
 
 #search-bar{
@@ -85,11 +94,11 @@ html, body, #map-canvas,
   outline: 0px;
 }
 
-#search-bar form{
+#search-bar form {
   margin-left: 58px;
   padding-left: 6px;
   padding-right: 10px;
-  height: 100%;
+  height: 48px;
 }
 
 #search-bar form input{
@@ -97,6 +106,8 @@ html, body, #map-canvas,
   width: 100%;
   height: 100%;
   padding: 0px;
+  background: transparent;
+  font-family: "Noto Sans JP";
 }
 
 .nav-switch {
@@ -117,7 +128,12 @@ html, body, #map-canvas,
 }
 
 .night .search-bar, .night input {
-  background-color: #405060;
+  background-color: rgb(64 80 96 / 0.5);
+}
+
+.night input::placeholder {
+  color: #ccc;
+  opacity: 0.5;
 }
 
 #search-bar.night button.mdl-layout__drawer-button,
@@ -135,6 +151,7 @@ html, body, #map-canvas,
 
 #search-bar .ui-menu-item {
   font-size: 13px;
+  font-family: "Noto Sans JP";
 }
 
 @media screen and (max-width: 600px) {
@@ -180,4 +197,31 @@ html, body, #map-canvas,
   margin: 0;
   padding: 0;
   border: 0;
+}
+
+.ui-autocomplete {
+  position: static !important;
+  margin-inline: 8px;
+  margin-bottom: 8px;
+  width: auto !important;
+  min-width: unset !important;
+  max-width: unset !important;
+  border-radius: 10px;
+  background-color: rgb(255 255 255 / 0.25);
+  backdrop-filter: blur(50px);
+  border: none !important;
+  box-shadow: 0.1px 1px 3px 1px rgba(0,0,0,0.2);
+}
+
+.night .ui-autocomplete {
+  background-color: rgb(64 80 96 / 0.25);
+}
+
+.ui-autocomplete strong {
+  font-weight: 700;
+}
+
+.gm-control-active {
+  background-color: rgb(255 255 255 / 0.5) !important;
+  backdrop-filter: blur(50px) saturate(1.5);
 }

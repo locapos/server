@@ -19,6 +19,7 @@ i.fa:before {
 html {
   position: relative;
   min-height: 100%;
+  font-family: "Noto Sans";
 }
 body {
   margin-bottom: 60px;
