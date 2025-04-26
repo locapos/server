@@ -292,6 +292,15 @@ export const Night: google.maps.MapTypeStyle[] = [
     ]
   },
   {
+    "featureType": "road.highway.controlled_access",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#3bba94"
+      }
+    ]
+  },
+  {
     "featureType": "transit",
     "elementType": "geometry",
     "stylers": [
