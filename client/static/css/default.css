@@ -1,3 +1,12 @@
+:root,
+html,
+html body,
+a.btn,
+.navbar,
+h4 {
+  font-family: "Noto Sans", "Noto Sans JP" !important;
+}
+
 .btn-margin {
   margin-bottom: 8px;
 }
@@ -19,7 +28,6 @@ i.fa:before {
 html {
   position: relative;
   min-height: 100%;
-  font-family: "Noto Sans";
 }
 body {
   margin-bottom: 60px;
