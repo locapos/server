@@ -7,14 +7,26 @@ import { getAuthUser } from "../util/auth-session";
 import { ClientRepository } from "../repositories/ClientRepository";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 
-class ElementHandler implements HTMLRewriterElementContentHandlers {
-  constructor(private uri: string) {}
+class BodyElementHandler implements HTMLRewriterElementContentHandlers {
+  constructor(private uri: string) { }
 
   element(element: Element) {
     element.append(
       `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},3000);</script>`,
       { html: true }
     );
+  }
+}
+
+class AnchorElementHandler implements HTMLRewriterElementContentHandlers {
+  constructor(private uri: string) { }
+
+  element(element: Element) {
+    const href = element.getAttribute("href");
+    if (href !== "#-REPLACE-#") {
+      return;
+    }
+    element.setAttribute("href", this.uri);
   }
 }
 
@@ -89,7 +101,10 @@ app.get("/redirect", async (c) => {
   const rewriter = new HTMLRewriter()
     .on(
       "body",
-      new ElementHandler(`${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`)
+      new BodyElementHandler(`${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`)
+    )
+    .on("a",
+      new AnchorElementHandler(`${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`)
     )
     .transform(asset);
   return c.newResponse(rewriter.body, asset);
