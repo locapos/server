@@ -1,6 +1,6 @@
 import { createHono } from "../lib/factory";
 import { hash } from "../lib/hashgen";
-import { getAuthState, setAuthUser, setAuthState } from "../util/auth-session";
+import { getOAuthProviderStateSession, setOAuthUserSession, setOAuthProviderStateSession } from "../util/oauth-session";
 import { HTTPException } from "hono/http-exception";
 
 const MS_AUTHORITY = "https://login.microsoftonline.com/common/oauth2/v2.0";
@@ -9,7 +9,7 @@ const app = createHono();
 
 app.get("/", async (c) => {
   const state = hash();
-  await setAuthState(c, state);
+  await setOAuthProviderStateSession(c, { state });
   const params = new URLSearchParams({
     client_id: c.env.MSA_CLIENT_ID,
     response_type: "code",
@@ -24,8 +24,8 @@ app.get("/", async (c) => {
 app.get("/callback", async (c) => {
   const code = c.req.query("code");
   const remoteState = c.req.query("state");
-  const state = await getAuthState(c);
-  if (!state || state.state !== remoteState) {
+  const stateSession = await getOAuthProviderStateSession(c);
+  if (!stateSession || stateSession.state !== remoteState) {
     throw new HTTPException(400, { message: "Invalid state" });
   }
   if (!code) {
@@ -57,7 +57,7 @@ app.get("/callback", async (c) => {
     displayName?: string;
     userPrincipalName?: string;
   }>();
-  await setAuthUser(c, {
+  await setOAuthUserSession(c, {
     provider: "microsoft",
     id: user.id,
     name: user.displayName || user.userPrincipalName || "",

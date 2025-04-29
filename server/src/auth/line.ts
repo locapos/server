@@ -1,13 +1,13 @@
 import { createHono } from "../lib/factory";
 import { hash } from "../lib/hashgen";
-import { getAuthState, setAuthUser, setAuthState } from "../util/auth-session";
+import { getOAuthProviderStateSession, setOAuthUserSession, setOAuthProviderStateSession } from "../util/oauth-session";
 import { HTTPException } from "hono/http-exception";
 
 const app = createHono();
 
 app.get("/", async (c) => {
   const state = hash();
-  await setAuthState(c, state);
+  await setOAuthProviderStateSession(c, { state });
   const params = new URLSearchParams({
     response_type: "code",
     client_id: c.env.LINE_CHANNEL_ID,
@@ -21,8 +21,8 @@ app.get("/", async (c) => {
 app.get("/callback", async (c) => {
   const code = c.req.query("code");
   const remoteState = c.req.query("state");
-  const state = await getAuthState(c);
-  if (!state || state.state !== remoteState) {
+  const stateSession = await getOAuthProviderStateSession(c);
+  if (!stateSession || stateSession.state !== remoteState) {
     throw new HTTPException(400, { message: "Invalid state" });
   }
   if (!code) {
@@ -50,7 +50,7 @@ app.get("/callback", async (c) => {
     throw new HTTPException(400, { message: "Failed to get user info" });
   }
   const user = await userRes.json<{ userId: string; displayName?: string }>();
-  await setAuthUser(c, {
+  await setOAuthUserSession(c, {
     provider: "line",
     id: user.userId,
     name: user.displayName || "",
