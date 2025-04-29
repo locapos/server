@@ -17,7 +17,7 @@ html, body, #map-canvas,
   text-align: center;
   width: 60px;
   border: 2px solid red;
-  white-scape: nowrap;
+  white-space: nowrap;
 }
 
 .looking{
@@ -26,11 +26,11 @@ html, body, #map-canvas,
 }
 
 .additional-control{
-  margin: 8px;
+  margin: 10px;
   padding: 8px;
-  background-color: rgb(255 255 255 / 0.5);
-  backdrop-filter: blur(50px) saturate(1.5);
-  border-radius: 15px;
+  background-color: rgba(245, 245, 247, .8);
+  backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 24px;
   box-shadow: 0px 1px 4px -1px rgba(0,0,0,0.3);
 }
 
@@ -65,7 +65,7 @@ html, body, #map-canvas,
 #search-bar button{
   color: #000;
   background-color: transparent;
-  margin: 8px;
+  margin: 10px;
   padding: 0px;
   text-align: center;
 }
@@ -201,16 +201,17 @@ html, body, #map-canvas,
 
 .ui-autocomplete {
   position: static !important;
-  margin-inline: 8px;
-  margin-bottom: 8px;
+  margin-inline: 10px !important;
+  margin-bottom: 10px;
   width: auto !important;
   min-width: unset !important;
   max-width: unset !important;
-  border-radius: 10px;
-  background-color: rgb(255 255 255 / 0.25);
-  backdrop-filter: blur(50px);
+  border-radius: 14px;
+  background-color: rgba(245, 245, 247, .4);
+  backdrop-filter: blur(20px) saturate(280%);
   border: none !important;
   box-shadow: 0.1px 1px 3px 1px rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 .night .ui-autocomplete {
@@ -222,6 +223,6 @@ html, body, #map-canvas,
 }
 
 .gm-control-active {
-  background-color: rgb(255 255 255 / 0.5) !important;
-  backdrop-filter: blur(50px) saturate(1.5);
+  background-color: rgba(245, 245, 247, .8) !important;
+  backdrop-filter: blur(20px) saturate(280%);
 }
