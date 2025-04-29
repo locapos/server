@@ -98,6 +98,15 @@ export const Default: google.maps.MapTypeStyle[] = [
   },
   {
     "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#B8DCFF"
+      }
+    ]
+  },
+  {
+    "featureType": "water",
     "elementType": "labels.text",
     "stylers": [
       {
