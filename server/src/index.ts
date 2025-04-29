@@ -4,6 +4,7 @@ import { api } from './api';
 import { oauth } from './oauth';
 import { Connection } from './durable-objects/connection';
 import { auth } from './auth';
+import { decompress } from './middleware/decompress';
 
 export { Storage } from "./durable-objects/storage";
 export { Connection } from "./durable-objects/connection";
@@ -11,6 +12,7 @@ export { Connection } from "./durable-objects/connection";
 const app = new Hono<{ Bindings: Env }>()
 
 app.use('/api/*', cors({ origin: '*' }))
+app.use('/api/*', decompress)
 app.route('/api', api);
 app.route('/oauth', oauth);
 app.route('/auth', auth);
