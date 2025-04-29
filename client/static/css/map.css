@@ -64,6 +64,7 @@ body,
 
 #search-bar {
   display: none;
+  position: absolute;
 }
 
 #search-bar button {
