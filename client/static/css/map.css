@@ -35,7 +35,7 @@ body,
   background-color: rgba(245, 245, 247, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   border-radius: 24px;
-  box-shadow: 0px 1px 4px -1px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
 }
 
 .width-wrapper {
@@ -100,7 +100,7 @@ body,
 }
 
 #search-bar form {
-  margin-left: 58px;
+  margin-left: 48px;
   padding-left: 6px;
   padding-right: 10px;
   height: 48px;
@@ -231,4 +231,14 @@ body,
 .gm-control-active {
   background-color: rgba(245, 245, 247, 0.8) !important;
   backdrop-filter: blur(20px) saturate(280%);
+}
+
+.ui-autocomplete i {
+  margin-right: 5px;
+}
+
+.mdl-layout__drawer-button i.bi {
+  font-size: 20px;
+  display: block;
+  color: #444;
 }

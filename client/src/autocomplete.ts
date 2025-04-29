@@ -5,7 +5,7 @@ type AutocompleteItem = {
   label: string;
   secondary: string;
   value: string;
-  type: "user" | "map-marker";
+  type: "person-fill" | "geo-alt-fill";
   placeId?: string;
   userId?: string;
   raw: unknown;
@@ -40,8 +40,8 @@ export default class Autocomplete {
       .data("ui-autocomplete")._renderItem = (ul: JQuery, item: AutocompleteItem) => {
       const secondary = $("<span>" + item.secondary + "</span>").addClass("secondary");
       const icon = $("<i>")
-        .addClass("fa")
-        .addClass("fa-" + item.type)
+        .addClass("bi")
+        .addClass("bi-" + item.type)
         .attr("aria-hidden", "true");
       const content = $("<span>" + item.label + "</span>")
         .append(secondary)
@@ -81,7 +81,7 @@ export default class Autocomplete {
           label: this.format(x.structured_formatting),
           secondary: x.structured_formatting.secondary_text,
           value: x.description,
-          type: "map-marker" as const,
+          type: "geo-alt-fill" as const,
           placeId: x.place_id,
           raw: x,
         }));
@@ -112,7 +112,7 @@ export default class Autocomplete {
         label: this.formatUser(req, x.name),
         secondary: `${x.latitude},${x.longitude}`,
         value: x.name,
-        type: "user" as const,
+        type: "person-fill" as const,
         userId: `${x.provider}:${x.id}`,
         raw: x,
       }));
