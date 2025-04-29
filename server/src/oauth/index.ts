@@ -6,6 +6,8 @@ import { hash, hmac } from "../lib/hashgen";
 import { getAuthUser } from "../util/auth-session";
 import { ClientRepository } from "../repositories/ClientRepository";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
+import { AssetsRepository } from "../repositories/AssetsRepository";
+import { newResponse } from "../util/response";
 
 class BodyElementHandler implements HTMLRewriterElementContentHandlers {
   constructor(private uri: string) { }
@@ -54,8 +56,7 @@ app.get("/authorize", async (c) => {
   });
 
   // Proxy asset content
-  const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_authorize.html");
-  return c.newResponse(asset.body, asset);
+  return newResponse(c, await new AssetsRepository(c).authorize());
 });
 
 app.get("/redirect", async (c) => {
@@ -98,7 +99,7 @@ app.get("/redirect", async (c) => {
     ? encodeURIComponent(`${userHash}.${existingToken.token}`)
     : encodeURIComponent(`${userHash}.${tokenHash}`);
 
-  const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_redirect.html");
+  const asset = await new AssetsRepository(c).redirect();
   const rewriter = new HTMLRewriter()
     .on(
       "body",
@@ -117,8 +118,7 @@ app.get("/failed", async (c) => {
   deleteCookie(c, "auth");
 
   // Proxy content
-  const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_failed.html");
-  return c.newResponse(asset.body, asset);
+  return newResponse(c, await new AssetsRepository(c).failed());
 });
 
 export { app as oauth };
