@@ -1,0 +1,17 @@
+# ビルド生成物
+dist/
+node_modules/
+bower_components/
+@types/worker-configuration.d.ts
+
+# ログファイル
+*.log
+
+# Terraformファイル
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+
+# その他
+.DS_Store
+.cache

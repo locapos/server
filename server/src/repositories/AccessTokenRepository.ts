@@ -53,9 +53,7 @@ export class AccessTokenRepository {
   }
 
   async deleteExpired(): Promise<void> {
-    await this.db
-      .delete(accessTokensTable)
-      .where(lt(accessTokensTable.expireAt, Date.now()));
+    await this.db.delete(accessTokensTable).where(lt(accessTokensTable.expireAt, Date.now()));
   }
 
   async create(accessToken: AccessToken): Promise<AccessToken> {

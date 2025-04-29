@@ -14,7 +14,7 @@ app.get("/", async (c) => {
     response_type: "code",
     scope: "profile",
     state,
-    prompt: "consent"
+    prompt: "consent",
   });
   return c.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
 });
@@ -36,15 +36,15 @@ app.get("/callback", async (c) => {
       client_id: c.env.GOOGLE_CLIENT_ID,
       client_secret: c.env.GOOGLE_CLIENT_SECRET,
       redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/google/callback`,
-      grant_type: "authorization_code"
-    })
+      grant_type: "authorization_code",
+    }),
   });
   if (!tokenRes.ok) {
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const userRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
-    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` },
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
@@ -53,7 +53,7 @@ app.get("/callback", async (c) => {
   await setAuthUser(c, {
     provider: "google",
     id: user.id,
-    name: user.name || user.email || ""
+    name: user.name || user.email || "",
   });
   return c.redirect("/oauth/redirect");
 });

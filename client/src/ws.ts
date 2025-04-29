@@ -1,10 +1,11 @@
 import MapView from "./map-view";
 import Markers, { Location } from "./markers";
-import Hash from "./hash";
-import { MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 
 export class WsSession {
-  constructor(private mapView: MapView, private markers: Markers) { }
+  constructor(
+    private mapView: MapView,
+    private markers: Markers
+  ) {}
 
   start() {
     const socket = new WebSocket(WsSession.url);
@@ -13,19 +14,23 @@ export class WsSession {
 
     socket.addEventListener("open", () => {
       socket.send(JSON.stringify({ event: "sync" }));
-      pingInterval = window.setInterval(() => socket.send(JSON.stringify({ event: "ping" })), 15 * 1000); // send ping every minute
-      syncInterval = window.setInterval(() => socket.send(JSON.stringify({ event: "sync" })), 2.5 * 60 * 1000); // send sync request every 2.5 minutes
+      pingInterval = window.setInterval(
+        () => socket.send(JSON.stringify({ event: "ping" })),
+        15 * 1000
+      ); // send ping every minute
+      syncInterval = window.setInterval(
+        () => socket.send(JSON.stringify({ event: "sync" })),
+        2.5 * 60 * 1000
+      ); // send sync request every 2.5 minutes
     });
 
     socket.addEventListener("message", (event) => {
       const msg = JSON.parse(event.data);
       if (msg.event === "update") {
         msg.data.forEach((o: Location) => this.markers.update(o));
-      }
-      else if (msg.event === "delete") {
+      } else if (msg.event === "delete") {
         msg.data.forEach((o: string) => this.markers.clear(o));
-      }
-      else if (msg.event === "sync") {
+      } else if (msg.event === "sync") {
         this.markers.keys().forEach((k) => this.markers.clear(k));
         msg.data.forEach((o: Location) => this.markers.update(o));
       }

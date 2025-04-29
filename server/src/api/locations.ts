@@ -38,7 +38,7 @@ app.post("/update", enforce, async (c) => {
     obj.heading = obj.heading < 0 ? obj.heading + 360 : obj.heading;
   }
   // group key must be 43 characters
-  const groups = group.split(",").filter(g => g.length !== 0);
+  const groups = group.split(",").filter((g) => g.length !== 0);
   for (const g of groups) {
     if (g.length !== 0 && g.length !== 43) {
       throw new HTTPException(403, { message: "group key must be 43 characters" });

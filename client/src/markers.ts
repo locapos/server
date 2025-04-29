@@ -1,6 +1,6 @@
-import { MarkerWithLabel } from '@googlemaps/markerwithlabel';
-import Hash from './hash';
-import MapView from './map-view';
+import { MarkerWithLabel } from "@googlemaps/markerwithlabel";
+import Hash from "./hash";
+import MapView from "./map-view";
 
 export type Location = {
   provider: string;
@@ -27,17 +27,17 @@ export default class Markers {
     const opt = {
       position: new google.maps.LatLng(obj.latitude, obj.longitude),
       icon: icon,
-      labelContent: obj.name || '(undefined)',
+      labelContent: obj.name || "(undefined)",
       labelAnchor: new google.maps.Point(-32, 10),
-      labelClass: `labels ${Hash.isLooking(key) ? 'looking' : ''}`,
+      labelClass: `labels ${Hash.isLooking(key) ? "looking" : ""}`,
       labelStyle: { opacity: 0.75 },
-      key: key
+      key: key,
     };
     if (this.markers[key] === undefined) {
       this.markers[key] = this.map.createLabeledMarker(opt);
       this.markers[key].rawValue = obj;
     } else {
-      this.map.createTrackingDot(this.markers[key], obj.posMode || 'A');
+      this.map.createTrackingDot(this.markers[key], obj.posMode || "A");
       this.markers[key].setOptions(opt);
     }
     if (Hash.isLooking(key)) {
@@ -46,7 +46,9 @@ export default class Markers {
   }
 
   clear(key: string) {
-    if (this.markers[key] === undefined) { return; }
+    if (this.markers[key] === undefined) {
+      return;
+    }
     // clear marker from map
     this.markers[key].setMap(null);
     delete this.markers[key];
@@ -57,7 +59,7 @@ export default class Markers {
   }
 
   values() {
-    return Object.keys(this.markers).map(k => this.markers[k]);
+    return Object.keys(this.markers).map((k) => this.markers[k]);
   }
 
   containsKey(key: string) {

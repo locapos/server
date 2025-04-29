@@ -1,4 +1,3 @@
-
 import { DurableObject } from "cloudflare:workers";
 import { uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
@@ -41,10 +40,10 @@ export class Storage extends DurableObject<Env> {
   }
 
   async storeLocation(obj: Location, groups: string[], isPrivate: boolean) {
-    const primary = isPrivate ? uniqueId(this.env, obj) : '0';
+    const primary = isPrivate ? uniqueId(this.env, obj) : "0";
     await Promise.all([
       this.updateAndPublish(primary, obj),
-      ...groups.map(group => this.updateAndPublish(group, obj))
+      ...groups.map((group) => this.updateAndPublish(group, obj)),
     ]);
   }
 
@@ -62,7 +61,7 @@ export class Storage extends DurableObject<Env> {
     }
   }
 
-  async alarm(_alarmInfo?: AlarmInvocationInfo) {
+  async alarm() {
     const expirations = await this.locationRepository.listExpirations();
     for (const expired of expirations) {
       const { provider, id, mapKey } = expired;
@@ -99,7 +98,7 @@ export class Storage extends DurableObject<Env> {
     if (next.heading != null) return next;
     return {
       ...next,
-      heading: geo.heading(current, next)
+      heading: geo.heading(current, next),
     };
   }
 

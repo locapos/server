@@ -2,7 +2,7 @@ import MapView from "./map-view";
 
 export type MapLayerLike = {
   setMap(map: google.maps.Map | null): void;
-}
+};
 
 export default class MapLayer {
   private map: MapView;

@@ -1,16 +1,20 @@
-:root, html body, html body .gm-style {
+:root,
+html body,
+html body .gm-style {
   font-family: "Noto Sans JP";
 }
 
-html, body, #map-canvas, 
-.layout-root, .layout-root .mdl-layout__content
-{
+html,
+body,
+#map-canvas,
+.layout-root,
+.layout-root .mdl-layout__content {
   height: 100%;
   margin: 0;
   padding: 0;
 }
 
-.labels{
+.labels {
   color: black;
   background-color: white;
   font-size: 10px;
@@ -20,21 +24,21 @@ html, body, #map-canvas,
   white-space: nowrap;
 }
 
-.looking{
+.looking {
   color: white;
   background-color: red;
 }
 
-.additional-control{
+.additional-control {
   margin: 10px;
   padding: 8px;
-  background-color: rgba(245, 245, 247, .8);
+  background-color: rgba(245, 245, 247, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   border-radius: 24px;
-  box-shadow: 0px 1px 4px -1px rgba(0,0,0,0.3);
+  box-shadow: 0px 1px 4px -1px rgba(0, 0, 0, 0.3);
 }
 
-.width-wrapper{
+.width-wrapper {
   width: 100vw;
 }
 
@@ -43,7 +47,7 @@ html, body, #map-canvas,
   box-shadow: none;
 }
 
-#search-bar .additional-control{
+#search-bar .additional-control {
   padding: 0px;
   min-height: 48px;
   max-width: 320px;
@@ -58,11 +62,11 @@ html, body, #map-canvas,
   border-bottom: 0.0001px solid transparent;
 }
 
-#search-bar{
+#search-bar {
   display: none;
 }
 
-#search-bar button{
+#search-bar button {
   color: #000;
   background-color: transparent;
   margin: 10px;
@@ -86,11 +90,11 @@ html, body, #map-canvas,
   display: block;
 }
 
-#search-bar button:focus{
+#search-bar button:focus {
   outline: 0px;
 }
 
-#search-bar input:focus{
+#search-bar input:focus {
   outline: 0px;
 }
 
@@ -101,7 +105,7 @@ html, body, #map-canvas,
   height: 48px;
 }
 
-#search-bar form input{
+#search-bar form input {
   border: none;
   width: 100%;
   height: 100%;
@@ -122,12 +126,13 @@ html, body, #map-canvas,
 }
 
 @media screen and (max-width: 480px) {
-  #search-bar .additional-control{
+  #search-bar .additional-control {
     max-width: 9999px;
   }
 }
 
-.night .search-bar, .night input {
+.night .search-bar,
+.night input {
   background-color: rgb(64 80 96 / 0.5);
 }
 
@@ -178,12 +183,12 @@ html, body, #map-canvas,
 }
 
 #search-bar .ui-menu-item:hover {
-  background-color: #5070D0;
-  color: #FFF;
+  background-color: #5070d0;
+  color: #fff;
 }
 
 /* styles for night mode */
-#search-bar .ui-autocomplete.night{
+#search-bar .ui-autocomplete.night {
   background-color: #405060;
   color: #ccc;
   border-color: #666;
@@ -207,10 +212,10 @@ html, body, #map-canvas,
   min-width: unset !important;
   max-width: unset !important;
   border-radius: 14px;
-  background-color: rgba(245, 245, 247, .4);
+  background-color: rgba(245, 245, 247, 0.4);
   backdrop-filter: blur(20px) saturate(280%);
   border: none !important;
-  box-shadow: 0.1px 1px 3px 1px rgba(0,0,0,0.2);
+  box-shadow: 0.1px 1px 3px 1px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
@@ -223,6 +228,6 @@ html, body, #map-canvas,
 }
 
 .gm-control-active {
-  background-color: rgba(245, 245, 247, .8) !important;
+  background-color: rgba(245, 245, 247, 0.8) !important;
   backdrop-filter: blur(20px) saturate(280%);
 }

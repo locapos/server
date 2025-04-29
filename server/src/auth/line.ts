@@ -13,7 +13,7 @@ app.get("/", async (c) => {
     client_id: c.env.LINE_CHANNEL_ID,
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/line/callback`,
     state,
-    scope: "profile"
+    scope: "profile",
   });
   return c.redirect(`https://access.line.me/oauth2/v2.1/authorize?${params.toString()}`);
 });
@@ -35,8 +35,8 @@ app.get("/callback", async (c) => {
       code,
       redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/line/callback`,
       client_id: c.env.LINE_CHANNEL_ID,
-      client_secret: c.env.LINE_CHANNEL_SECRET
-    })
+      client_secret: c.env.LINE_CHANNEL_SECRET,
+    }),
   });
   if (!tokenRes.ok) {
     console.log("tokenRes", await tokenRes.text());
@@ -44,7 +44,7 @@ app.get("/callback", async (c) => {
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const userRes = await fetch("https://api.line.me/v2/profile", {
-    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` },
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
@@ -53,7 +53,7 @@ app.get("/callback", async (c) => {
   await setAuthUser(c, {
     provider: "line",
     id: user.userId,
-    name: user.displayName || ""
+    name: user.displayName || "",
   });
   return c.redirect("/oauth/redirect");
 });

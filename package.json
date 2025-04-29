@@ -2,6 +2,7 @@
   "name": "locapos-server",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "npm run build:client && npm run build:templates",
     "build:templates": "sh scripts/build-templates.sh",
@@ -14,7 +15,11 @@
     "dev": "wrangler dev",
     "dev:remote": "wrangler dev --remote",
     "types:gen": "wrangler types @types/worker-configuration.d.ts",
-    "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts"
+    "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts",
+    "lint": "eslint --ext .ts,.js ./client/src ./server/src",
+    "lint:fix": "eslint --ext .ts,.js ./client/src ./server/src --fix",
+    "format": "prettier --write \"**/*.{ts,js,json,css,html,pug}\"",
+    "format:check": "prettier --check \"**/*.{ts,js,json,css,html,pug}\""
   },
   "repository": {
     "type": "git",
@@ -35,14 +40,22 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.25.1",
+    "@prettier/plugin-pug": "^3.4.0",
     "@types/google.maps": "^3.58.1",
     "@types/jquery": "^3.5.32",
     "@types/jqueryui": "^1.12.24",
     "@types/node": "^22.14.1",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
     "bower": "^1.8.14",
     "drizzle-kit": "^0.31.0",
     "esbuild": "^0.25.2",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "prettier": "^3.5.3",
     "pug-cli": "^1.0.0-alpha6",
+    "typescript-eslint": "^8.31.1",
     "wrangler": "^4.13.2"
   }
 }

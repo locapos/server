@@ -9,7 +9,7 @@ type Session = {
 
 type State = {
   state: string;
-}
+};
 
 const COOKIE_NAME = "auth";
 
@@ -29,7 +29,7 @@ export const getAuthState = async (c: Context<{ Bindings: Env }>): Promise<State
 
 export const setAuthState = async (c: Context<{ Bindings: Env }>, state: string) => {
   await setSignedCookie(c, COOKIE_NAME, JSON.stringify({ state }), c.env.COOKIE_SECRET);
-}
+};
 
 export const getAuthUser = async (c: Context<{ Bindings: Env }>): Promise<Session | null> => {
   const cookie = await getSignedCookie(c, c.env.COOKIE_SECRET, COOKIE_NAME);

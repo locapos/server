@@ -13,7 +13,7 @@ app.get("/", async (c) => {
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/facebook/callback`,
     state,
     response_type: "code",
-    scope: "public_profile email"
+    scope: "public_profile email",
   });
   return c.redirect(`https://www.facebook.com/v19.0/dialog/oauth?${params.toString()}`);
 });
@@ -28,21 +28,26 @@ app.get("/callback", async (c) => {
   if (!code) {
     throw new HTTPException(400, { message: "Missing code" });
   }
-  const tokenRes = await fetch(`https://graph.facebook.com/v19.0/oauth/access_token?` +
-    new URLSearchParams({
-      client_id: c.env.FACEBOOK_CLIENT_ID,
-      client_secret: c.env.FACEBOOK_CLIENT_SECRET,
-      redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/facebook/callback`,
-      code
-    }), {
-    method: "GET"
-  });
+  const tokenRes = await fetch(
+    `https://graph.facebook.com/v19.0/oauth/access_token?` +
+      new URLSearchParams({
+        client_id: c.env.FACEBOOK_CLIENT_ID,
+        client_secret: c.env.FACEBOOK_CLIENT_SECRET,
+        redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/facebook/callback`,
+        code,
+      }),
+    {
+      method: "GET",
+    }
+  );
   if (!tokenRes.ok) {
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const accessToken = tokenJson.access_token;
-  const userRes = await fetch(`https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`);
+  const userRes = await fetch(
+    `https://graph.facebook.com/me?fields=id,name,email&access_token=${accessToken}`
+  );
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
   }
@@ -50,7 +55,7 @@ app.get("/callback", async (c) => {
   await setAuthUser(c, {
     provider: "facebook",
     id: user.id,
-    name: user.name || user.email || ""
+    name: user.name || user.email || "",
   });
   return c.redirect("/oauth/redirect");
 });

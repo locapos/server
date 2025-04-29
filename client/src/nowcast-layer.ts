@@ -1,4 +1,4 @@
-import CustomLayer from './custom-layer';
+import CustomLayer from "./custom-layer";
 
 export default class NowcastLayer extends CustomLayer {
   getDate() {
@@ -7,7 +7,7 @@ export default class NowcastLayer extends CustomLayer {
     const month = now.getMonth() + 1;
     const day = now.getDate();
     const hours = now.getHours();
-    const minutes = (now.getMinutes() / 10 | 0) * 10;
+    const minutes = ((now.getMinutes() / 10) | 0) * 10;
 
     return `${year}${this.stringify(month)}${this.stringify(day)}${this.stringify(hours)}${this.stringify(minutes)}`;
   }
@@ -21,6 +21,6 @@ export default class NowcastLayer extends CustomLayer {
   }
 
   private stringify(num: number) {
-    return num < 10 ? '0' + num : num;
+    return num < 10 ? "0" + num : num;
   }
 }

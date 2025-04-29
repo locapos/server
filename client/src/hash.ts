@@ -4,12 +4,12 @@ type InfoType = {
 
 class Hash {
   info(): InfoType {
-    const hash = location.hash.split('/');
+    const hash = location.hash.split("/");
     return { id: hash[1] };
   }
 
   setInfo(info: InfoType) {
-    location.hash = '#!/' + info.id;
+    location.hash = "#!/" + info.id;
   }
 
   isLooking(id: string | undefined) {
@@ -17,7 +17,7 @@ class Hash {
   }
 
   toggleLookingFor(id: string | undefined) {
-    const info = { id: (this.isLooking(id) ? '' : id) };
+    const info = { id: this.isLooking(id) ? "" : id };
     this.setInfo(info);
   }
 }

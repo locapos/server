@@ -16,7 +16,7 @@ app.get("/", async (c) => {
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/microsoft/callback`,
     response_mode: "query",
     scope: "openid profile",
-    state
+    state,
   });
   return c.redirect(`${MS_AUTHORITY}/authorize?${params.toString()}`);
 });
@@ -39,24 +39,28 @@ app.get("/callback", async (c) => {
       code,
       redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/microsoft/callback`,
       grant_type: "authorization_code",
-      scope: "openid email profile User.Read"
-    })
+      scope: "openid email profile User.Read",
+    }),
   });
   if (!tokenRes.ok) {
     throw new HTTPException(400, { message: "Failed to get token" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const userRes = await fetch("https://graph.microsoft.com/v1.0/me", {
-    headers: { Authorization: `Bearer ${tokenJson.access_token}` }
+    headers: { Authorization: `Bearer ${tokenJson.access_token}` },
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
   }
-  const user = await userRes.json<{ id: string; displayName?: string; userPrincipalName?: string }>();
+  const user = await userRes.json<{
+    id: string;
+    displayName?: string;
+    userPrincipalName?: string;
+  }>();
   await setAuthUser(c, {
     provider: "microsoft",
     id: user.id,
-    name: user.displayName || user.userPrincipalName || ""
+    name: user.displayName || user.userPrincipalName || "",
   });
   return c.redirect("/oauth/redirect");
 });

@@ -1,4 +1,3 @@
-
 import { DurableObject } from "cloudflare:workers";
 import { Location, Storage } from "./storage";
 
@@ -36,7 +35,12 @@ export class Connection extends DurableObject<Env> {
     this.connections.delete(ws);
   }
 
-  webSocketClose(ws: WebSocket, code: number, reason: string, wasClean: boolean): void | Promise<void> {
+  webSocketClose(
+    ws: WebSocket,
+    code: number,
+    reason: string,
+    wasClean: boolean
+  ): void | Promise<void> {
     console.log("WebSocket closed:", { code, reason, wasClean });
     this.connections.delete(ws);
   }
@@ -78,7 +82,7 @@ export class Connection extends DurableObject<Env> {
   }
 
   private async getName() {
-    return await this.ctx.storage.get<string>("name") || "0";
+    return (await this.ctx.storage.get<string>("name")) || "0";
   }
 
   private async setName(name: string) {

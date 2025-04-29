@@ -13,7 +13,7 @@ app.get("/", async (c) => {
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/github/callback`,
     scope: "read:user",
     state,
-    allow_signup: "true"
+    allow_signup: "true",
   });
   return c.redirect(`https://github.com/login/oauth/authorize?${params.toString()}`);
 });
@@ -30,14 +30,14 @@ app.get("/callback", async (c) => {
   }
   const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
     method: "POST",
-    headers: { "Accept": "application/json" },
+    headers: { Accept: "application/json" },
     body: new URLSearchParams({
       client_id: c.env.GITHUB_CLIENT_ID,
       client_secret: c.env.GITHUB_CLIENT_SECRET,
       code,
       redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/github/callback`,
-      state: remoteState
-    })
+      state: remoteState,
+    }),
   });
   if (!tokenRes.ok) {
     throw new HTTPException(400, { message: "Failed to get token" });
@@ -46,8 +46,8 @@ app.get("/callback", async (c) => {
   const userRes = await fetch("https://api.github.com/user", {
     headers: {
       Authorization: `Bearer ${tokenJson.access_token}`,
-      "User-Agent": "locapos-server"
-    }
+      "User-Agent": "locapos-server",
+    },
   });
   if (!userRes.ok) {
     throw new HTTPException(400, { message: "Failed to get user info" });
@@ -56,7 +56,7 @@ app.get("/callback", async (c) => {
   await setAuthUser(c, {
     provider: "github",
     id: String(user.id),
-    name: user.name || user.login || ""
+    name: user.name || user.login || "",
   });
   return c.redirect("/oauth/redirect");
 });

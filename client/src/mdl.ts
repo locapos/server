@@ -3,30 +3,39 @@ export default class Mdl {
     return `mdl-${type} mdl-js-${type} mdl-js-ripple-effect`;
   }
 
-  createElement<K extends keyof HTMLElementTagNameMap>(tag: K, clazz: string, parent: HTMLElement): HTMLElementTagNameMap[K] {
-    let control = document.createElement(tag);
+  createElement<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    clazz: string,
+    parent: HTMLElement
+  ): HTMLElementTagNameMap[K] {
+    const control = document.createElement(tag);
     control.className = clazz;
     if (parent) parent.appendChild(control);
     return control;
   }
 
-  createRippleElement<K extends keyof HTMLElementTagNameMap>(tag: K, clazz: string, parent: HTMLElement): HTMLElementTagNameMap[K] {
+  createRippleElement<K extends keyof HTMLElementTagNameMap>(
+    tag: K,
+    clazz: string,
+    parent: HTMLElement
+  ): HTMLElementTagNameMap[K] {
     return this.createElement(tag, `${this.mdlRipple(tag)} ${clazz}`, parent);
   }
 
   createCheckbox(label: string, id: string, parent: HTMLElement) {
-    let control = this.createElement('label', this.mdlRipple('checkbox'), parent);
+    const control = this.createElement("label", this.mdlRipple("checkbox"), parent);
     control.htmlFor = id;
-    let ui = this.createElement('input', 'mdl-checkbox__input', control);
-    ui.type = 'checkbox';
+    const ui = this.createElement("input", "mdl-checkbox__input", control);
+    ui.type = "checkbox";
     ui.id = id;
-    let text = this.createElement('span', 'mdl-checkbox__label', control);
+    const text = this.createElement("span", "mdl-checkbox__label", control);
     text.innerText = label;
-    (control as any).ui = ui;
+    // This is not required?
+    // (control as any).ui = ui;
     return control;
   }
 
   createButton(label: unknown, id: unknown, parent: HTMLElement) {
-    return this.createRippleElement('button', 'mdl-button--raised', parent);
+    return this.createRippleElement("button", "mdl-button--raised", parent);
   }
 }

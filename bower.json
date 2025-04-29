@@ -2,20 +2,11 @@
   "name": "imakoko",
   "description": "",
   "main": "index.js",
-  "authors": [
-    "yutaka <shigure@refy.net>"
-  ],
+  "authors": ["yutaka <shigure@refy.net>"],
   "license": "MIT",
   "moduleType": [],
   "homepage": "",
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "public/components",
-    "test",
-    "tests"
-  ],
+  "ignore": ["**/.*", "node_modules", "bower_components", "public/components", "test", "tests"],
   "dependencies": {
     "Umi": "~3.3.6-1",
     "Add-Clear": "add-clear#^2.0.5"
