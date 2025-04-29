@@ -12,6 +12,7 @@
     "watch:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js --watch",
     "deploy": "npm run build && wrangler deploy",
     "dev": "wrangler dev",
+    "dev:remote": "wrangler dev --remote",
     "types:gen": "wrangler types @types/worker-configuration.d.ts",
     "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts"
   },
