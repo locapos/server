@@ -12,7 +12,7 @@ class BodyElementHandler implements HTMLRewriterElementContentHandlers {
 
   element(element: Element) {
     element.append(
-      `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},3000);</script>`,
+      `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},300000);</script>`,
       { html: true }
     );
   }
@@ -90,6 +90,7 @@ app.get("/redirect", async (c) => {
 
   // drop session
   deleteCookie(c, "session");
+  deleteCookie(c, "auth");
 
   // render redirect page
   const state = encodeURIComponent(session.state || "");
@@ -113,6 +114,7 @@ app.get("/redirect", async (c) => {
 app.get("/failed", async (c) => {
   // drop session
   deleteCookie(c, "session");
+  deleteCookie(c, "auth");
 
   // Proxy content
   const asset = await c.env.ASSETS.fetch("http://dummy/oauth/_failed.html");
