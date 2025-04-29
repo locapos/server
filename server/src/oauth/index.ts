@@ -1,13 +1,17 @@
 import { createHono } from "../lib/factory";
-import { deleteCookie } from "hono/cookie";
 import { HTTPException } from "hono/http-exception";
-import { getSession, setSession } from "../util/session";
 import { hash, hmac } from "../lib/hashgen";
-import { getAuthUser } from "../util/auth-session";
+import { newResponse } from "../util/response";
+import {
+  getOAuthClientSession,
+  setOAuthClientSession,
+  deleteOAuthClientSession,
+  getOAuthUserSession,
+  deleteOAuthUserSession
+} from "../util/oauth-session";
 import { ClientRepository } from "../repositories/ClientRepository";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 import { AssetsRepository } from "../repositories/AssetsRepository";
-import { newResponse } from "../util/response";
 
 class BodyElementHandler implements HTMLRewriterElementContentHandlers {
   constructor(private uri: string) { }
@@ -49,7 +53,7 @@ app.get("/authorize", async (c) => {
   const client = await clientRepository.getById(clientId);
   if (!client) throw new HTTPException(400);
 
-  await setSession(c, {
+  await setOAuthClientSession(c, {
     client_id: clientId,
     redirect_uri: redirectUri,
     state: c.req.query("state"),
@@ -60,8 +64,8 @@ app.get("/authorize", async (c) => {
 });
 
 app.get("/redirect", async (c) => {
-  const user = await getAuthUser(c);
-  const session = await getSession(c);
+  const user = await getOAuthUserSession(c);
+  const session = await getOAuthClientSession(c);
   const uri = session?.redirect_uri;
   if (!user || !session || !uri) throw new HTTPException(400);
 
@@ -90,8 +94,8 @@ app.get("/redirect", async (c) => {
   }
 
   // drop session
-  deleteCookie(c, "session");
-  deleteCookie(c, "auth");
+  deleteOAuthClientSession(c);
+  deleteOAuthUserSession(c);
 
   // render redirect page
   const state = encodeURIComponent(session.state || "");
@@ -114,8 +118,8 @@ app.get("/redirect", async (c) => {
 
 app.get("/failed", async (c) => {
   // drop session
-  deleteCookie(c, "session");
-  deleteCookie(c, "auth");
+  deleteOAuthClientSession(c);
+  deleteOAuthUserSession(c);
 
   // Proxy content
   return newResponse(c, await new AssetsRepository(c).failed());
