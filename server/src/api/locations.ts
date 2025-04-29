@@ -28,8 +28,8 @@ app.post("/update", enforce, async (c) => {
   const group = body.key || "";
   const isPrivate = body.private === "true";
   // check values
-  if (isNaN(obj.latitude)) throw new HTTPException(400);
-  if (isNaN(obj.longitude)) throw new HTTPException(400);
+  if (isNaN(obj.latitude)) throw new HTTPException(400, { message: "latitude is not a number" });
+  if (isNaN(obj.longitude)) throw new HTTPException(400, { message: "longitude is not a number" });
   if (obj.heading != null && isNaN(obj.heading)) {
     obj.heading = undefined;
   }
