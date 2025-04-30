@@ -21,7 +21,6 @@ body,
   text-align: center;
   width: 60px;
   border: 2px solid red;
-  white-space: nowrap;
 }
 
 .looking {
