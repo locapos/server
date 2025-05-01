@@ -79,6 +79,24 @@ export const Default: google.maps.MapTypeStyle[] = [
     ],
   },
   {
+    featureType: "road",
+    elementType: "labels.icon",
+    stylers: [
+      {
+        visibility: "visible",
+      },
+    ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "visible",
+      }
+    ]
+  },
+  {
     featureType: "road.highway.controlled_access",
     elementType: "geometry.fill",
     stylers: [
@@ -272,6 +290,15 @@ export const Night: google.maps.MapTypeStyle[] = [
         color: "#9ca5b3",
       },
     ],
+  },
+  {
+    featureType: "road.highway",
+    elementType: "labels",
+    stylers: [
+      {
+        visibility: "visible",
+      }
+    ]
   },
   {
     featureType: "road.highway",
