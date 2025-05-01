@@ -43,6 +43,7 @@ Events.handleEventOnce(document, "mdl-componentupgraded", () => {
   mapView.on("maptypeid_changed", () => {
     const state = mapView.getMapType() == MapParams.NIGHT_MODE;
     ThemeHelper.setColor(state ? "#263238" : "#4DB6AC");
+    localStorage.setItem("night-mode", state ? "1" : "0");
     getElementById<HTMLInputElement>("swMapMode").checked = state;
     if (state) {
       getElementById("search-bar").classList.add("night");
