@@ -241,3 +241,9 @@ body,
   display: block;
   color: #444;
 }
+
+.night .mdl-layout__drawer-button i.bi {
+  font-size: 20px;
+  display: block;
+  color: #ccc;
+}
