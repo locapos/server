@@ -61,6 +61,7 @@ export default class MapView {
     const dot = new google.maps.Marker({
       position: origin.getPosition()!,
       icon: icon,
+      clickable: false,
     });
     dot.setMap(this.map);
   }
