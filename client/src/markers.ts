@@ -32,6 +32,7 @@ export default class Markers {
       labelClass: `labels ${Hash.isLooking(key) ? "looking" : ""}`,
       labelStyle: { opacity: 0.75 },
       key: key,
+      zIndex: 1,
     };
     if (this.markers[key] === undefined) {
       this.markers[key] = this.map.createLabeledMarker(opt);
