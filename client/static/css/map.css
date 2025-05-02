@@ -298,3 +298,8 @@ button#menu i.bi {
 .dark .ui-autocomplete {
   background-color: rgb(64 80 96 / 0.25);
 }
+
+.dark .gm-control-active {
+  background-color: rgb(64 80 96 / 0.5) !important;
+  color: #ccc !important;
+}
