@@ -92,7 +92,7 @@ body,
   background-color: var(--glass-bg);
   box-shadow: var(--glass-shadow);
   border: var(--glass-border);
-  transition: box-shadow 0.1s;
+  transition: box-shadow 0.15s;
 }
 
 .search-bar:focus-within {
@@ -164,12 +164,12 @@ button#menu i.bi {
 
 [popover]:popover-open {
   opacity: 1;
-  transform: translateY(0px);
+  transform: translateY(0px) scale(1);
 }
 
 [popover] {
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-10px) scale(0.95);
   transition:
     opacity 0.2s,
     transform 0.2s,
@@ -179,7 +179,7 @@ button#menu i.bi {
 @starting-style {
   [popover]:popover-open {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-10px) scale(0.95);
   }
 }
 
