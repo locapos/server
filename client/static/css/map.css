@@ -5,7 +5,7 @@
   --accent: #2563eb;
   --accent-hover: #3b82f6;
   --accent-rgb: 37, 99, 235;
-  --color-on-accent: #fff;
+  --color-on-accent: #f5f7fa;
   --icon-color: #6b7280;
   --switch-bg: rgba(0, 0, 0, 0.26);
   --glass-bg: rgba(255, 255, 255, 0.55);
@@ -29,17 +29,20 @@
   --accent: #38bdf8;
   --accent-hover: #67e8f9;
   --accent-rgb: 56, 189, 248;
-  --color-on-accent: #000;
+  --color-on-accent: #111;
   --icon-color: #9ca3af;
   --switch-bg: rgba(255, 255, 255, 0.26);
   --glass-bg: rgba(13, 20, 33, 0.5);
   --glass-bg-dd: rgba(13, 20, 33, 0.82);
   --glass-border: 1px solid rgba(255, 255, 255, 0.05);
   --glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
-  --glass-focus-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  --glass-focus-shadow:
+    0 0 0 2px rgba(56, 189, 248, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.65);
   --dropdown-shadow:
     rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
-    rgba(17, 17, 26, 0.35) 0px 16px 56px;
+    rgba(17, 17, 26, 0.35) 0px 16px 56px, inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.65);
   /* --glass-shadow:
     0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.05),
     inset 0 -1px 1px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
