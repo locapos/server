@@ -1,11 +1,58 @@
 @import url("segment.css");
 
+:root {
+  --color: #111;
+  --accent: #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-rgb: 37, 99, 235;
+  --color-on-accent: #fff;
+  --icon-color: #6b7280;
+  --switch-bg: rgba(0, 0, 0, 0.26);
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-dd: rgba(255, 255, 255, 0.9);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  --glass-focus-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  --dropdown-shadow:
+    rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
 .light {
   color-scheme: light;
 }
 
 .dark {
   color-scheme: dark;
+
+  --color: #f5f7fa;
+  --accent: #38bdf8;
+  --accent-hover: #67e8f9;
+  --accent-rgb: 56, 189, 248;
+  --color-on-accent: #000;
+  --icon-color: #9ca3af;
+  --switch-bg: rgba(255, 255, 255, 0.26);
+  --glass-bg: rgba(13, 20, 33, 0.5);
+  --glass-bg-dd: rgba(13, 20, 33, 0.82);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --glass-focus-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  --dropdown-shadow:
+    rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
+    rgba(17, 17, 26, 0.35) 0px 16px 56px;
+  /* --glass-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 0 2px rgba(255, 255, 255, 0.08);
+  --glass-focus-shadow:
+    0 0 0 2px rgba(56, 189, 248, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 0 2px rgba(255, 255, 255, 0.08);
+  --dropdown-shadow:
+    rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
+    rgba(17, 17, 26, 0.35) 0px 16px 56px, inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
+    inset 0 0 2px rgba(255, 255, 255, 0.08); */
 }
 
 :root,
@@ -40,10 +87,16 @@ body,
 .search-bar {
   margin: 10px;
   padding: 8px;
-  background-color: rgba(245, 245, 247, 0.8);
   backdrop-filter: saturate(180%) blur(20px);
   border-radius: 24px;
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  background-color: var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+  border: var(--glass-border);
+  transition: box-shadow 0.1s;
+}
+
+.search-bar:focus-within {
+  box-shadow: var(--glass-focus-shadow);
 }
 
 .width-wrapper {
@@ -98,16 +151,14 @@ button#menu i.bi {
   top: anchor(bottom);
   left: anchor(left);
   margin: 0;
-  margin-top: 5px;
+  margin-top: 8px;
   border: 0;
   border-radius: 24px;
-  background-color: rgba(245, 245, 247, 0.8);
+  background-color: var(--glass-bg);
   backdrop-filter: saturate(180%) blur(20px);
-  box-shadow:
-    rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.1) 0px 8px 24px,
-    rgba(17, 17, 26, 0.1) 0px 16px 56px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: var(--dropdown-shadow);
+  border: var(--glass-border);
+  color: var(--color);
   padding: 15px;
 }
 
@@ -225,9 +276,24 @@ button#menu i.bi {
   opacity: 0.5;
 }
 
+#search-bar .ui-menu-item {
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  color: var(--color);
+}
+
+#search-bar .ui-menu-item i {
+  color: var(--icon-color);
+}
+
 #search-bar .ui-menu-item:hover {
-  background-color: #5070d0;
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--color-on-accent);
+}
+
+#search-bar .ui-menu-item:hover i {
+  color: var(--color-on-accent);
 }
 
 #focus_trick {
@@ -250,10 +316,10 @@ button#menu i.bi {
   min-width: unset !important;
   max-width: unset !important;
   border-radius: 14px;
-  background-color: rgba(245, 245, 247, 0.4);
+  background-color: var(--glass-bg-dd);
   backdrop-filter: blur(20px) saturate(280%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   border: none !important;
-  box-shadow: 0.1px 1px 3px 1px rgba(0, 0, 0, 0.2);
   overflow: hidden;
 }
 
@@ -262,8 +328,10 @@ button#menu i.bi {
 }
 
 .gm-control-active {
-  background-color: rgba(245, 245, 247, 0.8) !important;
-  backdrop-filter: blur(20px) saturate(280%);
+  background-color: var(--glass-bg) !important;
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--glass-shadow) !important;
+  border: var(--glass-border) !important;
 }
 
 .ui-autocomplete i {
@@ -272,12 +340,6 @@ button#menu i.bi {
 
 .dark button#menu i.bi {
   color: #ccc;
-}
-
-.dark .search-bar,
-.dark input,
-.dark #popover {
-  background-color: rgb(64 80 96 / 0.5);
 }
 
 .dark input::placeholder {
@@ -290,16 +352,22 @@ button#menu i.bi {
 }
 /* styles for night mode */
 .dark #search-bar .ui-autocomplete {
-  background-color: #405060;
   color: #ccc;
   border-color: #666;
 }
 
-.dark .ui-autocomplete {
-  background-color: rgb(64 80 96 / 0.25);
+.mdl-switch__track {
+  background-color: var(--switch-bg);
 }
 
-.dark .gm-control-active {
-  background-color: rgb(64 80 96 / 0.5) !important;
-  color: #ccc !important;
+.mdl-switch__ripple-container .mdl-ripple {
+  background-color: var(--accent);
+}
+
+.mdl-switch.is-checked .mdl-switch__thumb {
+  background-color: rgb(var(--accent-rgb));
+}
+
+.mdl-switch.is-checked .mdl-switch__track {
+  background-color: rgba(var(--accent-rgb), 0.5);
 }

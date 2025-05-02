@@ -19,13 +19,20 @@
   padding: 5px 15px;
   flex: 1;
   border-right: 1px solid #888;
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
 }
 
 .segment:has(input[type="radio"]:checked) {
-  background-color: #3f51b5;
-  color: #fff;
+  background-color: var(--accent);
+  color: var(--color-on-accent);
   font-weight: 600;
   box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+.segment:hover {
+  background-color: var(--accent-hover);
+  color: var(--color-on-accent);
 }
 
 .segment input[type="radio"] {
