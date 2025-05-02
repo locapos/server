@@ -148,7 +148,9 @@ button#menu i.bi {
 #popover {
   position: fixed;
   position-anchor: --OptionButton;
+  top: 58px;
   top: anchor(bottom);
+  left: 10px;
   left: anchor(left);
   margin: 0;
   margin-top: 8px;
