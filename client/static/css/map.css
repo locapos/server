@@ -1,3 +1,13 @@
+@import url("segment.css");
+
+.light {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
 :root,
 html body,
 html body .gm-style {
@@ -7,8 +17,7 @@ html body .gm-style {
 html,
 body,
 #map-canvas,
-.layout-root,
-.layout-root .mdl-layout__content {
+.layout-root {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -28,7 +37,7 @@ body,
   background-color: red;
 }
 
-.additional-control {
+.search-bar {
   margin: 10px;
   padding: 8px;
   background-color: rgba(245, 245, 247, 0.8);
@@ -41,12 +50,7 @@ body,
   width: 100vw;
 }
 
-#search-bar.mdl-layout__header {
-  background-color: transparent;
-  box-shadow: none;
-}
-
-#search-bar .additional-control {
+#search-bar .search-bar {
   padding: 0px;
   min-height: 48px;
   max-width: 320px;
@@ -54,24 +58,84 @@ body,
   position: relative;
 }
 
-.additional-control.search-bar::after {
+button#menu {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background-color: transparent;
+  margin: 10px;
+  padding: 0px;
+  text-align: center;
+  top: -10px;
+  left: -10px;
+  anchor-name: --OptionButton;
+}
+
+button#menu i.bi {
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  color: #444;
+  height: 100%;
+}
+
+.search-bar::after {
   content: "";
   display: block;
   height: 0px;
   border-bottom: 0.0001px solid transparent;
 }
 
+.caption {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+#popover {
+  position: fixed;
+  position-anchor: --OptionButton;
+  top: anchor(bottom);
+  left: anchor(left);
+  margin: 0;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 24px;
+  background-color: rgba(245, 245, 247, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow:
+    rgba(17, 17, 26, 0.1) 0px 4px 16px,
+    rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+  transform: translateY(0px);
+}
+
+[popover] {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    display 0.2s allow-discrete;
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
 #search-bar {
   display: none;
   position: absolute;
-}
-
-#search-bar button {
-  color: #000;
-  background-color: transparent;
-  margin: 10px;
-  padding: 0px;
-  text-align: center;
+  width: 100%;
 }
 
 #search-bar input {
@@ -90,10 +154,7 @@ body,
   display: block;
 }
 
-#search-bar button:focus {
-  outline: 0px;
-}
-
+#search-bar button:focus,
 #search-bar input:focus {
   outline: 0px;
 }
@@ -115,8 +176,11 @@ body,
 }
 
 .nav-switch {
-  margin: 10px;
-  height: 48px;
+  margin-bottom: 15px;
+}
+
+.nav-switch:last-child {
+  margin-bottom: 0px;
 }
 
 @media screen and (max-width: 600px) {
@@ -126,33 +190,17 @@ body,
 }
 
 @media screen and (max-width: 480px) {
-  #search-bar .additional-control {
+  #search-bar .search-bar {
     max-width: 9999px;
+    z-index: 1;
+  }
+
+  .gm-fullscreen-control {
+    top: 63px !important;
   }
 }
 
-.night .search-bar,
-.night input {
-  background-color: rgb(64 80 96 / 0.5);
-}
-
-.night input::placeholder {
-  color: #ccc;
-  opacity: 0.5;
-}
-
-#search-bar.night button.mdl-layout__drawer-button,
-.night input {
-  color: #ccc;
-}
-
 /* styles for complexed search implementations */
-
-#search-bar .ui-autocomplete {
-  margin-left: 8px;
-  left: 0px !important;
-  white-space: nowrap;
-}
 
 #search-bar .ui-menu-item {
   font-size: 13px;
@@ -172,11 +220,6 @@ body,
   overflow: hidden;
 }
 
-#search-bar .ui-menu-item i.fa {
-  font-size: 16px;
-  margin-right: 8px;
-}
-
 #search-bar .ui-menu-item span.secondary {
   margin-left: 8px;
   opacity: 0.5;
@@ -185,13 +228,6 @@ body,
 #search-bar .ui-menu-item:hover {
   background-color: #5070d0;
   color: #fff;
-}
-
-/* styles for night mode */
-#search-bar .ui-autocomplete.night {
-  background-color: #405060;
-  color: #ccc;
-  border-color: #666;
 }
 
 #focus_trick {
@@ -206,8 +242,10 @@ body,
 
 .ui-autocomplete {
   position: static !important;
-  margin-inline: 10px !important;
+  margin-inline: 10px;
   margin-bottom: 10px;
+  left: 0px !important;
+  white-space: nowrap;
   width: auto !important;
   min-width: unset !important;
   max-width: unset !important;
@@ -217,10 +255,6 @@ body,
   border: none !important;
   box-shadow: 0.1px 1px 3px 1px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-}
-
-.night .ui-autocomplete {
-  background-color: rgb(64 80 96 / 0.25);
 }
 
 .ui-autocomplete strong {
@@ -236,14 +270,31 @@ body,
   margin-right: 5px;
 }
 
-.mdl-layout__drawer-button i.bi {
-  font-size: 20px;
-  display: block;
-  color: #444;
+.dark button#menu i.bi {
+  color: #ccc;
 }
 
-.night .mdl-layout__drawer-button i.bi {
-  font-size: 20px;
-  display: block;
+.dark .search-bar,
+.dark input,
+.dark #popover {
+  background-color: rgb(64 80 96 / 0.5);
+}
+
+.dark input::placeholder {
   color: #ccc;
+  opacity: 0.5;
+}
+
+.dark input {
+  color: #ccc;
+}
+/* styles for night mode */
+.dark #search-bar .ui-autocomplete {
+  background-color: #405060;
+  color: #ccc;
+  border-color: #666;
+}
+
+.dark .ui-autocomplete {
+  background-color: rgb(64 80 96 / 0.25);
 }

@@ -8,9 +8,9 @@ import ThemeHelper from "./theme-helper";
 import { WsSession } from "./ws";
 import Hash from "./hash";
 import { MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
-import { getElementById, querySelector } from "./document-util";
+import { getElementById } from "./document-util";
 
-function handleStateChanged(element: HTMLFormElement, handler: (checked: boolean) => void) {
+function handleStateChanged(element: HTMLInputElement, handler: (checked: boolean) => void) {
   element.addEventListener("change", function () {
     if (typeof handler === "function") handler(element.checked);
   });
@@ -40,42 +40,68 @@ Events.handleEventOnce(document, "mdl-componentupgraded", () => {
   const nowcastLayer = new NowcastLayer(mapView);
 
   /* handle map events */
-  mapView.on("maptypeid_changed", () => {
-    const state = mapView.getMapType() == MapParams.NIGHT_MODE;
-    ThemeHelper.setColor(state ? "#263238" : "#4DB6AC");
-    localStorage.setItem("night-mode", state ? "1" : "0");
-    getElementById<HTMLInputElement>("swMapMode").checked = state;
-    if (state) {
-      getElementById("search-bar").classList.add("night");
-      querySelector("#search-bar .ui-autocomplete").classList.add("night");
-    } else {
-      getElementById("search-bar").classList.remove("night");
-      querySelector("#search-bar .ui-autocomplete").classList.remove("night");
-    }
-  });
-  handleStateChanged(getElementById<HTMLFormElement>("swMapMode"), (state) => {
-    mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
-  });
-  handleStateChanged(getElementById<HTMLFormElement>("swSatellite"), (state) => {
-    mapView.setMapType(state ? google.maps.MapTypeId.SATELLITE : google.maps.MapTypeId.ROADMAP);
-    mapView.setTilt(0);
-  });
-  handleStateChanged(getElementById<HTMLFormElement>("swTraffic"), (state) => {
+  handleStateChanged(getElementById<HTMLInputElement>("swTraffic"), (state) => {
     trafficLayer.setVisible(state);
   });
-  handleStateChanged(getElementById<HTMLFormElement>("swWeather"), (state) => {
+  handleStateChanged(getElementById<HTMLInputElement>("swWeather"), (state) => {
     nowcastLayer.setVisible(state);
   });
 
-  // Require: Firefox or Chrome(need experimental flags)
-  let preferredMode: string = google.maps.MapTypeId.ROADMAP;
-  window.addEventListener("devicelight", function (event) {
-    if (!("value" in event) || typeof event.value !== "number") return;
-    const mode = event.value < 45 ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP;
-    if (mode === preferredMode) return;
-    preferredMode = mode;
-    mapView.setMapType(mode);
+  const dayNightDay = getElementById<HTMLInputElement>("daynight_day");
+  const dayNightNight = getElementById<HTMLInputElement>("daynight_night");
+  const dayNightAuto = getElementById<HTMLInputElement>("daynight_auto");
+
+  // set user preference
+  const userPreference = localStorage.getItem("color-scheme") || "auto";
+  if (userPreference === "light") {
+    dayNightDay.checked = true;
+  }
+  if (userPreference === "dark") {
+    dayNightNight.checked = true;
+  }
+  if (userPreference === "auto") {
+    dayNightAuto.checked = true;
+  }
+
+  // listen changed event
+  handleStateChanged(dayNightDay, (checked) => {
+    if (!checked) return;
+    localStorage.setItem("color-scheme", "light");
+    ThemeHelper.setActualColorScheme("light");
+    mapView.setMapType(google.maps.MapTypeId.ROADMAP);
   });
+  handleStateChanged(dayNightNight, (checked) => {
+    if (!checked) return;
+    localStorage.setItem("color-scheme", "dark");
+    ThemeHelper.setActualColorScheme("dark");
+    mapView.setMapType(MapParams.NIGHT_MODE);
+  });
+  handleStateChanged(dayNightAuto, (checked) => {
+    if (!checked) return;
+    localStorage.setItem("color-scheme", "auto");
+    const isDarkMode = ThemeHelper.isDarkMode();
+    ThemeHelper.setActualColorScheme(isDarkMode ? "dark" : "light");
+    mapView.setMapType(isDarkMode ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
+  });
+
+  const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)");
+  darkModePreference.addEventListener("change", (e) => {
+    if (!dayNightAuto.checked) return;
+    const state = e.matches;
+    ThemeHelper.setActualColorScheme(state ? "dark" : "light");
+    mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
+  });
+
+  // set initial color
+  // mapType need to be set when requested dark mode
+  if (userPreference === "auto") {
+    const isDarkMode = ThemeHelper.isDarkMode();
+    ThemeHelper.setActualColorScheme(isDarkMode ? "dark" : "light");
+    if (isDarkMode) mapView.setMapType(MapParams.NIGHT_MODE);
+  } else {
+    ThemeHelper.setActualColorScheme(userPreference === "dark" ? "dark" : "light");
+    if (userPreference === "dark") mapView.setMapType(MapParams.NIGHT_MODE);
+  }
 
   new WsSession(mapView, markers).start();
 

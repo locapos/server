@@ -1,0 +1,52 @@
+.segments {
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  margin-bottom: 15px;
+  padding: 0px;
+  border-radius: 100px;
+  border: 1px solid #ccc;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+  font-size: 16px;
+}
+
+.segment {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 5px 15px;
+  flex: 1;
+  border-right: 1px solid #888;
+}
+
+.segment:has(input[type="radio"]:checked) {
+  background-color: #3f51b5;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+}
+
+.segment input[type="radio"] {
+  display: none;
+}
+
+.dark .segments {
+  border: 1px solid #777;
+}
+
+.dark .segment {
+  border-right: 1px solid #555;
+}
+
+.segment:first-child {
+  border-top-left-radius: 100px;
+  border-bottom-left-radius: 100px;
+}
+
+.segment:last-child {
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
+  border-right: none;
+}
