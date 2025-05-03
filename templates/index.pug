@@ -40,16 +40,16 @@ html
     .layout-root
       #search-bar
         .search-bar
-          button.effect.icon#menu(popovertarget="popover")
+          button#menu.effect.icon(popovertarget="popover")
             i.bi.bi-three-dots-vertical
           form#search-form
             input#place-search(placeholder="Search in locapos")
-            button.effect.icon#clear
+            button#clear.effect.icon
               i.bi.bi-x
       #map-canvas: p "loading..."
     #popover(popover)
       .content
-        p.caption DayNight Mode
+        p.caption Theme
         .segments
           label.segment
             input#daynight_day(type="radio", name="daynight")
@@ -60,14 +60,16 @@ html
           label.segment
             input#daynight_night(type="radio", name="daynight")
             span Night
+
+        p.caption Layers
         .switch.pico
           label
             input#swTraffic(type="checkbox", role="switch")
-            span Traffic Layer
+            span Traffic
         .switch.pico
           label
             input#swWeather(type="checkbox", role="switch")
-            span Weather Layer
+            span Weather
     button#focus_trick
     script(
       src=`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`,

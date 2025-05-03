@@ -20,6 +20,7 @@
   --dropdown-shadow:
     rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
     rgba(17, 17, 26, 0.1) 0px 16px 56px;
+  font-size: 16px;
 }
 
 .light {
@@ -28,7 +29,6 @@
 
 .dark {
   color-scheme: dark;
-
   --color: #f5f7fa;
   --color-rgb: 245, 247, 250;
   --accent: #38bdf8;
@@ -54,6 +54,10 @@
 html body,
 html body .gm-style {
   font-family: "Noto Sans JP";
+}
+
+input {
+  font-size: 16px;
 }
 
 html,
@@ -160,8 +164,14 @@ button.effect:active::before {
 }
 
 .caption {
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 600;
   margin-bottom: 5px;
+  margin-top: 15px;
+  text-transform: uppercase;
+}
+
+.caption:first-child {
   margin-top: 0;
 }
 
@@ -217,7 +227,6 @@ button.effect:active::before {
 }
 
 #search-bar input {
-  font-size: 15px;
   color: var(--color);
 }
 
@@ -265,6 +274,10 @@ button.effect:active::before {
   font-family: "Noto Sans JP";
 }
 
+.pico {
+  --pico-font-size: 100%;
+}
+
 .switch.pico label {
   margin-bottom: 10px;
   color: var(--color);
@@ -284,12 +297,6 @@ button.effect:active::before {
   --pico-border-color: var(--accent);
 }
 
-@media screen and (max-width: 600px) {
-  #search-bar input {
-    font-size: 16px;
-  }
-}
-
 @media screen and (max-width: 480px) {
   #search-bar .search-bar {
     max-width: 9999px;
@@ -304,14 +311,8 @@ button.effect:active::before {
 /* styles for complexed search implementations */
 
 #search-bar .ui-menu-item {
-  font-size: 13px;
+  font-size: 16px;
   font-family: "Noto Sans JP";
-}
-
-@media screen and (max-width: 600px) {
-  #search-bar .ui-menu-item {
-    font-size: 15px;
-  }
 }
 
 #search-bar .ui-menu-item > span {
@@ -323,6 +324,7 @@ button.effect:active::before {
 
 #search-bar .ui-menu-item span.secondary {
   margin-left: 8px;
+  font-size: 14px;
   opacity: 0.5;
 }
 
