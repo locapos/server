@@ -28,7 +28,7 @@
     }
   ],
   "vars": {
-    "REDIRECT_URI_BASE": "https://beta.locapos.com",
+    "REDIRECT_URI_BASE": "https://locapos.com",
     "GITHUB_CLIENT_ID": "Ov23likT6YmzQfgrsfiT",
     "GOOGLE_CLIENT_ID": "483399348647-leq41d5sgt54p2kau9ttm9m7vq86m2ks.apps.googleusercontent.com",
     "MSA_CLIENT_ID": "dd303475-1c7c-4791-b047-03ad4efa39e6",
@@ -47,7 +47,7 @@
   },
   "routes": [
     {
-      "pattern": "beta.locapos.com",
+      "pattern": "locapos.com",
       "custom_domain": true,
     }
   ],
