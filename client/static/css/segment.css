@@ -1,3 +1,13 @@
+:root {
+  --segments-bg: rgba(225, 225, 225, 0.4);
+  --segments-box-shadow: inset rgba(0, 0, 0, 0.2) 1px 1px 3px -1px;
+}
+
+.dark {
+  --segments-bg: rgba(51, 60, 78, 0.4);
+  --segments-box-shadow: inset rgba(0, 0, 0, 0.45) 2px 2px 3px -1px;
+}
+
 .segments {
   display: flex;
   flex-direction: row;
@@ -5,8 +15,8 @@
   margin-bottom: 10px;
   padding: 0px;
   border-radius: 100px;
-  box-shadow: inset rgba(0, 0, 0, 0.2) 1px 1px 3px -1px;
-  background: rgba(225, 225, 225, 0.4);
+  box-shadow: var(--segments-box-shadow);
+  background: var(--segments-bg);
   font-size: 14px;
 }
 
@@ -44,23 +54,3 @@
 .segment input[type="radio"] {
   display: none;
 }
-
-.dark .segments {
-  box-shadow: inset rgba(0, 0, 0, 0.45) 2px 2px 3px -1px;
-  background: rgba(51, 60, 78, 0.4);
-}
-
-/* .dark .segment {
-  border-right: 1px solid #555;
-} */
-/* 
-.segment:first-child {
-  border-top-left-radius: 100px;
-  border-bottom-left-radius: 100px;
-}
-
-.segment:last-child {
-  border-top-right-radius: 100px;
-  border-bottom-right-radius: 100px;
-  border-right: none;
-} */

@@ -2,12 +2,14 @@
 
 :root {
   --color: #111;
+  --color-rgb: 17, 17, 17;
   --accent: #2563eb;
   --accent-hover: #3b82f6;
   --accent-rgb: 37, 99, 235;
   --accent-hover-rgb: 59, 130, 246;
   --color-on-accent: #f5f7fa;
   --icon-color: #6b7280;
+  --icon-button-color: #333c4e;
   --switch-bg: rgba(0, 0, 0, 0.26);
   --glass-bg: rgba(255, 255, 255, 0.55);
   --glass-bg-dd: rgba(255, 255, 255, 0.9);
@@ -27,12 +29,14 @@
   color-scheme: dark;
 
   --color: #f5f7fa;
+  --color-rgb: 245, 247, 250;
   --accent: #38bdf8;
   --accent-hover: #67e8f9;
   --accent-rgb: 56, 189, 248;
   --accent-hover-rgb: 103, 232, 249;
   --color-on-accent: #111;
   --icon-color: #9ca3af;
+  --icon-button-color: #d1d7e1;
   --switch-bg: rgba(255, 255, 255, 0.26);
   --glass-bg: rgba(13, 20, 33, 0.5);
   --glass-bg-dd: rgba(13, 20, 33, 0.82);
@@ -131,7 +135,7 @@ button#menu {
   font-size: 20px;
   display: grid;
   place-items: center;
-  color: #444;
+  color: var(--icon-button-color);
   height: 100%;
 }
 
@@ -169,6 +173,7 @@ button.effect:active::before {
 .caption {
   font-size: 14px;
   margin-bottom: 5px;
+  margin-top: 0;
 }
 
 #popover {
@@ -224,6 +229,11 @@ button.effect:active::before {
 
 #search-bar input {
   font-size: 15px;
+  color: var(--color);
+}
+
+#search-bar input::placeholder {
+  color: rgba(var(--color-rgb), 0.5);
 }
 
 #search-bar button#clear {
@@ -269,6 +279,10 @@ button.effect:active::before {
 .switch.pico label {
   margin-bottom: 10px;
   color: var(--color);
+}
+
+.switch.pico:last-child label {
+  margin-bottom: 0px;
 }
 
 .switch.pico [type="checkbox"][role="switch"]:checked {
@@ -375,21 +389,4 @@ button.effect:active::before {
 
 .ui-autocomplete i {
   margin-right: 5px;
-}
-
-.dark #search-bar button.icon i.bi {
-  color: #ccc;
-}
-
-.dark input::placeholder {
-  color: #ccc;
-  opacity: 0.5;
-}
-
-.dark input {
-  color: #ccc;
-}
-/* styles for night mode */
-.dark #search-bar .ui-autocomplete {
-  color: #ccc;
 }
