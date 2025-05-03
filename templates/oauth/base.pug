@@ -1,0 +1,40 @@
+doctype
+html
+  block vars
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible", content="IE=edge")
+    meta(name="viewport", content="width=device-width, initial-scale=1")
+    link(rel="preconnect", href="https://fonts.googleapis.com")
+    link(rel="preconnect", href="https://fonts.googleapis.com", crossorigin)
+    link(rel="stylesheet", href="/components/Umi/dist/css/bootstrap.min.css")
+    link(
+      rel="stylesheet",
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap"
+    )
+    link(rel="stylesheet", href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css")
+    link(rel="stylesheet", href="/css/default.css")
+    title login
+  body
+    header
+      .navbar.navbar-default.navbar-static-top
+        .container
+          .navbar-header
+            a.navbar-brand LocaPos
+            p.navbar-text ログイン
+    block content
+    #message.modal.fade
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            button.close(type="button", data-dismiss="modal", aria-label="Close")
+              span(aria-hidden="true") &times;
+            h4#modal-title.modal-title
+          #modal-body.modal-body
+    footer.footer
+      .container
+        p.text-muted
+          a#about(href="#") about LocaPos
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js", defer)
+    script(src="/components/Umi/dist/js/bootstrap.min.js", defer)
+    script(src="/js/auth.js", defer)

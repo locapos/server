@@ -1,0 +1,56 @@
+:root {
+  --segments-bg: rgba(225, 225, 225, 0.4);
+  --segments-box-shadow: inset rgba(0, 0, 0, 0.2) 1px 1px 3px -1px;
+}
+
+.dark {
+  --segments-bg: rgba(51, 60, 78, 0.4);
+  --segments-box-shadow: inset rgba(0, 0, 0, 0.45) 2px 2px 3px -1px;
+}
+
+.segments {
+  display: flex;
+  flex-direction: row;
+  margin: 0px;
+  margin-bottom: 10px;
+  padding: 0px;
+  border-radius: 100px;
+  box-shadow: var(--segments-box-shadow);
+  background: var(--segments-bg);
+  font-size: 14px;
+}
+
+.segment {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0px;
+  padding: 3px 20px;
+  flex: 1;
+  margin: 1px;
+  border-radius: 100px;
+  background: transparent;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
+}
+
+.segment:has(input[type="radio"]:checked) {
+  background-color: var(--accent);
+  color: var(--color-on-accent);
+  font-weight: 600;
+  box-shadow:
+    rgba(var(--accent-rgb), 0.25) 0px 4px 8px -1px,
+    rgba(var(--accent-rgb), 0.5) 0px 0px 3px 1px;
+}
+
+.segment:hover {
+  background-color: var(--accent-hover);
+  color: var(--color-on-accent);
+}
+
+.segment input[type="radio"] {
+  display: none;
+}

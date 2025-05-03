@@ -1,0 +1,22 @@
+extends ./base.pug
+
+block content
+  .container
+    .bs-component
+      .well ログインに使用するサービスを選択してください
+    ul.list-unstyled
+      li: a.btn.btn-info.btn-auth(href="/auth/google")
+        i.bi.bi-google
+        | Google
+      li: a.btn.btn-info.btn-auth(href="/auth/microsoft")
+        i.bi.bi-microsoft
+        | Microsoft
+      li: a.btn.btn-info.btn-auth(href="/auth/github")
+        i.bi.bi-github
+        | GitHub
+      li: a.btn.btn-info.btn-auth(href="/auth/line")
+        i.bi.bi-line
+        | LINE
+      //- li: a.btn.btn-info.btn-auth(href='/auth/null')
+      //-   i.fa.fa-user
+      //-   | null(debug)

@@ -1,0 +1,4 @@
+cloudflare_api_token = "your-cloudflare-api-token"
+cloudflare_account_id = "your-cloudflare-account-id"
+database_name = "db-name"
+custom_domain = "your-custom-domain"

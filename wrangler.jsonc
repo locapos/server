@@ -1,0 +1,67 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "locapos-server",
+  "main": "server/src/index.ts",
+  "compatibility_date": "2025-04-16",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "STORAGE_DO",
+        "class_name": "Storage"
+      },
+      {
+        "name": "CONNECTION_DO",
+        "class_name": "Connection"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v2",
+      "new_sqlite_classes": [
+        "Storage",
+        "Connection"
+      ]
+    }
+  ],
+  "vars": {
+    "REDIRECT_URI_BASE": "https://beta.locapos.com",
+    "GITHUB_CLIENT_ID": "Ov23likT6YmzQfgrsfiT",
+    "GOOGLE_CLIENT_ID": "483399348647-leq41d5sgt54p2kau9ttm9m7vq86m2ks.apps.googleusercontent.com",
+    "MSA_CLIENT_ID": "dd303475-1c7c-4791-b047-03ad4efa39e6",
+    "LINE_CHANNEL_ID":"1485751913"
+  },
+  "d1_databases": [
+    {
+      "binding": "SDB",
+      "database_name": "locapos-db",
+      "database_id": "cd937188-1979-4abd-84a8-7aeeec6fa936",
+    }
+  ],
+  "assets":{
+    "directory": "./dist",
+    "binding": "ASSETS",
+  },
+  "routes": [
+    {
+      "pattern": "beta.locapos.com",
+      "custom_domain": true,
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1,
+    "logs": {
+      "invocation_logs": true,
+    }
+  },
+  "placement": {
+    "mode": "smart"
+  },
+  "dev": {
+    "ip": "*"
+  }
+}

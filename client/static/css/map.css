@@ -1,0 +1,384 @@
+@import url("segment.css");
+
+:root {
+  --color: #111;
+  --color-rgb: 17, 17, 17;
+  --accent: #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-dark: hsl(224, 76%, 38%);
+  --accent-rgb: 37, 99, 235;
+  --accent-hover-rgb: 59, 130, 246;
+  --color-on-accent: #f5f7fa;
+  --icon-color: #6b7280;
+  --icon-button-color: #333c4e;
+  --switch-bg: #333c4e;
+  --glass-bg: rgba(255, 255, 255, 0.55);
+  --glass-bg-dd: rgba(255, 255, 255, 0.9);
+  --glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --glass-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  --glass-focus-shadow: 0 0 0 2px rgba(37, 99, 235, 0.3);
+  --dropdown-shadow:
+    rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.1) 0px 8px 24px,
+    rgba(17, 17, 26, 0.1) 0px 16px 56px;
+}
+
+.light {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color: #f5f7fa;
+  --color-rgb: 245, 247, 250;
+  --accent: #38bdf8;
+  --accent-hover: #67e8f9;
+  --accent-dark: hsl(199, 89%, 38%);
+  --accent-rgb: 56, 189, 248;
+  --accent-hover-rgb: 103, 232, 249;
+  --color-on-accent: #111;
+  --icon-color: #9ca3af;
+  --icon-button-color: #d1d7e1;
+  --switch-bg: #333c4e;
+  --glass-bg: rgba(13, 20, 33, 0.5);
+  --glass-bg-dd: rgba(13, 20, 33, 0.82);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.05);
+  --glass-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  --glass-focus-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+  --dropdown-shadow:
+    rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
+    rgba(17, 17, 26, 0.35) 0px 16px 56px;
+}
+
+:root,
+html body,
+html body .gm-style {
+  font-family: "Noto Sans JP";
+}
+
+html,
+body,
+#map-canvas,
+.layout-root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.labels {
+  color: black;
+  background-color: white;
+  font-size: 10px;
+  text-align: center;
+  width: 60px;
+  border: 2px solid red;
+}
+
+.looking {
+  color: white;
+  background-color: red;
+}
+
+.search-bar {
+  margin: 10px;
+  padding: 8px;
+  backdrop-filter: saturate(180%) blur(20px);
+  border-radius: 24px;
+  background-color: var(--glass-bg);
+  box-shadow: var(--glass-shadow);
+  border: var(--glass-border);
+  transition: box-shadow 0.15s;
+}
+
+.search-bar:has(input:focus) {
+  box-shadow: var(--glass-focus-shadow);
+}
+
+.width-wrapper {
+  width: 100vw;
+}
+
+#search-bar .search-bar {
+  padding: 0px;
+  min-height: 48px;
+  max-width: 320px;
+  width: auto;
+  position: relative;
+}
+
+button#menu {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  background-color: transparent;
+  margin: 10px;
+  padding: 0px;
+  text-align: center;
+  top: -10px;
+  left: -10px;
+  anchor-name: --OptionButton;
+}
+
+#search-bar button.icon i.bi {
+  font-size: 20px;
+  display: grid;
+  place-items: center;
+  color: var(--icon-button-color);
+  height: 100%;
+}
+
+button.effect {
+  position: relative;
+}
+
+button.effect::before {
+  content: "";
+  position: absolute;
+  background: transparent;
+  inset: 0;
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+button.effect:hover::before {
+  background: rgba(var(--accent-hover-rgb), 0.25);
+}
+
+button.effect:active::before {
+  background: rgba(var(--accent-rgb), 0.45);
+}
+
+.search-bar::after {
+  content: "";
+  display: block;
+  height: 0px;
+  border-bottom: 0.0001px solid transparent;
+}
+
+.caption {
+  font-size: 14px;
+  margin-bottom: 5px;
+  margin-top: 0;
+}
+
+#popover {
+  position: fixed;
+  position-anchor: --OptionButton;
+  top: 58px;
+  top: anchor(bottom);
+  left: 10px;
+  left: anchor(left);
+  margin: 0;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 24px;
+  background-color: var(--glass-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--dropdown-shadow);
+  border: var(--glass-border);
+  color: var(--color);
+  padding: 15px;
+}
+
+[popover]:popover-open {
+  opacity: 1;
+  transform: translateY(0px) scale(1);
+}
+
+[popover] {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  transition:
+    opacity 0.2s,
+    transform 0.2s,
+    display 0.2s allow-discrete;
+}
+
+@starting-style {
+  [popover]:popover-open {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+}
+
+#search-bar {
+  display: none;
+  position: absolute;
+  width: 100%;
+}
+
+#search-bar form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+#search-bar input {
+  font-size: 15px;
+  color: var(--color);
+}
+
+#search-bar input::placeholder {
+  color: rgba(var(--color-rgb), 0.5);
+}
+
+#search-bar button#clear {
+  display: none;
+  height: 48px;
+  border: 0;
+  background-color: transparent;
+  margin: 0px;
+  padding: 0px;
+  padding-inline: 10px;
+  text-align: center;
+}
+
+#search-bar input:not(:placeholder-shown) + button#clear {
+  display: block;
+}
+
+#search-bar input::-ms-clear {
+  display: none;
+}
+
+#search-bar button:focus,
+#search-bar input:focus {
+  outline: 0px;
+}
+
+#search-bar form {
+  margin-left: 48px;
+  padding-left: 6px;
+  padding-right: 10px;
+  height: 48px;
+}
+
+#search-bar form input {
+  border: none;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  background: transparent;
+  font-family: "Noto Sans JP";
+}
+
+.switch.pico label {
+  margin-bottom: 10px;
+  color: var(--color);
+}
+
+.switch.pico:last-child label {
+  margin-bottom: 0px;
+}
+
+.switch.pico [type="checkbox"][role="switch"] {
+  --pico-background-color: var(--switch-bg);
+  --pico-border-color: var(--switch-bg);
+}
+
+.switch.pico [type="checkbox"][role="switch"]:checked {
+  --pico-background-color: var(--accent);
+  --pico-border-color: var(--accent);
+}
+
+@media screen and (max-width: 600px) {
+  #search-bar input {
+    font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #search-bar .search-bar {
+    max-width: 9999px;
+    z-index: 1;
+  }
+
+  .gm-fullscreen-control {
+    top: 63px !important;
+  }
+}
+
+/* styles for complexed search implementations */
+
+#search-bar .ui-menu-item {
+  font-size: 13px;
+  font-family: "Noto Sans JP";
+}
+
+@media screen and (max-width: 600px) {
+  #search-bar .ui-menu-item {
+    font-size: 15px;
+  }
+}
+
+#search-bar .ui-menu-item > span {
+  display: block;
+  padding: 4px 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#search-bar .ui-menu-item span.secondary {
+  margin-left: 8px;
+  opacity: 0.5;
+}
+
+#search-bar .ui-menu-item {
+  transition:
+    background-color 0.1s,
+    color 0.1s;
+  color: var(--color);
+}
+
+#search-bar .ui-menu-item i {
+  color: var(--icon-color);
+  margin-right: 5px;
+}
+
+#search-bar .ui-menu-item:hover {
+  background-color: var(--accent);
+  color: var(--color-on-accent);
+}
+
+#search-bar .ui-menu-item:hover i {
+  color: var(--color-on-accent);
+}
+
+#focus_trick {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.ui-autocomplete {
+  position: static !important;
+  margin-inline: 10px;
+  margin-bottom: 10px;
+  left: 0px !important;
+  white-space: nowrap;
+  width: auto !important;
+  border-radius: 14px;
+  background-color: var(--glass-bg-dd);
+  backdrop-filter: blur(20px) saturate(280%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  border: none !important;
+  overflow: hidden;
+}
+
+.ui-autocomplete strong {
+  font-weight: 700;
+}
+
+.gm-control-active {
+  background-color: var(--glass-bg) !important;
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: var(--glass-shadow) !important;
+  border: var(--glass-border) !important;
+}
