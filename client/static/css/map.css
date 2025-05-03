@@ -46,19 +46,6 @@
   --dropdown-shadow:
     rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
     rgba(17, 17, 26, 0.35) 0px 16px 56px;
-  /* --glass-shadow:
-    0 2px 6px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.05),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
-    inset 0 0 2px rgba(255, 255, 255, 0.08);
-  --glass-focus-shadow:
-    0 0 0 2px rgba(56, 189, 248, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05),
-    inset 0 -1px 1px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
-    inset 0 0 2px rgba(255, 255, 255, 0.08);
-  --dropdown-shadow:
-    rgba(17, 17, 26, 0.35) 0px 4px 16px, rgba(17, 17, 26, 0.35) 0px 8px 24px,
-    rgba(17, 17, 26, 0.35) 0px 16px 56px, inset 0 1px 1px rgba(255, 255, 255, 0.05),
-    inset 0 -1px 3px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(37, 99, 235, 0.15),
-    inset 0 0 2px rgba(255, 255, 255, 0.08); */
 }
 
 :root,
@@ -340,6 +327,7 @@ button.effect:active::before {
 
 #search-bar .ui-menu-item i {
   color: var(--icon-color);
+  margin-right: 5px;
 }
 
 #search-bar .ui-menu-item:hover {
@@ -385,8 +373,4 @@ button.effect:active::before {
   backdrop-filter: saturate(180%) blur(20px);
   box-shadow: var(--glass-shadow) !important;
   border: var(--glass-border) !important;
-}
-
-.ui-autocomplete i {
-  margin-right: 5px;
 }
