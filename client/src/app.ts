@@ -125,4 +125,19 @@ window.addEventListener("load", () => {
     } satisfies Partial<MarkerWithLabelOptions> as google.maps.MarkerOptions);
     mapView.moveCenterTo(markers.get(id));
   });
+
+  (globalThis as any).debug = async function () {
+    for (let i = 0; i < 360; i += 1) {
+      markers.update({
+        id: "debug",
+        provider: "debug",
+        latitude: 35.681236,
+        longitude: 139.767125,
+        heading: i,
+        name: "Tokyo Station",
+        posMode: "A",
+      });
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+  }
 });
