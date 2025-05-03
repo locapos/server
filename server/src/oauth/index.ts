@@ -18,7 +18,7 @@ class BodyElementHandler implements HTMLRewriterElementContentHandlers {
 
   element(element: Element) {
     element.append(
-      `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},300000);</script>`,
+      `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},3 * 1000);</script>`,
       { html: true }
     );
   }
