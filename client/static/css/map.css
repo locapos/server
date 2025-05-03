@@ -5,12 +5,13 @@
   --color-rgb: 17, 17, 17;
   --accent: #2563eb;
   --accent-hover: #3b82f6;
+  --accent-dark: hsl(224, 76%, 38%);
   --accent-rgb: 37, 99, 235;
   --accent-hover-rgb: 59, 130, 246;
   --color-on-accent: #f5f7fa;
   --icon-color: #6b7280;
   --icon-button-color: #333c4e;
-  --switch-bg: rgba(0, 0, 0, 0.26);
+  --switch-bg: #333c4e;
   --glass-bg: rgba(255, 255, 255, 0.55);
   --glass-bg-dd: rgba(255, 255, 255, 0.9);
   --glass-border: 1px solid rgba(0, 0, 0, 0.08);
@@ -32,12 +33,13 @@
   --color-rgb: 245, 247, 250;
   --accent: #38bdf8;
   --accent-hover: #67e8f9;
+  --accent-dark: hsl(199, 89%, 38%);
   --accent-rgb: 56, 189, 248;
   --accent-hover-rgb: 103, 232, 249;
   --color-on-accent: #111;
   --icon-color: #9ca3af;
   --icon-button-color: #d1d7e1;
-  --switch-bg: rgba(255, 255, 255, 0.26);
+  --switch-bg: #333c4e;
   --glass-bg: rgba(13, 20, 33, 0.5);
   --glass-bg-dd: rgba(13, 20, 33, 0.82);
   --glass-border: 1px solid rgba(255, 255, 255, 0.05);
@@ -272,8 +274,14 @@ button.effect:active::before {
   margin-bottom: 0px;
 }
 
+.switch.pico [type="checkbox"][role="switch"] {
+  --pico-background-color: var(--switch-bg);
+  --pico-border-color: var(--switch-bg);
+}
+
 .switch.pico [type="checkbox"][role="switch"]:checked {
   --pico-background-color: var(--accent);
+  --pico-border-color: var(--accent);
 }
 
 @media screen and (max-width: 600px) {
