@@ -1,5 +1,3 @@
-include ./mdl/switch.pug
-
 doctype
 html
   head
@@ -22,24 +20,20 @@ html
     )
     link(
       rel="stylesheet",
-      href="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.2.1/material.min.css"
-    )
-    link(
-      rel="stylesheet",
       href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
     )
     link(
       rel="stylesheet",
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
     )
+    link(
+      rel="stylesheet",
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.conditional.min.css"
+    )
     link(rel="stylesheet", href="/css/map.css")
     link(rel="prefetch", href="/res/0/0.png")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js", defer)
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js", defer)
-    script(
-      src="https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.2.1/material.min.js",
-      defer
-    )
     script(src="/components/Add-Clear/addclear.min.js", defer)
     meta(name="color-scheme", content="light dark")
     title LocaPos | Overview
@@ -64,8 +58,14 @@ html
           label.segment
             input#daynight_night(type="radio", name="daynight")
             span Night
-        .nav-switch: +mdlSwitch("swTraffic", "Traffic Layer")
-        .nav-switch: +mdlSwitch("swWeather", "Weather Layer")
+        .switch.pico
+          label
+            input#swTraffic(type="checkbox", role="switch")
+            span Traffic Layer
+        .switch.pico
+          label
+            input#swWeather(type="checkbox", role="switch")
+            span Weather Layer
     button#focus_trick
     script(
       src=`https://maps.googleapis.com/maps/api/js?key=${process.env.GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`,

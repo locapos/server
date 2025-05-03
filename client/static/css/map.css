@@ -250,12 +250,13 @@ button#menu i.bi {
   font-family: "Noto Sans JP";
 }
 
-.nav-switch {
-  margin-bottom: 15px;
+.switch.pico label {
+  margin-bottom: 10px;
+  color: var(--color);
 }
 
-.nav-switch:last-child {
-  margin-bottom: 0px;
+.switch.pico [type="checkbox"][role="switch"]:checked {
+  --pico-background-color: var(--accent);
 }
 
 @media screen and (max-width: 600px) {
@@ -337,8 +338,6 @@ button#menu i.bi {
   left: 0px !important;
   white-space: nowrap;
   width: auto !important;
-  min-width: unset !important;
-  max-width: unset !important;
   border-radius: 14px;
   background-color: var(--glass-bg-dd);
   backdrop-filter: blur(20px) saturate(280%);
@@ -377,21 +376,4 @@ button#menu i.bi {
 /* styles for night mode */
 .dark #search-bar .ui-autocomplete {
   color: #ccc;
-  border-color: #666;
-}
-
-.mdl-switch__track {
-  background-color: var(--switch-bg);
-}
-
-.mdl-switch__ripple-container .mdl-ripple {
-  background-color: var(--accent);
-}
-
-.mdl-switch.is-checked .mdl-switch__thumb {
-  background-color: rgb(var(--accent-rgb));
-}
-
-.mdl-switch.is-checked .mdl-switch__track {
-  background-color: rgba(var(--accent-rgb), 0.5);
 }

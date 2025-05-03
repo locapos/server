@@ -2,12 +2,12 @@
   display: flex;
   flex-direction: row;
   margin: 0px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   padding: 0px;
   border-radius: 100px;
-  border: 1px solid #ccc;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-  font-size: 16px;
+  box-shadow: inset rgba(0, 0, 0, 0.2) 1px 1px 3px -1px;
+  background: rgba(225, 225, 225, 0.4);
+  font-size: 14px;
 }
 
 .segment {
@@ -16,18 +16,24 @@
   justify-content: center;
   align-items: center;
   margin: 0px;
-  padding: 5px 15px;
+  padding: 3px 20px;
   flex: 1;
-  border-right: 1px solid #888;
+  margin: 1px;
+  border-radius: 100px;
   background: transparent;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 
 .segment:has(input[type="radio"]:checked) {
   background-color: var(--accent);
   color: var(--color-on-accent);
   font-weight: 600;
-  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+  box-shadow:
+    rgba(var(--accent-rgb), 0.25) 0px 4px 8px -1px,
+    rgba(var(--accent-rgb), 0.5) 0px 0px 3px 1px;
 }
 
 .segment:hover {
@@ -40,13 +46,14 @@
 }
 
 .dark .segments {
-  border: 1px solid #777;
+  box-shadow: inset rgba(0, 0, 0, 0.45) 2px 2px 3px -1px;
+  background: rgba(51, 60, 78, 0.4);
 }
 
-.dark .segment {
+/* .dark .segment {
   border-right: 1px solid #555;
-}
-
+} */
+/* 
 .segment:first-child {
   border-top-left-radius: 100px;
   border-bottom-left-radius: 100px;
@@ -56,4 +63,4 @@
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
   border-right: none;
-}
+} */

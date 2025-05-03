@@ -3,7 +3,6 @@ import MapParams from "./map-params";
 import Markers from "./markers";
 import MapLayer from "./map-layer";
 import NowcastLayer from "./nowcast-layer";
-import Events from "./events";
 import ThemeHelper from "./theme-helper";
 import { WsSession } from "./ws";
 import Hash from "./hash";
@@ -16,7 +15,7 @@ function handleStateChanged(element: HTMLInputElement, handler: (checked: boolea
   });
 }
 
-Events.handleEventOnce(document, "mdl-componentupgraded", () => {
+window.addEventListener("load", () => {
   /* setup map */
   const canvas = getElementById("map-canvas");
   const mapView = new MapView(canvas);
