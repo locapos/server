@@ -25,13 +25,13 @@ window.addEventListener("load", () => {
   const searchBox = getElementById("search-bar");
   mapView.addControl(google.maps.ControlPosition.LEFT_TOP, searchBox);
   searchBox.style.display = "block";
-  const placeSearch = getElementById("place-search");
-  mapView.enableAutoComplete(placeSearch, markers);
+  mapView.enableAutoComplete(getElementById("place-search"), markers);
   mapView.enableLocation();
-  ($(placeSearch) as unknown as { addClear: () => void }).addClear();
-  const searchForm = getElementById("search-form");
-  searchForm.addEventListener("submit", (e) => {
+  getElementById("search-form").addEventListener("submit", (e) => {
     e.preventDefault();
+  });
+  getElementById("clear").addEventListener("click", () => {
+    getElementById<HTMLInputElement>("place-search").value = "";
   });
 
   // build layers

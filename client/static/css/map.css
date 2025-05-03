@@ -127,32 +127,36 @@ button#menu {
   anchor-name: --OptionButton;
 }
 
-button#menu::after {
-  content: "";
-  position: absolute;
-  background: transparent;
-  inset: 0;
-  width: 80%;
-  height: 80%;
-  margin: auto;
-  border-radius: 50%;
-  transition: background-color 0.2s;
-}
-
-button#menu:hover::after {
-  background: rgba(var(--accent-hover-rgb), 0.25);
-}
-
-button#menu:active::after {
-  background: rgba(var(--accent-rgb), 0.45);
-}
-
-button#menu i.bi {
+#search-bar button.icon i.bi {
   font-size: 20px;
   display: grid;
   place-items: center;
   color: #444;
   height: 100%;
+}
+
+button.effect {
+  position: relative;
+}
+
+button.effect::before {
+  content: "";
+  position: absolute;
+  background: transparent;
+  inset: 0;
+  width: 32px;
+  height: 32px;
+  margin: auto;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+button.effect:hover::before {
+  background: rgba(var(--accent-hover-rgb), 0.25);
+}
+
+button.effect:active::before {
+  background: rgba(var(--accent-rgb), 0.45);
 }
 
 .search-bar::after {
@@ -213,20 +217,32 @@ button#menu i.bi {
   width: 100%;
 }
 
+#search-bar form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
 #search-bar input {
   font-size: 15px;
 }
 
-#search-bar input::-ms-clear {
-  display: none;
-}
-
 #search-bar button#clear {
   display: none;
+  height: 48px;
+  border: 0;
+  background-color: transparent;
+  margin: 0px;
+  padding: 0px;
+  padding-inline: 10px;
+  text-align: center;
 }
 
-#search-bar input:focus + button#clear {
+#search-bar input:not(:placeholder-shown) + button#clear {
   display: block;
+}
+
+#search-bar input::-ms-clear {
+  display: none;
 }
 
 #search-bar button:focus,
@@ -361,7 +377,7 @@ button#menu i.bi {
   margin-right: 5px;
 }
 
-.dark button#menu i.bi {
+.dark #search-bar button.icon i.bi {
   color: #ccc;
 }
 

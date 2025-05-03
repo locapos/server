@@ -34,16 +34,18 @@ html
     link(rel="prefetch", href="/res/0/0.png")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js", defer)
     script(src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js", defer)
-    script(src="/components/Add-Clear/addclear.min.js", defer)
     meta(name="color-scheme", content="light dark")
     title LocaPos | Overview
   body
     .layout-root
       #search-bar
         .search-bar
-          button#menu(popovertarget="popover")
+          button.effect.icon#menu(popovertarget="popover")
             i.bi.bi-three-dots-vertical
-          form#search-form: input#place-search(placeholder="Search in locapos")
+          form#search-form
+            input#place-search(placeholder="Search in locapos")
+            button.effect.icon#clear
+              i.bi.bi-x
       #map-canvas: p "loading..."
     #popover(popover)
       .content
