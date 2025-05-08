@@ -6,6 +6,8 @@ import Markers from "./markers";
 import { MarkerWithLabel, MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import { MapLayerLike } from "./map-layer";
 
+const MarkerSvg = "data:image/svg+xml,%3Csvg id='a' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' transform='rotate(##DEG##)' transform-origin='center'%3E%3Cg%3E%3Cpolygon points='4.439758 24.014404 15.5 20.276672 15.5 4.264343 4.439758 24.014404' style='fill: %23ff6260;'/%3E%3Cline x1='16.274712' y1='19.275221' x2='4.949998' y2='23.103279' style='fill: none; stroke: %23ffefef; stroke-miterlimit: 10;'/%3E%3C/g%3E%3Cpolygon points='26.79834 24.014404 15.5 4.264343 15.5 20.276672 26.79834 24.014404' style='fill: %23d10106;'/%3E%3Cline x1='15.330453' y1='19.479523' x2='26.400015' y2='23.221333' style='fill: none; opacity: .5; stroke: %23ffefef; stroke-miterlimit: 10;'/%3E%3Cpolygon points='4.439729 24.014404 15.5 4.264386 26.798331 24.014404 15.5 20.276661 4.439729 24.014404' style='fill: none; stroke: %23231815; stroke-miterlimit: 10; stroke-width: .75px;'/%3E%3C/svg%3E";
+
 export default class MapView {
   private map: google.maps.Map;
   private currentLocation: google.maps.Marker | null = null;
@@ -33,14 +35,10 @@ export default class MapView {
   }
 
   createMarkerIcon(_type: unknown, angle: number) {
-    const x = angle % 19;
-    const y = ~~(angle / 19);
-    const scale = ~~window.devicePixelRatio < 2 ? "" : "@2x";
+    const dataUrl = MarkerSvg.replace("##DEG##", angle.toString());
     return {
-      url: `/res/0/0${scale}.png`,
-      scaledSize: new google.maps.Size(608, 608),
+      url: dataUrl,
       size: new google.maps.Size(32, 32),
-      origin: new google.maps.Point(x * 32, y * 32),
       anchor: new google.maps.Point(16, 16),
     };
   }
