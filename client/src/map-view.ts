@@ -6,7 +6,7 @@ import Markers from "./markers";
 import { MarkerWithLabel, MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import { MapLayerLike } from "./map-layer";
 
-const MarkerSvg = "data:image/svg+xml,%3Csvg id='a' xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32' transform='rotate(##DEG##)' transform-origin='center'%3E%3Cg%3E%3Cpolygon points='4.439758 24.014404 15.5 20.276672 15.5 4.264343 4.439758 24.014404' style='fill: %23ff6260;'/%3E%3Cline x1='16.274712' y1='19.275221' x2='4.949998' y2='23.103279' style='fill: none; stroke: %23ffefef; stroke-miterlimit: 10;'/%3E%3C/g%3E%3Cpolygon points='26.79834 24.014404 15.5 4.264343 15.5 20.276672 26.79834 24.014404' style='fill: %23d10106;'/%3E%3Cline x1='15.330453' y1='19.479523' x2='26.400015' y2='23.221333' style='fill: none; opacity: .5; stroke: %23ffefef; stroke-miterlimit: 10;'/%3E%3Cpolygon points='4.439729 24.014404 15.5 4.264386 26.798331 24.014404 15.5 20.276661 4.439729 24.014404' style='fill: none; stroke: %23231815; stroke-miterlimit: 10; stroke-width: .75px;'/%3E%3C/svg%3E";
+const MarkerSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' transform='rotate(##DEG##)' transform-origin='center'%3E%3Cpath fill='%23ff6260' d='m4.44 24.014 11.06-3.737V4.264L4.44 24.014z'/%3E%3Cpath stroke='%23ffefef' d='M16.275 19.275 4.95 23.103'/%3E%3Cpath fill='%23d10106' d='M26.798 24.014 15.5 4.264v16.013l11.298 3.737z'/%3E%3Cpath stroke='%23ffefef' d='m15.33 19.48 11.07 3.741' opacity='.5'/%3E%3Cpath fill='none' stroke='%23231815' stroke-width='.75' d='M4.44 24.014 15.5 4.264l11.298 19.75L15.5 20.277 4.44 24.014z'/%3E%3C/svg%3E";
 
 export default class MapView {
   private map: google.maps.Map;
