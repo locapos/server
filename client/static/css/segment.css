@@ -37,6 +37,10 @@
     box-shadow 0.2s;
 }
 
+.segment:hover {
+  box-shadow: inset 0 0 1.5px 1px var(--accent-hover);
+}
+
 .segment:has(input[type="radio"]:checked) {
   background-color: var(--accent);
   color: var(--color-on-accent);
@@ -44,11 +48,6 @@
   box-shadow:
     rgba(var(--accent-rgb), 0.25) 0px 4px 8px -1px,
     rgba(var(--accent-rgb), 0.5) 0px 0px 3px 1px;
-}
-
-.segment:hover {
-  background-color: var(--accent-hover);
-  color: var(--color-on-accent);
 }
 
 .segment input[type="radio"] {
