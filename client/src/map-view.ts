@@ -5,8 +5,8 @@ import Hash from "./hash";
 import Markers from "./markers";
 import { MarkerWithLabel, MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import { MapLayerLike } from "./map-layer";
+import { createDotIcon } from "./marker-icon";
 
-const MarkerSvg = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' transform='rotate(##DEG##)' transform-origin='center'%3E%3Cpath fill='%23ff6260' d='m4.44 24.014 11.06-3.737V4.264L4.44 24.014z'/%3E%3Cpath stroke='%23ffefef' d='M16.275 19.275 4.95 23.103'/%3E%3Cpath fill='%23d10106' d='M26.798 24.014 15.5 4.264v16.013l11.298 3.737z'/%3E%3Cpath stroke='%23ffefef' d='m15.33 19.48 11.07 3.741' opacity='.5'/%3E%3Cpath fill='none' stroke='%23231815' stroke-width='.75' d='M4.44 24.014 15.5 4.264l11.298 19.75L15.5 20.277 4.44 24.014z'/%3E%3C/svg%3E";
 
 export default class MapView {
   private map: google.maps.Map;
@@ -34,31 +34,15 @@ export default class MapView {
     return map;
   }
 
-  createMarkerIcon(_type: unknown, angle: number) {
-    const dataUrl = MarkerSvg.replace("##DEG##", angle.toString());
-    return {
-      url: dataUrl,
-      size: new google.maps.Size(32, 32),
-      anchor: new google.maps.Point(16, 16),
-    };
-  }
-
   createTrackingDot(origin: google.maps.Marker, mode: string) {
     // check visible bounds
     if (!this.map.getBounds()?.contains(origin.getPosition()!)) {
       return;
     }
     // create tracking dot
-    const m = mode == "E" ? "E" : "A";
-    const icon = {
-      url: `/res/99/${m}.png`,
-      scaledSize: new google.maps.Size(4, 4),
-      origin: new google.maps.Point(0, 0),
-      anchor: new google.maps.Point(2, 2),
-    };
     const dot = new google.maps.Marker({
       position: origin.getPosition()!,
-      icon: icon,
+      icon: createDotIcon(mode),
       clickable: false,
     });
     dot.setMap(this.map);
@@ -68,11 +52,11 @@ export default class MapView {
     this.map.setCenter(marker.getPosition()!);
   }
 
-  createLabeledMarker(opt: MarkerWithLabelOptions & { key: string }) {
+  createLabeledMarker(key: string, opt: MarkerWithLabelOptions) {
     const marker = new MarkerWithLabel(opt);
     marker.setMap(this.map);
     marker.addListener("click", function () {
-      Hash.toggleLookingFor(opt.key);
+      Hash.toggleLookingFor(key);
     });
     return marker;
   }

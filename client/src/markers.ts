@@ -1,6 +1,7 @@
 import { MarkerWithLabel } from "@googlemaps/markerwithlabel";
 import Hash from "./hash";
 import MapView from "./map-view";
+import { createMarkerIcon } from "./marker-icon";
 
 export type Location = {
   provider: string;
@@ -23,10 +24,9 @@ export default class Markers {
 
   update(obj: Location) {
     const key = `${obj.provider}:${obj.id}`;
-    const icon = this.map.createMarkerIcon(0, obj.heading);
     const opt = {
       position: new google.maps.LatLng(obj.latitude, obj.longitude),
-      icon: icon,
+      icon: createMarkerIcon(obj.heading),
       labelContent: obj.name || "(undefined)",
       labelAnchor: new google.maps.Point(-32, 10),
       labelClass: `labels ${Hash.isLooking(key) ? "looking" : ""}`,
@@ -35,7 +35,7 @@ export default class Markers {
       zIndex: 1,
     };
     if (this.markers[key] === undefined) {
-      this.markers[key] = this.map.createLabeledMarker(opt);
+      this.markers[key] = this.map.createLabeledMarker(key, opt);
       this.markers[key].rawValue = obj;
     } else {
       this.map.createTrackingDot(this.markers[key], obj.posMode || "A");
