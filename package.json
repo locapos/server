@@ -36,7 +36,7 @@
   "dependencies": {
     "@googlemaps/markerwithlabel": "^2.0.28",
     "drizzle-orm": "^0.42.0",
-    "hono": "^4.9.7",
+    "hono": "^4.10.2",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
