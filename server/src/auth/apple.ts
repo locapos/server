@@ -55,7 +55,7 @@ app.get("/", async (c) => {
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/apple/callback`,
     response_type: "code",
     response_mode: "query",
-    scope: "name",
+    scope: "",
     state,
   });
   return c.redirect(`https://appleid.apple.com/auth/authorize?${params.toString()}`);
