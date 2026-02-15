@@ -96,7 +96,7 @@ app.get("/callback", async (c) => {
   await setOAuthUserSession(c, {
     provider: "apple",
     id: idTokenPayload.sub,
-    name: idTokenPayload.email || "",
+    name: "Apple User",
   });
 
   // Check if existing token exists for this Apple user
