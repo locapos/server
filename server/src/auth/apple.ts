@@ -27,10 +27,9 @@ function generateAppleClientSecret(env: Env): string {
   const payloadEncoded = encode(payload);
   const signingInput = `${headerEncoded}.${payloadEncoded}`;
 
-  const privateKeyPem = Buffer.from(env.APPLE_PRIVATE_KEY, "base64").toString("utf-8");
-  const key = createPrivateKey({ key: privateKeyPem, format: "pem" });
+  const privateKeyPem = Buffer.from(env.APPLE_PRIVATE_KEY, "base64");
   const signature = sign("sha256", Buffer.from(signingInput), {
-    key,
+    key: privateKeyPem,
     dsaEncoding: "ieee-p1363",
   });
 
