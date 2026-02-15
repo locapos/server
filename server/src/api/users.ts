@@ -43,7 +43,7 @@ app.post("/update", enforce, async (c) => {
   const tokenRepository = new AccessTokenRepository(c.env.SDB);
   await tokenRepository.updateUsername(user.hash, newUsername);
 
-  c.text("ok");
+  return c.text("ok");
 });
 
 export { app as users };
