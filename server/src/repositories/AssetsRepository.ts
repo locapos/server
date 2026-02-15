@@ -21,6 +21,10 @@ export class AssetsRepository {
     return this.getAsset("/oauth/_failed.html");
   }
 
+  config() {
+    return this.getAsset("/oauth/_config.html");
+  }
+
   index() {
     return this.getAsset("/index.html");
   }

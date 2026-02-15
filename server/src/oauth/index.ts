@@ -7,6 +7,7 @@ import {
   setOAuthClientSession,
   deleteOAuthClientSession,
   getOAuthUserSession,
+  setOAuthUserSession,
   deleteOAuthUserSession
 } from "../util/oauth-session";
 import { ClientRepository } from "../repositories/ClientRepository";
@@ -114,6 +115,22 @@ app.get("/redirect", async (c) => {
     )
     .transform(asset);
   return c.newResponse(rewriter.body, asset);
+});
+
+app.get("/config", async (c) => {
+  const user = await getOAuthUserSession(c);
+  if (!user) throw new HTTPException(400);
+  return newResponse(c, await new AssetsRepository(c).config());
+});
+
+app.post("/config", async (c) => {
+  const user = await getOAuthUserSession(c);
+  if (!user) throw new HTTPException(400);
+  const body = await c.req.parseBody();
+  const username = body["username"] as string;
+  if (!username) throw new HTTPException(400);
+  await setOAuthUserSession(c, { ...user, name: username });
+  return c.redirect("/oauth/redirect");
 });
 
 app.get("/failed", async (c) => {

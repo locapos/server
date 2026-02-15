@@ -33,6 +33,9 @@
     "GOOGLE_CLIENT_ID": "${google_client_id}",
     "MSA_CLIENT_ID":"${msa_client_id}",
     "LINE_CHANNEL_ID":"${line_channel_id}",
+    "APPLE_CLIENT_ID": "${apple_client_id}",
+    "APPLE_TEAM_ID": "${apple_team_id}",
+    "APPLE_KEY_ID": "${apple_key_id}",
   },
   "d1_databases": [
     {

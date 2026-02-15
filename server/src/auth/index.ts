@@ -3,6 +3,7 @@ import { googleAuth } from "./google";
 import { githubAuth } from "./github";
 import { microsoftAuth } from "./microsoft";
 import { lineAuth } from "./line";
+import { appleAuth } from "./apple";
 
 const app = createHono();
 //app.route("/null", nullAuth);
@@ -11,5 +12,6 @@ app.route("/github", githubAuth);
 //app.route("/facebook", facebookAuth);
 app.route("/microsoft", microsoftAuth);
 app.route("/line", lineAuth);
+app.route("/apple", appleAuth);
 
 export { app as auth };

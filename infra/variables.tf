@@ -38,3 +38,18 @@ variable "line_channel_id" {
   description = "LINE channel ID for authentication"
   type        = string
 }
+
+variable "apple_client_id" {
+  description = "Apple Service ID for authentication"
+  type        = string
+}
+
+variable "apple_team_id" {
+  description = "Apple Team ID for authentication"
+  type        = string
+}
+
+variable "apple_key_id" {
+  description = "Apple Key ID for authentication"
+  type        = string
+}

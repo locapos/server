@@ -32,7 +32,10 @@
     "GITHUB_CLIENT_ID": "Ov23likT6YmzQfgrsfiT",
     "GOOGLE_CLIENT_ID": "483399348647-leq41d5sgt54p2kau9ttm9m7vq86m2ks.apps.googleusercontent.com",
     "MSA_CLIENT_ID": "dd303475-1c7c-4791-b047-03ad4efa39e6",
-    "LINE_CHANNEL_ID":"1485751913"
+    "LINE_CHANNEL_ID":"1485751913",
+    "APPLE_CLIENT_ID": "com.locapos.web.auth",
+    "APPLE_TEAM_ID": "J3LZEFNZVJ",
+    "APPLE_KEY_ID": "Z4KJY953RN"
   },
   "d1_databases": [
     {

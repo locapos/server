@@ -1,0 +1,11 @@
+extends ./base.pug
+
+block content
+  .container
+    .bs-component
+      .well ユーザー名を入力してください
+    form(method="POST", action="/oauth/config")
+      .form-group
+        label(for="username") ユーザー名
+        input.form-control(type="text", name="username", id="username", required, autofocus)
+      button.btn.btn-primary(type="submit") 設定
