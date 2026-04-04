@@ -56,6 +56,6 @@
     "prettier": "^3.5.3",
     "pug-cli": "^1.0.0-alpha6",
     "typescript-eslint": "^8.31.1",
-    "wrangler": "^4.13.2"
+    "wrangler": "^4.59.1"
   }
 }
