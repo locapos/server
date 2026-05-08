@@ -6,7 +6,6 @@ type Props = {
 };
 
 export const Redirect: FC<Props> = ({ redirectUri }) => {
-  const script = `setTimeout(function(){location.href='${redirectUri}'},3*1000);`;
   return (
     <Layout>
       <div class="container">
@@ -18,7 +17,6 @@ export const Redirect: FC<Props> = ({ redirectUri }) => {
           </p>
         </div>
       </div>
-      <script dangerouslySetInnerHTML={{ __html: script }}></script>
     </Layout>
   );
 };

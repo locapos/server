@@ -82,6 +82,7 @@ app.get("/redirect", async (c) => {
     : encodeURIComponent(`${userHash}.${tokenHash}`);
   const redirectUri = `${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`;
 
+  c.header("Refresh", `3;url=${redirectUri}`);
   return c.html(<Redirect redirectUri={redirectUri} />);
 });
 
