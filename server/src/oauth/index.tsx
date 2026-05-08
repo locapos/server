@@ -1,7 +1,6 @@
 import { createHono } from "../lib/factory";
 import { HTTPException } from "hono/http-exception";
 import { hash, hmac } from "../lib/hashgen";
-import { newResponse } from "../util/response";
 import {
   getOAuthClientSession,
   setOAuthClientSession,
@@ -12,30 +11,10 @@ import {
 } from "../util/oauth-session";
 import { ClientRepository } from "../repositories/ClientRepository";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
-import { AssetsRepository } from "../repositories/AssetsRepository";
-
-class BodyElementHandler implements HTMLRewriterElementContentHandlers {
-  constructor(private uri: string) { }
-
-  element(element: Element) {
-    element.append(
-      `<script type="text/javascript">setTimeout(function(){location.href='${this.uri}'},3 * 1000);</script>`,
-      { html: true }
-    );
-  }
-}
-
-class AnchorElementHandler implements HTMLRewriterElementContentHandlers {
-  constructor(private uri: string) { }
-
-  element(element: Element) {
-    const href = element.getAttribute("href");
-    if (href !== "#-REPLACE-#") {
-      return;
-    }
-    element.setAttribute("href", this.uri);
-  }
-}
+import { Authorize } from "../views/oauth/Authorize";
+import { Redirect } from "../views/oauth/Redirect";
+import { Config } from "../views/oauth/Config";
+import { Failed } from "../views/oauth/Failed";
 
 const app = createHono();
 
@@ -60,8 +39,7 @@ app.get("/authorize", async (c) => {
     state: c.req.query("state"),
   });
 
-  // Proxy asset content
-  return newResponse(c, await new AssetsRepository(c).authorize());
+  return c.html(<Authorize />);
 });
 
 app.get("/redirect", async (c) => {
@@ -98,29 +76,19 @@ app.get("/redirect", async (c) => {
   deleteOAuthClientSession(c);
   deleteOAuthUserSession(c);
 
-  // render redirect page
   const state = encodeURIComponent(session.state || "");
   const accessToken = existingToken
     ? encodeURIComponent(`${userHash}.${existingToken.token}`)
     : encodeURIComponent(`${userHash}.${tokenHash}`);
+  const redirectUri = `${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`;
 
-  const asset = await new AssetsRepository(c).redirect();
-  const rewriter = new HTMLRewriter()
-    .on(
-      "body",
-      new BodyElementHandler(`${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`)
-    )
-    .on("a",
-      new AnchorElementHandler(`${uri}#access_token=${accessToken}&token_type=bearer&state=${state}`)
-    )
-    .transform(asset);
-  return c.newResponse(rewriter.body, asset);
+  return c.html(<Redirect redirectUri={redirectUri} />);
 });
 
 app.get("/config", async (c) => {
   const user = await getOAuthUserSession(c);
   if (!user) throw new HTTPException(400);
-  return newResponse(c, await new AssetsRepository(c).config());
+  return c.html(<Config />);
 });
 
 app.post("/config", async (c) => {
@@ -138,8 +106,7 @@ app.get("/failed", async (c) => {
   deleteOAuthClientSession(c);
   deleteOAuthUserSession(c);
 
-  // Proxy content
-  return newResponse(c, await new AssetsRepository(c).failed());
+  return c.html(<Failed />);
 });
 
 export { app as oauth };
