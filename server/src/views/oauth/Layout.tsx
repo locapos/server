@@ -6,13 +6,15 @@ type Props = {
 
 export const Layout: FC<Props> = ({ children }) => {
   return (
-    <html>
+    <>
+      {'<!DOCTYPE html>'}
+      <html>
       <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="" />
         <link rel="stylesheet" href="/components/Umi/dist/css/bootstrap.min.css" />
         <link
           rel="stylesheet"
@@ -64,5 +66,6 @@ export const Layout: FC<Props> = ({ children }) => {
         <script src="/js/auth.js" defer></script>
       </body>
     </html>
+    </>
   );
 };

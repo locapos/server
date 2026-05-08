@@ -8,7 +8,9 @@ const gaScript = `(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;(i[r]=i[
 
 export const Index: FC<Props> = ({ mapsApiKey }) => {
   return (
-    <html>
+    <>
+      {'<!DOCTYPE html>'}
+      <html>
       <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,7 +24,7 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
         <meta name="description" content="locapos(ろけぽす)は位置情報を共有するサービスです." />
         <meta name="keywords" content="gps,locapos,位置情報" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="" />
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap"
@@ -68,10 +70,10 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
             </div>
           </div>
           <div id="map-canvas">
-            <p>"loading..."</p>
+            <p>loading...</p>
           </div>
         </div>
-        <div id="popover" popover={true}>
+        <div id="popover" popover="auto">
           <div class="content">
             <p class="caption">Theme</p>
             <div class="segments">
@@ -116,5 +118,6 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
         <script dangerouslySetInnerHTML={{ __html: gaScript }}></script>
       </body>
     </html>
+    </>
   );
 };
