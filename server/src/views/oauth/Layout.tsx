@@ -1,4 +1,5 @@
 import type { FC } from "hono/jsx";
+import { raw } from "hono/html";
 
 type Props = {
   children?: any;
@@ -7,7 +8,7 @@ type Props = {
 export const Layout: FC<Props> = ({ children }) => {
   return (
     <>
-      {'<!DOCTYPE html>'}
+      {raw('<!DOCTYPE html>')}
       <html>
       <head>
         <meta charset="utf-8" />

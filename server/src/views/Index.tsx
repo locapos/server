@@ -1,4 +1,5 @@
 import type { FC } from "hono/jsx";
+import { raw } from "hono/html";
 
 type Props = {
   mapsApiKey: string;
@@ -9,7 +10,7 @@ const gaScript = `(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;(i[r]=i[
 export const Index: FC<Props> = ({ mapsApiKey }) => {
   return (
     <>
-      {'<!DOCTYPE html>'}
+      {raw('<!DOCTYPE html>')}
       <html>
       <head>
         <meta charset="utf-8" />
