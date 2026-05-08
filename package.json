@@ -16,8 +16,8 @@
     "dev:remote": "wrangler dev --remote",
     "types:gen": "wrangler types @types/worker-configuration.d.ts",
     "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts",
-    "lint": "eslint --ext .ts,.js ./client/src ./server/src",
-    "lint:fix": "eslint --ext .ts,.js ./client/src ./server/src --fix",
+    "lint": "eslint --ext .ts,.tsx,.js ./client/src ./server/src",
+    "lint:fix": "eslint --ext .ts,.tsx,.js ./client/src ./server/src --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,css,html}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,json,css,html}\""
   },
