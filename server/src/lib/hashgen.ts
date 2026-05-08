@@ -27,5 +27,5 @@ export function uniqueId(env: Env, user: { id: string; provider: string }) {
 }
 
 export function publicUserId(env: Env, user: { id: string; provider: string }) {
-  return hmac(`${user.provider}${user.id}`, env.CRYPTO_HASH_KEY, "sha1").slice(0, 10);
+  return hmac(`${user.provider}:${user.id}`, env.CRYPTO_HASH_KEY, "sha1").slice(0, 10);
 }
