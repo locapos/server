@@ -17,7 +17,7 @@ app.get("/me", enforce, async (c) => {
   const user = c.get("user");
   return c.json({
     provider: user.provider,
-    id: user.id,
+    id: user.publicId,
     name: user.username,
   });
 });
