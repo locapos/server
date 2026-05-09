@@ -4,7 +4,6 @@ import MapView from "./map-view";
 import { createMarkerIcon } from "./marker-icon";
 
 export type Location = {
-  provider: string;
   id: string;
   name: string;
   latitude: number;
@@ -23,7 +22,7 @@ export default class Markers {
   }
 
   update(obj: Location) {
-    const key = `${obj.provider}:${obj.id}`;
+    const key = obj.id;
     const opt = {
       position: new google.maps.LatLng(obj.latitude, obj.longitude),
       icon: createMarkerIcon(obj.heading),

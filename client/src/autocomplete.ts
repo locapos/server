@@ -113,7 +113,7 @@ export default class Autocomplete {
         secondary: `${x.latitude},${x.longitude}`,
         value: x.name,
         type: "person-fill" as const,
-        userId: `${x.provider}:${x.id}`,
+        userId: x.id,
         raw: x,
       }));
   }

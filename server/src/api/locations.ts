@@ -1,7 +1,9 @@
 import { createHono } from "../lib/factory";
-import { Location, Storage } from "../durable-objects/storage";
+import { Location, Storage, PUBLIC_MAP_KEY } from "../durable-objects/storage";
 import { HTTPException } from "hono/http-exception";
 import { enforce } from "../middleware/enforce";
+import { uniqueId } from "../lib/hashgen";
+
 type UpdateRequestBody = {
   latitude: string;
   longitude: string;
@@ -11,22 +13,25 @@ type UpdateRequestBody = {
   key: string;
 };
 
+function getPreferredMapKey(env: Env, user: { id: string; provider: string }, isPrivate: boolean): string {
+  return isPrivate ? uniqueId(env, user) : PUBLIC_MAP_KEY;
+}
+
 const app = createHono();
 
 app.post("/update", enforce, async (c) => {
   const body = await c.req.parseBody<UpdateRequestBody>();
   const user = c.get("user");
   const obj: Location = {
-    provider: user.provider,
-    id: user.id,
+    id: user.publicId,
     name: user.username,
     latitude: parseFloat(body.latitude),
     longitude: parseFloat(body.longitude),
     heading: parseFloat(body.heading) % 360,
     posMode: body.posMode,
   };
-  const group = body.key || "";
   const isPrivate = body.private === "true";
+  const group = body.key || "";
   // check values
   if (isNaN(obj.latitude)) throw new HTTPException(400, { message: "latitude is not a number" });
   if (isNaN(obj.longitude)) throw new HTTPException(400, { message: "longitude is not a number" });
@@ -46,7 +51,7 @@ app.post("/update", enforce, async (c) => {
   }
   // store location
   const stub = Storage.stub(c.env);
-  await stub.storeLocation(obj, groups, isPrivate);
+  await stub.storeLocations(obj, [getPreferredMapKey(c.env, user, isPrivate), ...new Set(groups)]);
   return c.text("ok");
 });
 
@@ -56,7 +61,7 @@ app.post("/delete", enforce, async (c) => {
   const group = body.key;
   // delete location
   const stub = Storage.stub(c.env);
-  await stub.deleteLocation(user.provider, user.id, group);
+  await stub.deleteLocation(user.publicId, group);
   return c.text("ok");
 });
 
