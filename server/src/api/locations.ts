@@ -51,7 +51,7 @@ app.post("/update", enforce, async (c) => {
   }
   // store location
   const stub = Storage.stub(c.env);
-  await stub.storeLocations(obj, [getPreferredMapKey(c.env, user, isPrivate), ...groups]);
+  await stub.storeLocations(obj, [getPreferredMapKey(c.env, user, isPrivate), ...new Set(groups)]);
   return c.text("ok");
 });
 
