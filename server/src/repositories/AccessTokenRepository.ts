@@ -15,6 +15,7 @@ export type AccessToken = {
 
 export type User = {
   id: string;
+  publicId: string;
   provider: string;
   username: string;
   default_username: string;
@@ -68,9 +69,10 @@ export class AccessTokenRepository {
       .where(eq(accessTokensTable.hash, hash));
   }
 
-  mapToUser(token: AccessToken): User {
+  mapToUser(token: AccessToken, publicId: string): User {
     return {
       id: token.id,
+      publicId,
       provider: token.provider,
       username: token.username,
       default_username: token.defaultUsername,

@@ -1,6 +1,7 @@
 import { createMiddleware } from "hono/factory";
 import { AccessTokenRepository, User } from "../repositories/AccessTokenRepository";
 import { bearerAuth } from "hono/bearer-auth";
+import { publicUserId } from "../lib/hashgen";
 
 type AuthUser = User & { hash: string };
 
@@ -25,7 +26,7 @@ export const enforce = createMiddleware<{
       await tokenRepository.extendExpiration(prefix);
       // Set user in context
       c.set("user", {
-        ...tokenRepository.mapToUser(accessToken),
+        ...tokenRepository.mapToUser(accessToken, publicUserId(c.env, accessToken)),
         hash: prefix,
       });
       // Chain request
