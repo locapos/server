@@ -1,10 +1,10 @@
 import { DurableObject } from "cloudflare:workers";
-import { uniqueId } from "../lib/hashgen";
 import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
 import { Connection } from "./connection";
 import geo from "../lib/geo";
 
 export { Location } from "../repositories/LocationRepository";
+export const PUBLIC_MAP_KEY = "0";
 
 export class Storage extends DurableObject<Env> {
   static readonly DEFAULT = "default";
@@ -24,8 +24,7 @@ export class Storage extends DurableObject<Env> {
       // すでにExpireしているデータを削除する
       const expirations = await this.locationRepository.listExpirations();
       for (const expired of expirations) {
-        const { provider, id, mapKey } = expired;
-        await this.locationRepository.delete(mapKey, provider, id);
+        await this.locationRepository.delete(expired.mapKey, expired.id);
       }
 
       // 間近のExpireをスケジュールする
@@ -39,33 +38,28 @@ export class Storage extends DurableObject<Env> {
     });
   }
 
-  async storeLocation(obj: Location, groups: string[], isPrivate: boolean) {
-    const primary = isPrivate ? uniqueId(this.env, obj) : "0";
-    await Promise.all([
-      this.updateAndPublish(primary, obj),
-      ...groups.map((group) => this.updateAndPublish(group, obj)),
-    ]);
+  async storeLocations(obj: Location, mapKeys: string[]) {
+    await Promise.all(mapKeys.map((k) => this.updateAndPublish(k, obj)));
   }
 
   async showLocations(group: string) {
-    const key = group || "0";
+    const key = group || PUBLIC_MAP_KEY;
     return await this.locationRepository.listByMapKey(key);
   }
 
-  async deleteLocation(provider: string, id: string, group: string) {
-    const key = group || "0";
+  async deleteLocation(id: string, group: string) {
+    const key = group || PUBLIC_MAP_KEY;
     if (key === "*") {
-      await this.deleteAllAndPublish(provider, id);
+      await this.deleteAllAndPublish(id);
     } else {
-      await this.deleteAndPublish(provider, id, key);
+      await this.deleteAndPublish(id, key);
     }
   }
 
   async alarm() {
     const expirations = await this.locationRepository.listExpirations();
     for (const expired of expirations) {
-      const { provider, id, mapKey } = expired;
-      await this.deleteAndPublish(provider, id, mapKey);
+      await this.deleteAndPublish(expired.id, expired.mapKey);
     }
     await this.schedule();
   }
@@ -77,23 +71,23 @@ export class Storage extends DurableObject<Env> {
     await this.schedule();
   }
 
-  private async deleteAndPublish(provider: string, id: string, group: string) {
-    const removed = await this.locationRepository.delete(group, provider, id);
+  private async deleteAndPublish(id: string, group: string) {
+    const removed = await this.locationRepository.delete(group, id);
     if (!removed) return;
 
     await this.publish("delete", removed);
     await this.schedule();
   }
 
-  private async deleteAllAndPublish(provider: string, id: string) {
-    const removed = await this.locationRepository.deleteAll(provider, id);
+  private async deleteAllAndPublish(id: string) {
+    const removed = await this.locationRepository.deleteAll(id);
     for (const key of removed) {
       await this.publish("delete", key);
     }
   }
 
   private async ensureHeading(group: string, next: Location) {
-    const current = await this.locationRepository.get(group, next.provider, next.id);
+    const current = await this.locationRepository.get(group, next.id);
     if (current == null) return next;
     if (next.heading != null) return next;
     return {

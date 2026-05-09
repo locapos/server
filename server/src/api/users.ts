@@ -1,5 +1,5 @@
 import { HTTPException } from "hono/http-exception";
-import { Storage } from "../durable-objects/storage";
+import { Storage, PUBLIC_MAP_KEY } from "../durable-objects/storage";
 import { createHono } from "../lib/factory";
 import { enforce } from "../middleware/enforce";
 import { uniqueId } from "../lib/hashgen";
@@ -8,7 +8,7 @@ import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 const app = createHono();
 
 app.get("/show", enforce, async (c) => {
-  const key = c.req.query("key") || "0";
+  const key = c.req.query("key") || PUBLIC_MAP_KEY;
   const stub = Storage.stub(c.env);
   return c.json(await stub.showLocations(key));
 });
@@ -16,7 +16,6 @@ app.get("/show", enforce, async (c) => {
 app.get("/me", enforce, async (c) => {
   const user = c.get("user");
   return c.json({
-    provider: user.provider,
     id: user.publicId,
     name: user.username,
   });

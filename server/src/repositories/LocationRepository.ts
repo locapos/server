@@ -1,9 +1,7 @@
-export type UserId = `${string}:${string}`;
-export type PrimaryKey = `locations#${string}#${UserId}`;
-export type SecondaryKey = `locations#${UserId}#${string}`;
+export type PrimaryKey = `locations#${string}#${string}`;
+export type SecondaryKey = `locations#${string}#${string}`;
 
 export type Location = {
-  provider: string;
   id: string;
   name: string;
   latitude: number;
@@ -13,7 +11,6 @@ export type Location = {
 };
 
 type Expiration = {
-  provider: string;
   id: string;
   mapKey: string;
   ttl: number;
@@ -24,23 +21,19 @@ type LocationStorageType = Location & {
   ttl: number;
 };
 
-const userId = (provider: string, id: string): UserId => `${provider}:${id}`;
-
-const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
-
 const Keys = {
-  primaryKey: (mapKey: string, provider: string, id: string): PrimaryKey =>
-    `locations#${mapKey}#${userId(provider, id)}`,
-  secondaryKey: (provider: string, id: string, mapKey: string): SecondaryKey =>
-    `locations#${userId(provider, id)}#${mapKey}`,
+  primaryKey: (mapKey: string, id: string): PrimaryKey => `locations#${mapKey}#${id}`,
+  secondaryKey: (id: string, mapKey: string): SecondaryKey => `locations#${id}#${mapKey}`,
   expirationKey: (ttl: number) => `exp#${ttl}`,
 } as const;
 
 const Prefixes = {
   primaryKey: (mapKey: string) => `locations#${mapKey}#`,
-  secondaryKey: (provider: string, id: string) => `locations#${userId(provider, id)}#`,
+  secondaryKey: (id: string) => `locations#${id}#`,
   expirations: () => `exp#`,
 } as const;
+
+const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
 
 export class LocationRepository {
   constructor(private db: DurableObjectStorage) {}
@@ -48,32 +41,18 @@ export class LocationRepository {
   async put(mapKey: string, value: Location) {
     const ttl = Date.now() + LocationLifeTime;
     const storageValue = { ...value, mapKey, ttl };
-    const existing = await this.db.get<LocationStorageType>(
-      Keys.primaryKey(mapKey, value.provider, value.id)
-    );
-    await this.db.put<LocationStorageType>(
-      Keys.primaryKey(mapKey, value.provider, value.id),
-      storageValue
-    );
-    await this.db.put<LocationStorageType>(
-      Keys.secondaryKey(value.provider, value.id, mapKey),
-      storageValue
-    );
-    await this.db.put<Expiration>(`exp#${ttl}`, {
-      provider: value.provider,
-      id: value.id,
-      mapKey,
-      ttl,
-    });
+    const existing = await this.db.get<LocationStorageType>(Keys.primaryKey(mapKey, value.id));
+    await this.db.put<LocationStorageType>(Keys.primaryKey(mapKey, value.id), storageValue);
+    await this.db.put<LocationStorageType>(Keys.secondaryKey(value.id, mapKey), storageValue);
+    await this.db.put<Expiration>(`exp#${ttl}`, { id: value.id, mapKey, ttl });
     if (existing) {
       this.db.delete(Keys.expirationKey(existing.ttl));
     }
-
-    return Keys.primaryKey(mapKey, value.provider, value.id);
+    return Keys.primaryKey(mapKey, value.id);
   }
 
-  async get(mapKey: string, provider: string, id: string) {
-    return await this.db.get<Location>(Keys.primaryKey(mapKey, provider, id));
+  async get(mapKey: string, id: string) {
+    return await this.db.get<Location>(Keys.primaryKey(mapKey, id));
   }
 
   async getNextExpiration() {
@@ -85,42 +64,34 @@ export class LocationRepository {
     return expirations.values().toArray()[0].ttl;
   }
 
-  async delete(mapKey: string, provider: string, id: string) {
-    const key = Keys.primaryKey(mapKey, provider, id);
+  async delete(mapKey: string, id: string) {
+    const key = Keys.primaryKey(mapKey, id);
     const value = await this.db.get<LocationStorageType>(key);
     if (!value) return null;
     this.db.delete(key);
-    this.db.delete(Keys.secondaryKey(provider, id, mapKey));
+    this.db.delete(Keys.secondaryKey(id, mapKey));
     this.db.delete(Keys.expirationKey(value.ttl));
-
     return key;
   }
 
-  async deleteAll(provider: string, id: string) {
-    const key = Prefixes.secondaryKey(provider, id);
+  async deleteAll(id: string) {
+    const prefix = Prefixes.secondaryKey(id);
     const removed: Array<PrimaryKey> = [];
     while (true) {
-      const locations = await this.db.list<LocationStorageType>({ prefix: key });
+      const locations = await this.db.list<LocationStorageType>({ prefix });
       if (locations.size === 0) break;
       for (const [, value] of locations) {
-        await this.db.delete(Keys.primaryKey(value.mapKey, provider, id));
-        await this.db.delete(Keys.secondaryKey(provider, id, value.mapKey));
+        await this.db.delete(Keys.primaryKey(value.mapKey, id));
+        await this.db.delete(Keys.secondaryKey(id, value.mapKey));
         await this.db.delete(Keys.expirationKey(value.ttl));
-        removed.push(Keys.primaryKey(value.mapKey, provider, id));
+        removed.push(Keys.primaryKey(value.mapKey, id));
       }
     }
-
     return removed;
   }
 
   async listByMapKey(mapKey: string) {
     return (await this.db.list<Location>({ prefix: Prefixes.primaryKey(mapKey) }))
-      .values()
-      .toArray();
-  }
-
-  async listByUserId(provider: string, id: string) {
-    return (await this.db.list<Location>({ prefix: Prefixes.secondaryKey(provider, id) }))
       .values()
       .toArray();
   }

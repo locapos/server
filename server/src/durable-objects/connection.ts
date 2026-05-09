@@ -1,5 +1,5 @@
 import { DurableObject } from "cloudflare:workers";
-import { Location, Storage } from "./storage";
+import { Location, Storage, PUBLIC_MAP_KEY } from "./storage";
 
 export class Connection extends DurableObject<Env> {
   static stub(env: Env, hash: string) {
@@ -16,7 +16,7 @@ export class Connection extends DurableObject<Env> {
 
   async fetch(req: Request) {
     const url = new URL(req.url);
-    await this.setName(url.pathname.split("/")[2] || "0");
+    await this.setName(url.pathname.split("/")[2] || PUBLIC_MAP_KEY);
 
     const websocketPair = new WebSocketPair();
     const [client, server] = Object.values(websocketPair);
@@ -82,7 +82,7 @@ export class Connection extends DurableObject<Env> {
   }
 
   private async getName() {
-    return (await this.ctx.storage.get<string>("name")) || "0";
+    return (await this.ctx.storage.get<string>("name")) || PUBLIC_MAP_KEY;
   }
 
   private async setName(name: string) {
