@@ -1,4 +1,4 @@
-import { BinaryToTextEncoding, createHash, createHmac } from "node:crypto";
+import { type BinaryToTextEncoding, createHash, createHmac } from "node:crypto";
 
 export function hash(
   value: string | null = null,
@@ -6,7 +6,7 @@ export function hash(
   encode: BinaryToTextEncoding = "base64url"
 ) {
   const hash = createHash(algo);
-  hash.update(value || "" + Math.random() + Date.now());
+  hash.update(value || `${Math.random()}${Date.now()}`);
   return hash.digest(encode);
 }
 
@@ -17,7 +17,7 @@ export function hmac(
   encode: BinaryToTextEncoding = "base64url"
 ) {
   const hmac = createHmac(algo, secret);
-  hmac.update(value || "" + Math.random() + Date.now());
+  hmac.update(value || `${Math.random()}${Date.now()}`);
   return hmac.digest(encode);
 }
 

@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { locations } from "./locations";
-import { groups } from "./groups";
-import { users } from "./users";
-import { terms } from "./terms";
 import { cors } from "hono/cors";
 import { decompress } from "../middleware/decompress";
+import { groups } from "./groups";
+import { locations } from "./locations";
+import { terms } from "./terms";
+import { users } from "./users";
 
 const app = new Hono<{ Bindings: Env }>();
 

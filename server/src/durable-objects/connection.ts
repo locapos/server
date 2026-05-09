@@ -1,5 +1,5 @@
 import { DurableObject } from "cloudflare:workers";
-import { Location, Storage, PUBLIC_MAP_KEY } from "./storage";
+import { type Location, PUBLIC_MAP_KEY, Storage } from "./storage";
 
 export class Connection extends DurableObject<Env> {
   static stub(env: Env, hash: string) {

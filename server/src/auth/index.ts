@@ -1,9 +1,9 @@
 import { createHono } from "../lib/factory";
-import { googleAuth } from "./google";
-import { githubAuth } from "./github";
-import { microsoftAuth } from "./microsoft";
-import { lineAuth } from "./line";
 import { appleAuth } from "./apple";
+import { githubAuth } from "./github";
+import { googleAuth } from "./google";
+import { lineAuth } from "./line";
+import { microsoftAuth } from "./microsoft";
 
 const app = createHono();
 //app.route("/null", nullAuth);

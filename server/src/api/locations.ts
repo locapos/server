@@ -1,8 +1,8 @@
-import { createHono } from "../lib/factory";
-import { Location, Storage, PUBLIC_MAP_KEY } from "../durable-objects/storage";
 import { HTTPException } from "hono/http-exception";
-import { enforce } from "../middleware/enforce";
+import { type Location, PUBLIC_MAP_KEY, Storage } from "../durable-objects/storage";
+import { createHono } from "../lib/factory";
 import { uniqueId } from "../lib/hashgen";
+import { enforce } from "../middleware/enforce";
 
 type UpdateRequestBody = {
   latitude: string;
@@ -13,7 +13,11 @@ type UpdateRequestBody = {
   key: string;
 };
 
-function getPreferredMapKey(env: Env, user: { id: string; provider: string }, isPrivate: boolean): string {
+function getPreferredMapKey(
+  env: Env,
+  user: { id: string; provider: string },
+  isPrivate: boolean
+): string {
   return isPrivate ? uniqueId(env, user) : PUBLIC_MAP_KEY;
 }
 
@@ -33,9 +37,11 @@ app.post("/update", enforce, async (c) => {
   const isPrivate = body.private === "true";
   const group = body.key || "";
   // check values
-  if (isNaN(obj.latitude)) throw new HTTPException(400, { message: "latitude is not a number" });
-  if (isNaN(obj.longitude)) throw new HTTPException(400, { message: "longitude is not a number" });
-  if (obj.heading != null && isNaN(obj.heading)) {
+  if (Number.isNaN(obj.latitude))
+    throw new HTTPException(400, { message: "latitude is not a number" });
+  if (Number.isNaN(obj.longitude))
+    throw new HTTPException(400, { message: "longitude is not a number" });
+  if (obj.heading != null && Number.isNaN(obj.heading)) {
     obj.heading = undefined;
   }
   // normalize heading 0 to 360

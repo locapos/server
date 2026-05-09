@@ -1,5 +1,6 @@
 import Hash from "./hash";
-import Markers from "./markers";
+import type Markers from "./markers";
+import type { Location } from "./markers";
 
 type AutocompleteItem = {
   label: string;
@@ -38,16 +39,11 @@ export default class Autocomplete {
         },
       })
       .data("ui-autocomplete")._renderItem = (ul: JQuery, item: AutocompleteItem) => {
-      const secondary = $("<span>" + item.secondary + "</span>").addClass("secondary");
-      const icon = $("<i>")
-        .addClass("bi")
-        .addClass("bi-" + item.type)
-        .attr("aria-hidden", "true");
-      const content = $("<span>" + item.label + "</span>")
-        .append(secondary)
-        .prepend(icon);
+      const secondary = $(`<span>${item.secondary}</span>`).addClass("secondary");
+      const icon = $("<i>").addClass("bi").addClass(`bi-${item.type}`).attr("aria-hidden", "true");
+      const content = $(`<span>${item.label}</span>`).append(secondary).prepend(icon);
       const li = $("<li></li>").append(content);
-      li.addClass("item-" + item.type);
+      li.addClass(`item-${item.type}`);
       return li.appendTo(ul);
     };
   }
@@ -95,17 +91,14 @@ export default class Autocomplete {
     const reqLower = req.toLowerCase();
     return this.markers
       .values()
-      .map((x) => x.rawValue!)
+      .map((x) => x.rawValue)
+      .filter((x): x is Location => x !== undefined)
       .filter((x) => ~x.name.toLowerCase().indexOf(reqLower))
       .sort((a, b) => {
         if (!center) return 0;
         return (
-          Math.sqrt(
-            Math.pow(center.lat() - a.latitude, 2) + Math.pow(center.lng() - a.longitude, 2)
-          ) -
-          Math.sqrt(
-            Math.pow(center.lat() - b.latitude, 2) + Math.pow(center.lng() - b.longitude, 2)
-          )
+          Math.sqrt((center.lat() - a.latitude) ** 2 + (center.lng() - a.longitude) ** 2) -
+          Math.sqrt((center.lat() - b.latitude) ** 2 + (center.lng() - b.longitude) ** 2)
         );
       })
       .map((x) => ({
@@ -129,7 +122,7 @@ export default class Autocomplete {
       if (p < f.offset) {
         s += item.main_text.substring(p, f.offset - p);
       }
-      s += "<strong>" + item.main_text.substring(f.offset, f.offset + f.length) + "</strong>";
+      s += `<strong>${item.main_text.substring(f.offset, f.offset + f.length)}</strong>`;
       p = f.offset + f.length;
     }
     if (p < item.main_text.length) {

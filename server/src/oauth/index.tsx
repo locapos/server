@@ -1,20 +1,20 @@
-import { createHono } from "../lib/factory";
 import { HTTPException } from "hono/http-exception";
+import { createHono } from "../lib/factory";
 import { hash, hmac } from "../lib/hashgen";
-import {
-  getOAuthClientSession,
-  setOAuthClientSession,
-  deleteOAuthClientSession,
-  getOAuthUserSession,
-  setOAuthUserSession,
-  deleteOAuthUserSession
-} from "../util/oauth-session";
-import { ClientRepository } from "../repositories/ClientRepository";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
+import { ClientRepository } from "../repositories/ClientRepository";
+import {
+  deleteOAuthClientSession,
+  deleteOAuthUserSession,
+  getOAuthClientSession,
+  getOAuthUserSession,
+  setOAuthClientSession,
+  setOAuthUserSession,
+} from "../util/oauth-session";
 import { Authorize } from "../views/oauth/Authorize";
-import { Redirect } from "../views/oauth/Redirect";
 import { Config } from "../views/oauth/Config";
 import { Failed } from "../views/oauth/Failed";
+import { Redirect } from "../views/oauth/Redirect";
 
 const app = createHono();
 
@@ -96,7 +96,7 @@ app.post("/config", async (c) => {
   const user = await getOAuthUserSession(c);
   if (!user) throw new HTTPException(400);
   const body = await c.req.parseBody();
-  const username = body["username"] as string;
+  const username = body.username as string;
   if (!username) throw new HTTPException(400);
   await setOAuthUserSession(c, { ...user, name: username });
   return c.redirect("/oauth/redirect");

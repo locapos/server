@@ -1,7 +1,7 @@
-import { createMiddleware } from "hono/factory";
-import { AccessTokenRepository, User } from "../repositories/AccessTokenRepository";
 import { bearerAuth } from "hono/bearer-auth";
+import { createMiddleware } from "hono/factory";
 import { publicUserId } from "../lib/hashgen";
+import { AccessTokenRepository, type User } from "../repositories/AccessTokenRepository";
 
 type AuthUser = User & { hash: string };
 

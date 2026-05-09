@@ -12,8 +12,8 @@ export const Redirect: FC<Props> = ({ redirectUri }) => {
         <div class="bs-callout bs-callout-success">
           <h4>認証に成功しました</h4>
           <p>
-            アプリケーションに転送しています...
-            転送されない場合は<a href={redirectUri}>ここをクリック</a>してください
+            アプリケーションに転送しています... 転送されない場合は
+            <a href={redirectUri}>ここをクリック</a>してください
           </p>
         </div>
       </div>

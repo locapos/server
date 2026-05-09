@@ -1,6 +1,6 @@
-import { hash } from "../lib/hashgen";
-import { createHono } from "../lib/factory";
 import { HTTPException } from "hono/http-exception";
+import { createHono } from "../lib/factory";
+import { hash } from "../lib/hashgen";
 
 const app = createHono();
 
