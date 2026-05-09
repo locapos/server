@@ -24,13 +24,13 @@ type LocationStorageType = Location & {
 const Keys = {
   primaryKey: (mapKey: string, id: string): PrimaryKey => `locations#${mapKey}#${id}`,
   secondaryKey: (id: string, mapKey: string): SecondaryKey => `locations#${id}#${mapKey}`,
-  expirationKey: (ttl: number) => `exp#${ttl}`,
+  expirationKey: (ttl: number, mapKey: string, id: string) => `exp#${ttl}#${mapKey}#${id}`,
 } as const;
 
 const Prefixes = {
   primaryKey: (mapKey: string) => `locations#${mapKey}#`,
   secondaryKey: (id: string) => `locations#${id}#`,
-  expirations: () => `exp#`,
+  expirationKey: () => `exp#`,
 } as const;
 
 const LocationLifeTime = 5 * 60 * 1000; // 5 minutes
@@ -44,9 +44,9 @@ export class LocationRepository {
     const existing = await this.db.get<LocationStorageType>(Keys.primaryKey(mapKey, value.id));
     await this.db.put<LocationStorageType>(Keys.primaryKey(mapKey, value.id), storageValue);
     await this.db.put<LocationStorageType>(Keys.secondaryKey(value.id, mapKey), storageValue);
-    await this.db.put<Expiration>(`exp#${ttl}`, { id: value.id, mapKey, ttl });
+    await this.db.put<Expiration>(Keys.expirationKey(ttl, mapKey, value.id), { id: value.id, mapKey, ttl });
     if (existing) {
-      this.db.delete(Keys.expirationKey(existing.ttl));
+      await this.db.delete(Keys.expirationKey(existing.ttl, mapKey, value.id));
     }
     return Keys.primaryKey(mapKey, value.id);
   }
@@ -57,7 +57,7 @@ export class LocationRepository {
 
   async getNextExpiration() {
     const expirations = await this.db.list<Expiration>({
-      prefix: Prefixes.expirations(),
+      prefix: Prefixes.expirationKey(),
       limit: 1,
     });
     if (expirations.size === 0) return null;
@@ -68,9 +68,9 @@ export class LocationRepository {
     const key = Keys.primaryKey(mapKey, id);
     const value = await this.db.get<LocationStorageType>(key);
     if (!value) return null;
-    this.db.delete(key);
-    this.db.delete(Keys.secondaryKey(id, mapKey));
-    this.db.delete(Keys.expirationKey(value.ttl));
+    await this.db.delete(key);
+    await this.db.delete(Keys.secondaryKey(id, mapKey));
+    await this.db.delete(Keys.expirationKey(value.ttl, mapKey, id));
     return key;
   }
 
@@ -83,7 +83,7 @@ export class LocationRepository {
       for (const [, value] of locations) {
         await this.db.delete(Keys.primaryKey(value.mapKey, id));
         await this.db.delete(Keys.secondaryKey(id, value.mapKey));
-        await this.db.delete(Keys.expirationKey(value.ttl));
+        await this.db.delete(Keys.expirationKey(value.ttl, value.mapKey, value.id));
         removed.push(Keys.primaryKey(value.mapKey, id));
       }
     }
@@ -98,7 +98,7 @@ export class LocationRepository {
 
   async listExpirations() {
     const now = Date.now();
-    const expirations = await this.db.list<Expiration>({ prefix: Prefixes.expirations() });
+    const expirations = await this.db.list<Expiration>({ prefix: Prefixes.expirationKey() });
     return [...expirations.entries()]
       .filter(([, value]) => value.ttl <= now)
       .map(([, value]) => value);
