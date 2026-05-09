@@ -6,10 +6,9 @@
   "packageManager": "pnpm@10.14.0",
   "scripts": {
     "build": "pnpm run build:client",
-    "build:client": "pnpm run build:client:bower && pnpm run build:client:app && pnpm run build:client:static",
+    "build:client": "pnpm run build:client:app && pnpm run build:client:static",
     "build:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js",
     "build:client:static": "cp -r client/static/* dist/",
-    "build:client:bower": "bower install",
     "watch:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js --watch",
     "deploy": "pnpm run build && wrangler deploy",
     "dev": "wrangler dev",
@@ -47,7 +46,6 @@
     "@types/jquery": "^3.5.32",
     "@types/jqueryui": "^1.12.24",
     "@types/node": "^22.14.1",
-    "bower": "^1.8.14",
     "drizzle-kit": "^0.31.0",
     "esbuild": "^0.25.2",
     "wrangler": "^4.80.0"
