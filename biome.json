@@ -1,7 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
   "files": {
-    "includes": ["client/src/**", "server/src/**", "*.ts", "*.js"]
+    "includes": ["client/src/**", "client/static/**/*.css", "server/src/**", "*.ts", "*.js"]
   },
   "formatter": {
     "enabled": true,
@@ -25,6 +25,12 @@
             "useExponentiationOperator": "off"
           }
         }
+      }
+    },
+    {
+      "includes": ["**/*.css"],
+      "linter": {
+        "enabled": false
       }
     }
   ],
