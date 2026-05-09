@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "locapos-server",
-  "main": "server/src/index.ts",
+  "main": "server/src/index.tsx",
   "compatibility_date": "2025-04-16",
   "compatibility_flags": [
     "nodejs_compat"
@@ -36,6 +36,9 @@
     "APPLE_CLIENT_ID": "com.locapos.web.auth",
     "APPLE_TEAM_ID": "J3LZEFNZVJ",
     "APPLE_KEY_ID": "Z4KJY953RN"
+  },
+  "secrets": {
+    "required": ["APPLE_PRIVATE_KEY", "COOKIE_SECRET", "CRYPTO_HASH_KEY", "GITHUB_CLIENT_SECRET", "GOOGLE_CLIENT_SECRET", "GOOGLE_MAPS_API_KEY", "JWT_SECRET", "LINE_CHANNEL_SECRET", "MSA_CLIENT_SECRET"]
   },
   "d1_databases": [
     {

@@ -3,23 +3,23 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
-    "build": "npm run build:client && npm run build:templates",
-    "build:templates": "sh scripts/build-templates.sh",
-    "build:client": "npm run build:client:bower && npm run build:client:app && npm run build:client:static",
+    "build": "pnpm run build:client",
+    "build:client": "pnpm run build:client:bower && pnpm run build:client:app && pnpm run build:client:static",
     "build:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js",
     "build:client:static": "cp -r client/static/* dist/",
     "build:client:bower": "bower install",
     "watch:client:app": "esbuild client/src/app.ts --bundle --minify --outfile=dist/js/app.js --watch",
-    "deploy": "npm run build && wrangler deploy",
+    "deploy": "pnpm run build && wrangler deploy",
     "dev": "wrangler dev",
     "dev:remote": "wrangler dev --remote",
     "types:gen": "wrangler types @types/worker-configuration.d.ts",
     "types:check:client": "tsc --noEmit --skipLibCheck client/src/app.ts",
-    "lint": "eslint --ext .ts,.js ./client/src ./server/src",
-    "lint:fix": "eslint --ext .ts,.js ./client/src ./server/src --fix",
-    "format": "prettier --write \"**/*.{ts,js,json,css,html,pug}\"",
-    "format:check": "prettier --check \"**/*.{ts,js,json,css,html,pug}\""
+    "lint": "eslint --ext .ts,.tsx,.js ./client/src ./server/src",
+    "lint:fix": "eslint --ext .ts,.tsx,.js ./client/src ./server/src --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,css,html}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,json,css,html}\""
   },
   "repository": {
     "type": "git",
@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.1",
-    "@prettier/plugin-pug": "^3.4.0",
     "@types/google.maps": "^3.58.1",
     "@types/jquery": "^3.5.32",
     "@types/jqueryui": "^1.12.24",
@@ -54,7 +53,6 @@
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-prettier": "^5.2.6",
     "prettier": "^3.5.3",
-    "pug-cli": "^1.0.0-alpha6",
     "typescript-eslint": "^8.31.1",
     "wrangler": "^4.80.0"
   }
