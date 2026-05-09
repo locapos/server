@@ -94,13 +94,15 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
               <p class="caption">Layers</p>
               <div class="switch pico">
                 <label>
-                  <input id="swTraffic" type="checkbox" role="switch" aria-checked="false" />
+                  {/* biome-ignore lint/a11y/useAriaPropsForRole: native checkbox maps checked→aria-checked automatically */}
+                  <input id="swTraffic" type="checkbox" role="switch" />
                   <span>Traffic</span>
                 </label>
               </div>
               <div class="switch pico">
                 <label>
-                  <input id="swWeather" type="checkbox" role="switch" aria-checked="false" />
+                  {/* biome-ignore lint/a11y/useAriaPropsForRole: native checkbox maps checked→aria-checked automatically */}
+                  <input id="swWeather" type="checkbox" role="switch" />
                   <span>Weather</span>
                 </label>
               </div>
