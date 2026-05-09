@@ -8,7 +8,7 @@ import {
 } from "../util/oauth-session";
 import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 import { HTTPException } from "hono/http-exception";
-import { createPrivateKey, sign } from "node:crypto";
+import { sign } from "node:crypto";
 
 function generateAppleClientSecret(env: Env): string {
   const header = { alg: "ES256", kid: env.APPLE_KEY_ID };

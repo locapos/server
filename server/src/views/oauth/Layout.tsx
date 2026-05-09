@@ -2,7 +2,7 @@ import type { FC } from "hono/jsx";
 import { raw } from "hono/html";
 
 type Props = {
-  children?: any;
+  children?: unknown;
 };
 
 export const Layout: FC<Props> = ({ children }) => {
