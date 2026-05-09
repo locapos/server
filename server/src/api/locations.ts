@@ -2,7 +2,7 @@ import { createHono } from "../lib/factory";
 import { Location, Storage, PUBLIC_MAP_KEY } from "../durable-objects/storage";
 import { HTTPException } from "hono/http-exception";
 import { enforce } from "../middleware/enforce";
-import { publicUserId, uniqueId } from "../lib/hashgen";
+import { uniqueId } from "../lib/hashgen";
 
 type UpdateRequestBody = {
   latitude: string;
@@ -23,7 +23,7 @@ app.post("/update", enforce, async (c) => {
   const body = await c.req.parseBody<UpdateRequestBody>();
   const user = c.get("user");
   const obj: Location = {
-    id: publicUserId(c.env, user),
+    id: user.publicId,
     name: user.username,
     latitude: parseFloat(body.latitude),
     longitude: parseFloat(body.longitude),
@@ -61,7 +61,7 @@ app.post("/delete", enforce, async (c) => {
   const group = body.key;
   // delete location
   const stub = Storage.stub(c.env);
-  await stub.deleteLocation(publicUserId(c.env, user), group);
+  await stub.deleteLocation(user.publicId, group);
   return c.text("ok");
 });
 
