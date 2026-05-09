@@ -1,12 +1,12 @@
 import { Hono } from "hono";
 import { api } from "./api";
-import { oauth } from "./oauth";
 import { auth } from "./auth";
-import { ws } from "./ws";
+import { oauth } from "./oauth";
 import { Index } from "./views/Index";
+import { ws } from "./ws";
 
-export { Storage } from "./durable-objects/storage";
 export { Connection } from "./durable-objects/connection";
+export { Storage } from "./durable-objects/storage";
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -18,6 +18,8 @@ app.route("/ws", ws);
 
 // SPA Route
 app.get("/", (c) => c.html(<Index mapsApiKey={c.env.GOOGLE_MAPS_API_KEY} />));
-app.get("/:hash{([a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})}", (c) => c.html(<Index mapsApiKey={c.env.GOOGLE_MAPS_API_KEY} />));
+app.get("/:hash{([a-zA-Z0-9_-]{38}|[a-zA-Z0-9_-]{43})}", (c) =>
+  c.html(<Index mapsApiKey={c.env.GOOGLE_MAPS_API_KEY} />)
+);
 
 export default app;

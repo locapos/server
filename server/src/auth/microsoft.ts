@@ -1,7 +1,11 @@
+import { HTTPException } from "hono/http-exception";
 import { createHono } from "../lib/factory";
 import { hash } from "../lib/hashgen";
-import { getOAuthProviderStateSession, setOAuthUserSession, setOAuthProviderStateSession } from "../util/oauth-session";
-import { HTTPException } from "hono/http-exception";
+import {
+  getOAuthProviderStateSession,
+  setOAuthProviderStateSession,
+  setOAuthUserSession,
+} from "../util/oauth-session";
 
 const MS_AUTHORITY = "https://login.microsoftonline.com/common/oauth2/v2.0";
 

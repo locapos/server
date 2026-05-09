@@ -1,11 +1,8 @@
-import MapView from "./map-view";
-import Markers, { Location } from "./markers";
+import type Markers from "./markers";
+import type { Location } from "./markers";
 
 export class WsSession {
-  constructor(
-    private mapView: MapView,
-    private markers: Markers
-  ) {}
+  constructor(private markers: Markers) {}
 
   start() {
     const socket = new WebSocket(WsSession.url);
@@ -27,12 +24,20 @@ export class WsSession {
     socket.addEventListener("message", (event) => {
       const msg = JSON.parse(event.data);
       if (msg.event === "update") {
-        msg.data.forEach((o: Location) => this.markers.update(o));
+        msg.data.forEach((o: Location) => {
+          this.markers.update(o);
+        });
       } else if (msg.event === "delete") {
-        msg.data.forEach((o: string) => this.markers.clear(o));
+        msg.data.forEach((o: string) => {
+          this.markers.clear(o);
+        });
       } else if (msg.event === "sync") {
-        this.markers.keys().forEach((k) => this.markers.clear(k));
-        msg.data.forEach((o: Location) => this.markers.update(o));
+        this.markers.keys().forEach((k) => {
+          this.markers.clear(k);
+        });
+        msg.data.forEach((o: Location) => {
+          this.markers.update(o);
+        });
       }
     });
 
@@ -64,7 +69,7 @@ export class WsSession {
       return "/ws";
     }
 
-    return "/ws" + location.pathname;
+    return `/ws${location.pathname}`;
   }
 
   private static get url() {

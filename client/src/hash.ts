@@ -9,7 +9,7 @@ class Hash {
   }
 
   setInfo(info: InfoType) {
-    location.hash = "#!/" + info.id;
+    location.hash = `#!/${info.id}`;
   }
 
   isLooking(id: string | undefined) {

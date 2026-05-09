@@ -1,7 +1,11 @@
 import { DurableObject } from "cloudflare:workers";
-import { Location, LocationRepository, PrimaryKey } from "../repositories/LocationRepository";
-import { Connection } from "./connection";
 import geo from "../lib/geo";
+import {
+  type Location,
+  LocationRepository,
+  type PrimaryKey,
+} from "../repositories/LocationRepository";
+import { Connection } from "./connection";
 
 export { Location } from "../repositories/LocationRepository";
 export const PUBLIC_MAP_KEY = "0";

@@ -1,4 +1,4 @@
-import MapView from "./map-view";
+import type MapView from "./map-view";
 
 export type MapLayerLike = {
   setMap(map: google.maps.Map | null): void;

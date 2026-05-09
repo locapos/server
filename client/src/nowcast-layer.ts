@@ -1,4 +1,4 @@
-import MapView from "./map-view";
+import type MapView from "./map-view";
 
 const LatitudeRange = [20, 47.5];
 const LongitudeRange = [120, 150];
@@ -17,9 +17,12 @@ export default class NowcastLayer {
     if (b) {
       await this.layer.fetchDate();
       this.map.getMapOverlays().push(this.layer);
-      this.interval = window.setInterval(() => {
-        this.swap();
-      }, 5 * 60 * 1000); // 5 minutes
+      this.interval = window.setInterval(
+        () => {
+          this.swap();
+        },
+        5 * 60 * 1000
+      ); // 5 minutes
     } else {
       const i = this.map.getMapOverlays().getArray().indexOf(this.layer);
       if (i >= 0) this.map.getMapOverlays().removeAt(i);
@@ -47,7 +50,8 @@ class NowcastImageMapType implements google.maps.MapType {
 
   async fetchDate() {
     const targetTimesN1 = await fetch(NowcastUrl);
-    const targetTimesN1Json = await targetTimesN1.json<Array<{ basetime: string; validtime: string; }>>();
+    const targetTimesN1Json =
+      await targetTimesN1.json<Array<{ basetime: string; validtime: string }>>();
     const targetTimesN1Data = targetTimesN1Json[0];
     this.basetime = targetTimesN1Data.basetime;
     this.validtime = targetTimesN1Data.validtime;
@@ -57,7 +61,9 @@ class NowcastImageMapType implements google.maps.MapType {
     if (tileCoord == null) return null;
     // 利用可能なズームの中で一番近いものを選ぶ
     const available = [4, 6, 8, 10];
-    const zNative = available.reduce((prev, curr) => Math.abs(curr - zoom) < Math.abs(prev - zoom) ? curr : prev);
+    const zNative = available.reduce((prev, curr) =>
+      Math.abs(curr - zoom) < Math.abs(prev - zoom) ? curr : prev
+    );
     // 一致するもしくは小さいレベルの画像を拡大して表示するパターン
     if (zNative <= zoom) {
       const scale = 1 << (zoom - zNative);
@@ -98,7 +104,7 @@ class NowcastImageMapType implements google.maps.MapType {
             backgroundImages.push(`url(${this.#getTileUrl(x + i, y + j, zNative)})`);
           }
           backgroundSizes.push(`${scale * 100}% ${scale * 100}%`);
-          backgroundPositions.push(`${(i / (scaleInv - 1) * 100)}% ${(j / (scaleInv - 1) * 100)}%`);
+          backgroundPositions.push(`${(i / (scaleInv - 1)) * 100}% ${(j / (scaleInv - 1)) * 100}%`);
           backgroundRepeats.push("no-repeat");
         }
       }
@@ -118,11 +124,11 @@ class NowcastImageMapType implements google.maps.MapType {
     }
   }
 
-  releaseTile(): void { }
+  releaseTile(): void {}
 
   #getTileUrl(x: number, y: number, z: number): string {
     if (y < 0) return BlankGif;
-    return `https://www.jma.go.jp/bosai/jmatile/data/nowc/${this.basetime}/none/${this.validtime}/surf/hrpns/${z}/${x}/${y}.png`
+    return `https://www.jma.go.jp/bosai/jmatile/data/nowc/${this.basetime}/none/${this.validtime}/surf/hrpns/${z}/${x}/${y}.png`;
   }
 
   #scalingParameters(tileCoord: google.maps.Point, scale: number) {
@@ -133,26 +139,25 @@ class NowcastImageMapType implements google.maps.MapType {
     return {
       coord: {
         x: x,
-        y: y
+        y: y,
       },
       scale: {
-        x: offsetX / (scale - 1) * 100,
-        y: offsetY / (scale - 1) * 100
-      }
-    }
-
+        x: (offsetX / (scale - 1)) * 100,
+        y: (offsetY / (scale - 1)) * 100,
+      },
+    };
   }
 
   // タイル座標とズームレベルからそのタイルが表示される範囲が事前に定義した緯度経度の範囲に収まるかどうかを判定する
   #inRange(x: number, y: number, z: number): boolean {
     // タイルの北西と南東の緯度経度を計算
-    const n = Math.PI - 2 * Math.PI * y / Math.pow(2, z);
+    const n = Math.PI - (2 * Math.PI * y) / Math.pow(2, z);
     const latNW = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(n) - Math.exp(-n)));
-    const longNW = x / Math.pow(2, z) * 360 - 180;
+    const longNW = (x / Math.pow(2, z)) * 360 - 180;
 
-    const s = Math.PI - 2 * Math.PI * (y + 1) / Math.pow(2, z);
+    const s = Math.PI - (2 * Math.PI * (y + 1)) / Math.pow(2, z);
     const latSE = (180 / Math.PI) * Math.atan(0.5 * (Math.exp(s) - Math.exp(-s)));
-    const longSE = (x + 1) / Math.pow(2, z) * 360 - 180;
+    const longSE = ((x + 1) / Math.pow(2, z)) * 360 - 180;
 
     // タイルの領域が定義された範囲と重なるかどうかをチェック
     const latOverlap = !(latSE > LatitudeRange[1] || latNW < LatitudeRange[0]);

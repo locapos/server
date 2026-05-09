@@ -1,16 +1,16 @@
-import MapView from "./map-view";
-import MapParams from "./map-params";
-import Markers from "./markers";
-import MapLayer from "./map-layer";
-import NowcastLayer from "./nowcast-layer";
-import ThemeHelper from "./theme-helper";
-import { WsSession } from "./ws";
-import Hash from "./hash";
-import { MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
+import type { MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import { getElementById } from "./document-util";
+import Hash from "./hash";
+import MapLayer from "./map-layer";
+import MapParams from "./map-params";
+import MapView from "./map-view";
+import Markers from "./markers";
+import NowcastLayer from "./nowcast-layer";
+import { isDarkMode, setActualColorScheme } from "./theme-helper";
+import { WsSession } from "./ws";
 
 function handleStateChanged(element: HTMLInputElement, handler: (checked: boolean) => void) {
-  element.addEventListener("change", function () {
+  element.addEventListener("change", () => {
     if (typeof handler === "function") handler(element.checked);
   });
 }
@@ -66,43 +66,43 @@ window.addEventListener("load", () => {
   handleStateChanged(dayNightDay, (checked) => {
     if (!checked) return;
     localStorage.setItem("color-scheme", "light");
-    ThemeHelper.setActualColorScheme("light");
+    setActualColorScheme("light");
     mapView.setMapType(google.maps.MapTypeId.ROADMAP);
   });
   handleStateChanged(dayNightNight, (checked) => {
     if (!checked) return;
     localStorage.setItem("color-scheme", "dark");
-    ThemeHelper.setActualColorScheme("dark");
+    setActualColorScheme("dark");
     mapView.setMapType(MapParams.NIGHT_MODE);
   });
   handleStateChanged(dayNightAuto, (checked) => {
     if (!checked) return;
     localStorage.setItem("color-scheme", "auto");
-    const isDarkMode = ThemeHelper.isDarkMode();
-    ThemeHelper.setActualColorScheme(isDarkMode ? "dark" : "light");
-    mapView.setMapType(isDarkMode ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
+    const darkMode = isDarkMode();
+    setActualColorScheme(darkMode ? "dark" : "light");
+    mapView.setMapType(darkMode ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
   });
 
   const darkModePreference = window.matchMedia("(prefers-color-scheme: dark)");
   darkModePreference.addEventListener("change", (e) => {
     if (!dayNightAuto.checked) return;
     const state = e.matches;
-    ThemeHelper.setActualColorScheme(state ? "dark" : "light");
+    setActualColorScheme(state ? "dark" : "light");
     mapView.setMapType(state ? MapParams.NIGHT_MODE : google.maps.MapTypeId.ROADMAP);
   });
 
   // set initial color
   // mapType need to be set when requested dark mode
   if (userPreference === "auto") {
-    const isDarkMode = ThemeHelper.isDarkMode();
-    ThemeHelper.setActualColorScheme(isDarkMode ? "dark" : "light");
-    if (isDarkMode) mapView.setMapType(MapParams.NIGHT_MODE);
+    const darkMode = isDarkMode();
+    setActualColorScheme(darkMode ? "dark" : "light");
+    if (darkMode) mapView.setMapType(MapParams.NIGHT_MODE);
   } else {
-    ThemeHelper.setActualColorScheme(userPreference === "dark" ? "dark" : "light");
+    setActualColorScheme(userPreference === "dark" ? "dark" : "light");
     if (userPreference === "dark") mapView.setMapType(MapParams.NIGHT_MODE);
   }
 
-  new WsSession(mapView, markers).start();
+  new WsSession(markers).start();
 
   // handle hash change
   window.addEventListener("hashchange", () => {

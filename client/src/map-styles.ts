@@ -93,8 +93,8 @@ export const Default: google.maps.MapTypeStyle[] = [
     stylers: [
       {
         visibility: "visible",
-      }
-    ]
+      },
+    ],
   },
   {
     featureType: "road.highway.controlled_access",
@@ -297,8 +297,8 @@ export const Night: google.maps.MapTypeStyle[] = [
     stylers: [
       {
         visibility: "visible",
-      }
-    ]
+      },
+    ],
   },
   {
     featureType: "road.highway",

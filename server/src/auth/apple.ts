@@ -1,14 +1,14 @@
+import { sign } from "node:crypto";
+import { HTTPException } from "hono/http-exception";
 import { createHono } from "../lib/factory";
 import { hash, hmac } from "../lib/hashgen";
+import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
 import {
   getOAuthClientSession,
   getOAuthProviderStateSession,
-  setOAuthUserSession,
   setOAuthProviderStateSession,
+  setOAuthUserSession,
 } from "../util/oauth-session";
-import { AccessTokenRepository } from "../repositories/AccessTokenRepository";
-import { HTTPException } from "hono/http-exception";
-import { sign } from "node:crypto";
 
 function generateAppleClientSecret(env: Env): string {
   const header = { alg: "ES256", kid: env.APPLE_KEY_ID };
@@ -21,8 +21,7 @@ function generateAppleClientSecret(env: Env): string {
     sub: env.APPLE_CLIENT_ID,
   };
 
-  const encode = (obj: object) =>
-    Buffer.from(JSON.stringify(obj)).toString("base64url");
+  const encode = (obj: object) => Buffer.from(JSON.stringify(obj)).toString("base64url");
   const headerEncoded = encode(header);
   const payloadEncoded = encode(payload);
   const signingInput = `${headerEncoded}.${payloadEncoded}`;
@@ -106,7 +105,7 @@ app.get("/callback", async (c) => {
   }
   const userHash = hmac(
     `${clientSession.client_id}#apple:${idTokenPayload.sub}`,
-    c.env.CRYPTO_HASH_KEY,
+    c.env.CRYPTO_HASH_KEY
   );
   const tokenRepository = new AccessTokenRepository(c.env.SDB);
   const existingToken = await tokenRepository.getByHash(userHash);

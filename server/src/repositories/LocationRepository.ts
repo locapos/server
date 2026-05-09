@@ -44,7 +44,11 @@ export class LocationRepository {
     const existing = await this.db.get<LocationStorageType>(Keys.primaryKey(mapKey, value.id));
     await this.db.put<LocationStorageType>(Keys.primaryKey(mapKey, value.id), storageValue);
     await this.db.put<LocationStorageType>(Keys.secondaryKey(value.id, mapKey), storageValue);
-    await this.db.put<Expiration>(Keys.expirationKey(ttl, mapKey, value.id), { id: value.id, mapKey, ttl });
+    await this.db.put<Expiration>(Keys.expirationKey(ttl, mapKey, value.id), {
+      id: value.id,
+      mapKey,
+      ttl,
+    });
     if (existing) {
       await this.db.delete(Keys.expirationKey(existing.ttl, mapKey, value.id));
     }

@@ -1,6 +1,6 @@
-import { MarkerWithLabel } from "@googlemaps/markerwithlabel";
+import type { MarkerWithLabel } from "@googlemaps/markerwithlabel";
 import Hash from "./hash";
-import MapView from "./map-view";
+import type MapView from "./map-view";
 import { createMarkerIcon } from "./marker-icon";
 
 export type Location = {

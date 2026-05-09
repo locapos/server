@@ -7,7 +7,8 @@ export default class MapParams {
 
   parseQueryString() {
     if (this.qsCache) return this.qsCache;
-    return (this.qsCache = new URLSearchParams(location.search));
+    this.qsCache = new URLSearchParams(location.search);
+    return this.qsCache;
   }
 
   getCenter() {
@@ -18,7 +19,7 @@ export default class MapParams {
   }
 
   getZoom() {
-    return parseInt(this.parseQueryString().get("zoom") || "9");
+    return parseInt(this.parseQueryString().get("zoom") || "9", 10);
   }
 
   get(): google.maps.MapOptions {

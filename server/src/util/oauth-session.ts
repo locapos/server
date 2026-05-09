@@ -1,5 +1,5 @@
-import { Context } from "hono";
-import { getSignedCookie, setSignedCookie, deleteCookie } from "hono/cookie";
+import type { Context } from "hono";
+import { deleteCookie, getSignedCookie, setSignedCookie } from "hono/cookie";
 
 // OAuthクライアント情報セッション
 export type OAuthClientSession = {
@@ -25,7 +25,9 @@ const USER_SESSION_COOKIE = "oauth_user_session";
 const PROVIDER_STATE_COOKIE = "oauth_provider_state_session";
 
 // --- クライアントセッション ---
-export const getOAuthClientSession = async (c: Context<{ Bindings: Env }>): Promise<OAuthClientSession | null> => {
+export const getOAuthClientSession = async (
+  c: Context<{ Bindings: Env }>
+): Promise<OAuthClientSession | null> => {
   const cookie = await getSignedCookie(c, c.env.COOKIE_SECRET, CLIENT_SESSION_COOKIE);
   if (!cookie) return null;
   try {
@@ -37,7 +39,10 @@ export const getOAuthClientSession = async (c: Context<{ Bindings: Env }>): Prom
   }
 };
 
-export const setOAuthClientSession = async (c: Context<{ Bindings: Env }>, session: OAuthClientSession) => {
+export const setOAuthClientSession = async (
+  c: Context<{ Bindings: Env }>,
+  session: OAuthClientSession
+) => {
   await setSignedCookie(c, CLIENT_SESSION_COOKIE, JSON.stringify(session), c.env.COOKIE_SECRET);
 };
 
@@ -46,7 +51,9 @@ export const deleteOAuthClientSession = (c: Context) => {
 };
 
 // --- 認証済みユーザー ---
-export const getOAuthUserSession = async (c: Context<{ Bindings: Env }>): Promise<OAuthUserSession | null> => {
+export const getOAuthUserSession = async (
+  c: Context<{ Bindings: Env }>
+): Promise<OAuthUserSession | null> => {
   const cookie = await getSignedCookie(c, c.env.COOKIE_SECRET, USER_SESSION_COOKIE);
   if (!cookie) return null;
   try {
@@ -58,7 +65,10 @@ export const getOAuthUserSession = async (c: Context<{ Bindings: Env }>): Promis
   }
 };
 
-export const setOAuthUserSession = async (c: Context<{ Bindings: Env }>, session: OAuthUserSession) => {
+export const setOAuthUserSession = async (
+  c: Context<{ Bindings: Env }>,
+  session: OAuthUserSession
+) => {
   await setSignedCookie(c, USER_SESSION_COOKIE, JSON.stringify(session), c.env.COOKIE_SECRET);
 };
 
@@ -67,7 +77,9 @@ export const deleteOAuthUserSession = (c: Context) => {
 };
 
 // --- 外部プロバイダステート ---
-export const getOAuthProviderStateSession = async (c: Context<{ Bindings: Env }>): Promise<OAuthProviderStateSession | null> => {
+export const getOAuthProviderStateSession = async (
+  c: Context<{ Bindings: Env }>
+): Promise<OAuthProviderStateSession | null> => {
   const cookie = await getSignedCookie(c, c.env.COOKIE_SECRET, PROVIDER_STATE_COOKIE);
   if (!cookie) return null;
   try {
@@ -79,7 +91,10 @@ export const getOAuthProviderStateSession = async (c: Context<{ Bindings: Env }>
   }
 };
 
-export const setOAuthProviderStateSession = async (c: Context<{ Bindings: Env }>, session: OAuthProviderStateSession) => {
+export const setOAuthProviderStateSession = async (
+  c: Context<{ Bindings: Env }>,
+  session: OAuthProviderStateSession
+) => {
   await setSignedCookie(c, PROVIDER_STATE_COOKIE, JSON.stringify(session), c.env.COOKIE_SECRET);
 };
 

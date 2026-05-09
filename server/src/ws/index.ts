@@ -1,7 +1,7 @@
 import { cors } from "hono/cors";
 import { Connection } from "../durable-objects/connection";
-import { createHono } from "../lib/factory";
 import { PUBLIC_MAP_KEY } from "../durable-objects/storage";
+import { createHono } from "../lib/factory";
 
 const app = createHono();
 

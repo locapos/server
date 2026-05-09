@@ -1,12 +1,11 @@
-import { Night } from "./map-styles";
-import MapParams from "./map-params";
+import { MarkerWithLabel, type MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import Autocomplete from "./autocomplete";
 import Hash from "./hash";
-import Markers from "./markers";
-import { MarkerWithLabel, MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
-import { MapLayerLike } from "./map-layer";
+import type { MapLayerLike } from "./map-layer";
+import MapParams from "./map-params";
+import { Night } from "./map-styles";
 import { createDotIcon } from "./marker-icon";
-
+import type Markers from "./markers";
 
 export default class MapView {
   private map: google.maps.Map;
@@ -26,7 +25,7 @@ export default class MapView {
     );
     dom.addEventListener(
       "touchmove",
-      function (e) {
+      (e) => {
         e.preventDefault();
       },
       { passive: false }
@@ -36,12 +35,13 @@ export default class MapView {
 
   createTrackingDot(origin: google.maps.Marker, mode: string) {
     // check visible bounds
-    if (!this.map.getBounds()?.contains(origin.getPosition()!)) {
+    const position = origin.getPosition();
+    if (!position || !this.map.getBounds()?.contains(position)) {
       return;
     }
     // create tracking dot
     const dot = new google.maps.Marker({
-      position: origin.getPosition()!,
+      position,
       icon: createDotIcon(mode),
       clickable: false,
     });
@@ -49,13 +49,14 @@ export default class MapView {
   }
 
   moveCenterTo(marker: google.maps.Marker) {
-    this.map.setCenter(marker.getPosition()!);
+    const position = marker.getPosition();
+    if (position) this.map.setCenter(position);
   }
 
   createLabeledMarker(key: string, opt: MarkerWithLabelOptions) {
     const marker = new MarkerWithLabel(opt);
     marker.setMap(this.map);
-    marker.addListener("click", function () {
+    marker.addListener("click", () => {
       Hash.toggleLookingFor(key);
     });
     return marker;
@@ -142,8 +143,7 @@ export default class MapView {
     this.currentAccuracy.setRadius(coords.accuracy);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  on(event: string, handler: Function) {
+  on(event: string, handler: (...args: unknown[]) => void) {
     google.maps.event.addListener(this.map, event, handler);
   }
 }

@@ -16,6 +16,18 @@
       "recommended": true
     }
   },
+  "overrides": [
+    {
+      "includes": ["client/src/nowcast-layer.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useExponentiationOperator": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "quoteStyle": "double",
