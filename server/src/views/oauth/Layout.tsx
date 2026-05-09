@@ -42,35 +42,11 @@ export const Layout: FC<Props> = ({ children }) => {
             </div>
           </header>
           {children}
-          <div id="message" class="modal fade">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                  <h4 id="modal-title" class="modal-title" aria-label="modal title"></h4>
-                </div>
-                <div id="modal-body" class="modal-body"></div>
-              </div>
-            </div>
-          </div>
-          <footer class="footer">
-            <div class="container">
-              <p class="text-muted">
-                {/* biome-ignore lint/a11y/useValidAnchor: about page not yet implemented */}
-                <a id="about" href="#">
-                  about LocaPos
-                </a>
-              </p>
-            </div>
-          </footer>
           <script
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"
             defer
           ></script>
           <script src="/components/Umi/dist/js/bootstrap.min.js" defer></script>
-          <script src="/js/auth.js" defer></script>
         </body>
       </html>
     </>
