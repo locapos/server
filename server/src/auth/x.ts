@@ -65,16 +65,16 @@ app.get("/callback", async (c) => {
     }),
   });
   if (!tokenRes.ok) {
-    const err = await tokenRes.text();
-    throw new HTTPException(400, { message: `Failed to get token: ${err}` });
+    console.error("X token error:", await tokenRes.text());
+    throw new HTTPException(400, { message: "Authentication failed" });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const userRes = await fetch("https://api.twitter.com/2/users/me?user.fields=name,username", {
     headers: { Authorization: `Bearer ${tokenJson.access_token}` },
   });
   if (!userRes.ok) {
-    const err = await userRes.text();
-    throw new HTTPException(400, { message: `Failed to get user info: ${err}` });
+    console.error("X user info error:", await userRes.text());
+    throw new HTTPException(400, { message: "Authentication failed" });
   }
   const userJson = await userRes.json<{ data: { id: string; name: string; username: string } }>();
   const user = userJson.data;
