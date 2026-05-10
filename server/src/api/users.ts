@@ -16,6 +16,7 @@ app.get("/show", enforce, async (c) => {
 app.get("/me", enforce, async (c) => {
   const user = c.get("user");
   return c.json({
+    provider: user.provider,
     id: user.publicId,
     name: user.username,
   });
