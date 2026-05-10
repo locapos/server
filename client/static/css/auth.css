@@ -1,0 +1,244 @@
+/* ── Light (default) ── */
+:root {
+  --pico-font-family: "Noto Sans JP", "Noto Sans", sans-serif;
+
+  /* Match main app accent: blue */
+  --pico-primary: #2563eb;
+  --pico-primary-background: #2563eb;
+  --pico-primary-hover-background: #1d4ed8;
+  --pico-primary-focus: rgba(37, 99, 235, 0.25);
+  --pico-primary-inverse: #f5f7fa;
+
+  /* Glass tokens — mirror main app */
+  --auth-bg: #eef2f8;
+  --auth-bg-glow-1: rgba(37, 99, 235, 0.07);
+  --auth-bg-glow-2: rgba(99, 102, 241, 0.04);
+  --auth-glass-bg: rgba(255, 255, 255, 0.75);
+  --auth-glass-border: 1px solid rgba(0, 0, 0, 0.08);
+  --auth-glass-shadow:
+    rgba(17, 17, 26, 0.06) 0px 4px 16px,
+    rgba(17, 17, 26, 0.06) 0px 8px 24px,
+    rgba(17, 17, 26, 0.04) 0px 16px 56px;
+
+  --auth-brand-color: #2563eb;
+  --auth-text: #111;
+  --auth-muted: #6b7280;
+  --auth-divider: rgba(0, 0, 0, 0.06);
+
+  --auth-btn-bg: rgba(255, 255, 255, 0.6);
+  --auth-btn-border: 1px solid rgba(0, 0, 0, 0.09);
+  --auth-btn-hover-bg: rgba(37, 99, 235, 0.07);
+  --auth-btn-hover-border: 1px solid rgba(37, 99, 235, 0.28);
+  --auth-btn-text: #333c4e;
+  --auth-btn-hover-text: #1e40af;
+
+  --auth-danger: #dc2626;
+  --auth-success: #059669;
+}
+
+/* ── Dark ── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --pico-primary: #38bdf8;
+    --pico-primary-background: hsl(199, 89%, 38%);
+    --pico-primary-hover-background: #0284c7;
+    --pico-primary-focus: rgba(56, 189, 248, 0.35);
+    --pico-primary-inverse: #111;
+
+    --auth-bg: #0a0f1a;
+    --auth-bg-glow-1: rgba(56, 189, 248, 0.05);
+    --auth-bg-glow-2: rgba(30, 64, 175, 0.07);
+    --auth-glass-bg: rgba(13, 20, 33, 0.82);
+    --auth-glass-border: 1px solid rgba(255, 255, 255, 0.05);
+    --auth-glass-shadow:
+      rgba(17, 17, 26, 0.35) 0px 4px 16px,
+      rgba(17, 17, 26, 0.35) 0px 8px 24px,
+      rgba(17, 17, 26, 0.35) 0px 16px 56px;
+
+    --auth-brand-color: #38bdf8;
+    --auth-text: #f5f7fa;
+    --auth-muted: #9ca3af;
+    --auth-divider: rgba(255, 255, 255, 0.05);
+
+    --auth-btn-bg: rgba(51, 60, 78, 0.5);
+    --auth-btn-border: 1px solid rgba(255, 255, 255, 0.07);
+    --auth-btn-hover-bg: rgba(56, 189, 248, 0.1);
+    --auth-btn-hover-border: 1px solid rgba(56, 189, 248, 0.25);
+    --auth-btn-text: #d1d7e1;
+    --auth-btn-hover-text: #f5f7fa;
+
+    --auth-danger: #f87171;
+    --auth-success: #34d399;
+  }
+}
+
+html, body {
+  height: 100%;
+}
+
+/* ── Layout ── */
+
+.auth-main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background-color: var(--auth-bg);
+  background-image:
+    radial-gradient(ellipse at 30% 35%, var(--auth-bg-glow-1) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 68%, var(--auth-bg-glow-2) 0%, transparent 45%);
+}
+
+.auth-shell {
+  width: 100%;
+  max-width: 480px;
+  animation: shell-enter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes shell-enter {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Brand ── */
+
+.auth-brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.75rem;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+
+.auth-brand:hover {
+  opacity: 1;
+}
+
+.auth-brand img {
+  height: 58px;
+  width: auto;
+  display: block;
+}
+
+
+/* ── Card — glass style matching main app ── */
+
+.auth-card {
+  background: var(--auth-glass-bg);
+  backdrop-filter: saturate(180%) blur(20px);
+  border: var(--auth-glass-border);
+  border-radius: 20px;
+  padding: 2rem 1.5rem 2.25rem;
+  box-shadow: var(--auth-glass-shadow);
+}
+
+.auth-card hgroup {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--auth-divider);
+}
+
+.auth-card hgroup h1 {
+  font-size: 1.1875rem;
+  font-weight: 500;
+  color: var(--auth-text);
+  margin-bottom: 0.3rem;
+}
+
+.auth-card hgroup > p {
+  font-size: 0.8125rem;
+  color: var(--auth-muted);
+  margin: 0;
+}
+
+/* ── Auth buttons ── */
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.auth-buttons a[role="button"] {
+  display: flex !important;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100% !important;
+  /* Larger tap target for mobile */
+  padding: 0.875rem 1rem !important;
+  min-height: 52px;
+  background: var(--auth-btn-bg) !important;
+  backdrop-filter: blur(8px);
+  color: var(--auth-btn-text) !important;
+  border: var(--auth-btn-border) !important;
+  border-radius: 12px !important;
+  font-size: 0.9375rem !important;
+  font-weight: 400 !important;
+  box-shadow: none !important;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.1s !important;
+  animation: btn-enter 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.auth-buttons a[role="button"]:hover {
+  background: var(--auth-btn-hover-bg) !important;
+  border: var(--auth-btn-hover-border) !important;
+  color: var(--auth-btn-hover-text) !important;
+  transform: translateX(2px);
+}
+
+.auth-buttons a:nth-child(1) { animation-delay: 0.05s; }
+.auth-buttons a:nth-child(2) { animation-delay: 0.10s; }
+.auth-buttons a:nth-child(3) { animation-delay: 0.15s; }
+.auth-buttons a:nth-child(4) { animation-delay: 0.20s; }
+.auth-buttons a:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes btn-enter {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Status (Failed / Redirect pages) ── */
+
+.auth-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.auth-status-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.auth-status-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.auth-status h2 {
+  font-size: 1.0625rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.auth-status p {
+  font-size: 0.875rem;
+  color: var(--auth-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.auth-status-success .auth-status-icon,
+.auth-status-success h2 {
+  color: var(--auth-success);
+}
+
+.auth-status-danger .auth-status-icon,
+.auth-status-danger h2 {
+  color: var(--auth-danger);
+}

@@ -4,42 +4,36 @@ import { Layout } from "./Layout";
 export const Authorize: FC = () => {
   return (
     <Layout>
-      <div class="container">
-        <div class="bs-component">
-          <div class="well">ログインに使用するサービスを選択してください</div>
-        </div>
-        <ul class="list-unstyled">
-          <li>
-            <a class="btn btn-info btn-auth" href="/auth/google">
-              <i class="bi bi-google"></i>
-              Google
-            </a>
-          </li>
-          <li>
-            <a class="btn btn-info btn-auth" href="/auth/microsoft">
-              <i class="bi bi-microsoft"></i>
-              Microsoft
-            </a>
-          </li>
-          <li>
-            <a class="btn btn-info btn-auth" href="/auth/github">
-              <i class="bi bi-github"></i>
-              GitHub
-            </a>
-          </li>
-          <li>
-            <a class="btn btn-info btn-auth" href="/auth/line">
-              <i class="bi bi-line"></i>
-              LINE
-            </a>
-          </li>
-          <li>
-            <a class="btn btn-info btn-auth" href="/auth/apple">
-              <i class="bi bi-apple"></i>
-              Sign in with Apple
-            </a>
-          </li>
-        </ul>
+      <hgroup>
+        <h1>ログイン</h1>
+        <p>ログインに使用するサービスを選択してください</p>
+      </hgroup>
+      <div class="auth-buttons">
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/google">
+          <i class="bi bi-google" aria-hidden="true"></i>
+          Google
+        </a>
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/microsoft">
+          <i class="bi bi-microsoft" aria-hidden="true"></i>
+          Microsoft
+        </a>
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/github">
+          <i class="bi bi-github" aria-hidden="true"></i>
+          GitHub
+        </a>
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/line">
+          <i class="bi bi-line" aria-hidden="true"></i>
+          LINE
+        </a>
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/apple">
+          <i class="bi bi-apple" aria-hidden="true"></i>
+          Sign in with Apple
+        </a>
       </div>
     </Layout>
   );

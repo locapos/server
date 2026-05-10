@@ -12,41 +12,38 @@ export const Layout: FC<Props> = ({ children }) => {
       <html lang="ja">
         <head>
           <meta charset="utf-8" />
-          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="" />
-          <link rel="stylesheet" href="/components/Umi/dist/css/bootstrap.min.css" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&display=swap"
+          />
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
           />
           <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
           />
-          <link rel="stylesheet" href="/css/default.css" />
-          <title>login</title>
+          <link rel="stylesheet" href="/css/auth.css" />
+          <title>login — LocaPos</title>
         </head>
         <body>
-          <header>
-            <div class="navbar navbar-default navbar-static-top">
-              <div class="container">
-                <div class="navbar-header">
-                  <a class="navbar-brand" href="/">
-                    LocaPos
-                  </a>
-                  <p class="navbar-text">ログイン</p>
-                </div>
+          <main class="auth-main">
+            <div class="auth-shell">
+              <a class="auth-brand" href="/">
+                <picture>
+                  <source srcset="/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+                  <img src="/img/logo.svg" alt="LocaPos" height="58" />
+                </picture>
+              </a>
+              <div class="auth-card">
+                {children}
               </div>
             </div>
-          </header>
-          {children}
-          <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"
-            defer
-          ></script>
-          <script src="/components/Umi/dist/js/bootstrap.min.js" defer></script>
+          </main>
         </body>
       </html>
     </>
