@@ -14,8 +14,7 @@ export const Redirect: FC<Props> = ({ redirectUri }) => {
           <h2>認証に成功しました</h2>
         </div>
         <p>
-          アプリケーションに転送しています…{" "}
-          転送されない場合は<a href={redirectUri}>こちら</a>
+          アプリケーションに転送しています… 転送されない場合は<a href={redirectUri}>こちら</a>
         </p>
       </div>
     </Layout>
