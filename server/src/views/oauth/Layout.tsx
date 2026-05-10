@@ -39,9 +39,7 @@ export const Layout: FC<Props> = ({ children }) => {
                   <img src="/img/logo.svg" alt="LocaPos" height="58" />
                 </picture>
               </a>
-              <div class="auth-card">
-                {children}
-              </div>
+              <div class="auth-card">{children}</div>
             </div>
           </main>
         </body>

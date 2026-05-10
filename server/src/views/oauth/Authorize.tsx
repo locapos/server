@@ -34,6 +34,10 @@ export const Authorize: FC = () => {
           <i class="bi bi-apple" aria-hidden="true"></i>
           Sign in with Apple
         </a>
+        {/* biome-ignore lint/a11y/useSemanticElements: Pico CSS button-styled link pattern */}
+        <a role="button" href="/auth/x">
+          <i class="bi bi-twitter-x" aria-hidden="true"></i>X
+        </a>
       </div>
     </Layout>
   );

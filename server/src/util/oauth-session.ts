@@ -18,6 +18,7 @@ export type OAuthUserSession = {
 // 外部プロバイダステート
 export type OAuthProviderStateSession = {
   state: string;
+  code_verifier?: string;
 };
 
 const CLIENT_SESSION_COOKIE = "oauth_client_session";
