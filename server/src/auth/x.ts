@@ -7,18 +7,32 @@ import {
   setOAuthUserSession,
 } from "../util/oauth-session";
 
+async function generatePkce(): Promise<{ code_verifier: string; code_challenge: string }> {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  const code_verifier = btoa(String.fromCharCode(...array))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(code_verifier));
+  const code_challenge = btoa(String.fromCharCode(...new Uint8Array(digest)))
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=/g, "");
+  return { code_verifier, code_challenge };
+}
+
 const app = createHono();
 
 app.get("/", async (c) => {
   const state = hash();
-  const code_verifier = hash();
-  const code_challenge = hash(code_verifier);
+  const { code_verifier, code_challenge } = await generatePkce();
   await setOAuthProviderStateSession(c, { state, code_verifier });
   const params = new URLSearchParams({
     response_type: "code",
     client_id: c.env.X_CLIENT_ID,
     redirect_uri: `${c.env.REDIRECT_URI_BASE}/auth/x/callback`,
-    scope: "users.read",
+    scope: "users.read tweet.read",
     state,
     code_challenge,
     code_challenge_method: "S256",
@@ -51,14 +65,16 @@ app.get("/callback", async (c) => {
     }),
   });
   if (!tokenRes.ok) {
-    throw new HTTPException(400, { message: "Failed to get token" });
+    const err = await tokenRes.text();
+    throw new HTTPException(400, { message: `Failed to get token: ${err}` });
   }
   const tokenJson = await tokenRes.json<{ access_token: string }>();
   const userRes = await fetch("https://api.twitter.com/2/users/me?user.fields=name,username", {
     headers: { Authorization: `Bearer ${tokenJson.access_token}` },
   });
   if (!userRes.ok) {
-    throw new HTTPException(400, { message: "Failed to get user info" });
+    const err = await userRes.text();
+    throw new HTTPException(400, { message: `Failed to get user info: ${err}` });
   }
   const userJson = await userRes.json<{ data: { id: string; name: string; username: string } }>();
   const user = userJson.data;
