@@ -19,11 +19,11 @@ type TrackedMarker = MarkerWithLabel & {
 
 export default class Markers {
   private map: MapView;
-  private markers: { [key: string]: TrackedMarker };
+  private markers: Record<string, TrackedMarker>;
 
   constructor(map: MapView) {
     this.map = map;
-    this.markers = {};
+    this.markers = Object.create(null) as Record<string, TrackedMarker>;
   }
 
   update(obj: Location) {
