@@ -78,6 +78,7 @@ body,
   text-align: center;
   width: 60px;
   border: 2px solid red;
+  opacity: 0.75 !important;
 }
 
 .looking {
