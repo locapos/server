@@ -1,4 +1,4 @@
-import type { MarkerWithLabel } from "@googlemaps/markerwithlabel";
+import type { MarkerWithLabel, MarkerWithLabelOptions } from "@googlemaps/markerwithlabel";
 import Hash from "./hash";
 import type MapView from "./map-view";
 import { createMarkerIcon } from "./marker-icon";
@@ -12,9 +12,14 @@ export type Location = {
   posMode: string;
 };
 
+type TrackedMarker = MarkerWithLabel & {
+  rawValue?: Location;
+  labelEl?: HTMLSpanElement;
+};
+
 export default class Markers {
   private map: MapView;
-  private markers: { [key: string]: MarkerWithLabel & { rawValue?: Location } };
+  private markers: { [key: string]: TrackedMarker };
 
   constructor(map: MapView) {
     this.map = map;
@@ -23,26 +28,39 @@ export default class Markers {
 
   update(obj: Location) {
     const key = obj.id;
-    const labelEl = document.createElement("span");
-    labelEl.textContent = obj.name || "(undefined)";
-    const opt = {
-      position: new google.maps.LatLng(obj.latitude, obj.longitude),
-      icon: createMarkerIcon(obj.heading),
-      labelContent: labelEl,
-      labelAnchor: new google.maps.Point(-32, 10),
-      labelClass: `labels ${Hash.isLooking(key) ? "looking" : ""}`,
-      labelStyle: { opacity: 0.75 },
-      key: key,
-      zIndex: 1,
-    };
-    if (this.markers[key] === undefined) {
-      this.markers[key] = this.map.createLabeledMarker(key, opt);
-      this.markers[key].rawValue = obj;
+    const text = obj.name || "(undefined)";
+    const isLooking = Hash.isLooking(key);
+    const labelClass = `labels ${isLooking ? "looking" : ""}`;
+    const position = new google.maps.LatLng(obj.latitude, obj.longitude);
+    const icon = createMarkerIcon(obj.heading);
+    const existing = this.markers[key];
+    if (existing === undefined) {
+      const labelEl = document.createElement("span");
+      labelEl.textContent = text;
+      this.markers[key] = Object.assign(
+        this.map.createLabeledMarker(key, {
+          position,
+          icon,
+          labelContent: labelEl,
+          labelAnchor: new google.maps.Point(-32, 10),
+          labelClass,
+          zIndex: 1,
+        }),
+        { rawValue: obj, labelEl },
+      );
     } else {
-      this.map.createTrackingDot(this.markers[key], obj.posMode || "A");
-      this.markers[key].setOptions(opt);
+      if (existing.labelEl) {
+        existing.labelEl.textContent = text;
+      }
+      this.map.createTrackingDot(existing, obj.posMode || "A");
+      existing.setOptions({
+        position,
+        icon,
+        labelClass,
+      } satisfies Partial<MarkerWithLabelOptions> as google.maps.MarkerOptions);
+      existing.rawValue = obj;
     }
-    if (Hash.isLooking(key)) {
+    if (isLooking) {
       this.map.moveCenterTo(this.markers[key]);
     }
   }
