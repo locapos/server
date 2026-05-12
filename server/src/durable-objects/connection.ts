@@ -7,13 +7,6 @@ export class Connection extends DurableObject<Env> {
     return env.CONNECTION_DO.get(id);
   }
 
-  private connections: Set<WebSocket>;
-
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
-    this.connections = new Set<WebSocket>();
-  }
-
   async fetch(req: Request) {
     const url = new URL(req.url);
     await this.setName(url.pathname.split("/")[2] || PUBLIC_MAP_KEY);
@@ -22,7 +15,6 @@ export class Connection extends DurableObject<Env> {
     const [client, server] = Object.values(websocketPair);
 
     this.ctx.acceptWebSocket(server);
-    this.connections.add(client);
 
     return new Response(null, {
       status: 101,
@@ -30,19 +22,17 @@ export class Connection extends DurableObject<Env> {
     });
   }
 
-  webSocketError(ws: WebSocket, error: unknown): void | Promise<void> {
+  webSocketError(_ws: WebSocket, error: unknown): void | Promise<void> {
     console.error("WebSocket error:", error);
-    this.connections.delete(ws);
   }
 
   webSocketClose(
-    ws: WebSocket,
+    _ws: WebSocket,
     code: number,
     reason: string,
     wasClean: boolean
   ): void | Promise<void> {
     console.log("WebSocket closed:", { code, reason, wasClean });
-    this.connections.delete(ws);
   }
 
   async webSocketMessage(ws: WebSocket, message: string | ArrayBuffer): Promise<void> {
