@@ -313,42 +313,42 @@ button.effect:active::before {
 
 /* styles for complexed search implementations */
 
-#search-bar .ui-menu-item {
+#search-bar .autocomplete-item {
   font-size: 16px;
   font-family: "Noto Sans JP";
-}
-
-#search-bar .ui-menu-item > span {
-  display: block;
-  padding: 4px 8px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-#search-bar .ui-menu-item span.secondary {
-  margin-left: 8px;
-  font-size: 14px;
-  opacity: 0.5;
-}
-
-#search-bar .ui-menu-item {
+  cursor: pointer;
   transition:
     background-color 0.1s,
     color 0.1s;
   color: var(--color);
 }
 
-#search-bar .ui-menu-item i {
+#search-bar .autocomplete-item > span {
+  display: block;
+  padding: 4px 8px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+#search-bar .autocomplete-item span.secondary {
+  margin-left: 8px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+#search-bar .autocomplete-item i {
   color: var(--icon-color);
   margin-right: 5px;
 }
 
-#search-bar .ui-menu-item:hover {
+#search-bar .autocomplete-item.selected,
+#search-bar .autocomplete-item:hover {
   background-color: var(--accent);
   color: var(--color-on-accent);
 }
 
-#search-bar .ui-menu-item:hover i {
+#search-bar .autocomplete-item.selected i,
+#search-bar .autocomplete-item:hover i {
   color: var(--color-on-accent);
 }
 
@@ -362,13 +362,15 @@ button.effect:active::before {
   opacity: 0;
 }
 
-.ui-autocomplete {
+.search-autocomplete {
   position: static !important;
   margin-inline: 10px;
   margin-bottom: 10px;
-  left: 0px !important;
+  left: 0 !important;
+  top: auto !important;
   white-space: nowrap;
   width: auto !important;
+  max-height: none !important;
   border-radius: 14px;
   background-color: var(--glass-bg-dd);
   backdrop-filter: blur(20px) saturate(280%);
@@ -377,7 +379,11 @@ button.effect:active::before {
   overflow: hidden;
 }
 
-.ui-autocomplete strong {
+.search-autocomplete:empty {
+  display: none !important;
+}
+
+.search-autocomplete strong {
   font-weight: 700;
 }
 

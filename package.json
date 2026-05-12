@@ -36,6 +36,7 @@
   "description": "",
   "dependencies": {
     "@googlemaps/markerwithlabel": "^2.0.28",
+    "autocompleter": "^9.3.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.18",
     "typescript": "^5.8.3"
@@ -43,8 +44,6 @@
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",
     "@types/google.maps": "^3.58.1",
-    "@types/jquery": "^3.5.32",
-    "@types/jqueryui": "^1.12.24",
     "@types/node": "^22.14.1",
     "drizzle-kit": "^0.31.0",
     "esbuild": "^0.25.2",

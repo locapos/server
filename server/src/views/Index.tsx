@@ -32,10 +32,6 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
           />
           <link
             rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"
-          />
-          <link
-            rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
           />
           <link
@@ -44,14 +40,6 @@ export const Index: FC<Props> = ({ mapsApiKey }) => {
           />
           <link rel="stylesheet" href="/css/map.css" />
           <link rel="prefetch" href="/res/0/0.png" />
-          <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"
-            defer
-          ></script>
-          <script
-            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"
-            defer
-          ></script>
           <meta name="color-scheme" content="light dark" />
           <title>LocaPos | Overview</title>
         </head>
