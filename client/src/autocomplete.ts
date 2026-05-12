@@ -25,8 +25,8 @@ export default class Autocomplete {
     private markers: Markers
   ) {}
 
-  enable(element: HTMLElement) {
-    this.element = element as HTMLInputElement;
+  enable(element: HTMLInputElement) {
+    this.element = element;
     const container = document.createElement("div");
     container.classList.add("search-autocomplete");
     document.querySelector(".search-bar")?.appendChild(container);

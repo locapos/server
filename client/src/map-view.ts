@@ -62,7 +62,7 @@ export default class MapView {
     return marker;
   }
 
-  enableAutoComplete(element: HTMLElement, markers: Markers) {
+  enableAutoComplete(element: HTMLInputElement, markers: Markers) {
     const autocomplete = new Autocomplete(this.map, markers);
     autocomplete.enable(element);
   }
