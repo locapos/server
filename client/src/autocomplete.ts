@@ -1,99 +1,99 @@
+import autocomplete from "autocompleter";
 import Hash from "./hash";
 import type Markers from "./markers";
 import type { Location } from "./markers";
 
-type AutocompleteItem = {
+type Match = { offset: number; length: number };
+
+type Item = {
   label: string;
-  secondary: string;
   value: string;
   type: "person-fill" | "geo-alt-fill";
-  placeId?: string;
-  userId?: string;
-  raw: unknown;
+  mainText: string;
+  secondaryText: string;
+  matches: Match[];
+  placePrediction?: google.maps.places.PlacePrediction;
+  user?: Location;
 };
 
 export default class Autocomplete {
-  private autocomplete: google.maps.places.AutocompleteService;
-  private places: google.maps.places.PlacesService;
-  private element: HTMLElement | null = null;
+  private element: HTMLInputElement | null = null;
+  private sessionToken: google.maps.places.AutocompleteSessionToken | null = null;
 
   constructor(
     private map: google.maps.Map,
     private markers: Markers
-  ) {
-    this.autocomplete = new google.maps.places.AutocompleteService();
-    this.places = new google.maps.places.PlacesService(map);
-  }
+  ) {}
 
   enable(element: HTMLElement) {
-    this.element = element;
-    const source = (req: { term: string }, callback: (data: AutocompleteItem[]) => void) =>
-      this.runQuery(req.term, callback);
-    $(this.element)
-      .autocomplete({
-        source: source,
-        appendTo: ".search-bar",
-        select: (a, b) => this.selectItem(a, b),
-        open: () => {
-          $(".ui-autocomplete").off("hover mouseover mouseenter");
-        },
-      })
-      .data("ui-autocomplete")._renderItem = (ul: JQuery, item: AutocompleteItem) => {
-      const secondary = $(`<span>${item.secondary}</span>`).addClass("secondary");
-      const icon = $("<i>").addClass("bi").addClass(`bi-${item.type}`).attr("aria-hidden", "true");
-      const content = $(`<span>${item.label}</span>`).append(secondary).prepend(icon);
-      const li = $("<li></li>").append(content);
-      li.addClass(`item-${item.type}`);
-      return li.appendTo(ul);
-    };
+    this.element = element as HTMLInputElement;
+    const container = document.createElement("div");
+    container.classList.add("search-autocomplete");
+    document.querySelector(".search-bar")?.appendChild(container);
+
+    autocomplete<Item>({
+      input: this.element,
+      container,
+      className: "search-autocomplete",
+      minLength: 2,
+      debounceWaitMs: 250,
+      preventSubmit: 1,
+      fetch: (text, update) => {
+        void this.runQuery(text, update);
+      },
+      onSelect: (item) => {
+        void this.selectItem(item);
+      },
+      render: (item) => this.renderItem(item),
+    });
   }
 
-  selectItem(_element: JQueryEventObject, ui: JQueryUI.AutocompleteUIParams) {
-    if (ui.item.placeId) {
-      this.places.getDetails({ placeId: ui.item.placeId }, (place) => {
-        if (!place?.geometry) {
-          return;
-        }
-        if (place.geometry.viewport) {
-          this.map.fitBounds(place.geometry.viewport);
-        } else if (place.geometry.location) {
-          this.map.setCenter(place.geometry.location);
-          this.map.setZoom(17);
-        }
-      });
-    } else {
-      Hash.setInfo({ id: ui.item.userId });
-      this.map.setCenter(new google.maps.LatLng(ui.item.raw.latitude, ui.item.raw.longitude));
+  private ensureSession(): google.maps.places.AutocompleteSessionToken {
+    if (!this.sessionToken) {
+      this.sessionToken = new google.maps.places.AutocompleteSessionToken();
     }
-    window.setTimeout(() => $("#focus_trick").focus(), 0);
+    return this.sessionToken;
   }
 
-  runQuery(req: string, callback: (data: AutocompleteItem[]) => void) {
-    this.autocomplete.getPlacePredictions(
-      { input: req, bounds: this.map.getBounds() },
-      (results) => {
-        const users = this.queryUsers(req);
-        const locations = (results || []).map((x) => ({
-          label: this.format(x.structured_formatting),
-          secondary: x.structured_formatting.secondary_text,
-          value: x.description,
+  private async runQuery(req: string, update: (items: Item[] | false) => void) {
+    const users = this.queryUsers(req);
+    try {
+      const bounds = this.map.getBounds();
+      const result = await google.maps.places.AutocompleteSuggestion.fetchAutocompleteSuggestions({
+        input: req,
+        locationBias: bounds ?? undefined,
+        sessionToken: this.ensureSession(),
+      });
+      const locations: Item[] = result.suggestions
+        .map((s) => s.placePrediction)
+        .filter((p): p is google.maps.places.PlacePrediction => p !== null)
+        .map((p) => ({
+          label: p.text.text,
+          value: p.text.text,
           type: "geo-alt-fill" as const,
-          placeId: x.place_id,
-          raw: x,
+          mainText: p.mainText?.text ?? p.text.text,
+          secondaryText: p.secondaryText?.text ?? "",
+          matches: (p.mainText?.matches ?? []).map((m) => ({
+            offset: m.startOffset,
+            length: m.endOffset - m.startOffset,
+          })),
+          placePrediction: p,
         }));
-        callback(users.concat(locations));
-      }
-    );
+      const all = users.concat(locations);
+      update(all.length > 0 ? all : false);
+    } catch {
+      update(users.length > 0 ? users : false);
+    }
   }
 
-  queryUsers(req: string): Array<AutocompleteItem> {
+  private queryUsers(req: string): Item[] {
     const center = this.map.getCenter();
     const reqLower = req.toLowerCase();
     return this.markers
       .values()
       .map((x) => x.rawValue)
       .filter((x): x is Location => x !== undefined)
-      .filter((x) => ~x.name.toLowerCase().indexOf(reqLower))
+      .filter((x) => x.name.toLowerCase().includes(reqLower))
       .sort((a, b) => {
         if (!center) return 0;
         return (
@@ -101,41 +101,77 @@ export default class Autocomplete {
           Math.sqrt((center.lat() - b.latitude) ** 2 + (center.lng() - b.longitude) ** 2)
         );
       })
-      .map((x) => ({
-        label: this.formatUser(req, x.name),
-        secondary: `${x.latitude},${x.longitude}`,
-        value: x.name,
-        type: "person-fill" as const,
-        userId: x.id,
-        raw: x,
-      }));
+      .map((x) => {
+        const offset = x.name.toLowerCase().indexOf(reqLower);
+        const matches: Match[] = offset >= 0 ? [{ offset, length: req.length }] : [];
+        return {
+          label: x.name,
+          value: x.name,
+          type: "person-fill" as const,
+          mainText: x.name,
+          secondaryText: `${x.latitude},${x.longitude}`,
+          matches,
+          user: x,
+        };
+      });
   }
 
-  format(item: {
-    main_text: string;
-    main_text_matched_substrings: Array<{ offset: number; length: number }>;
-  }) {
-    let p = 0;
-    let s = "";
-    for (let i = 0; i < item.main_text_matched_substrings.length; ++i) {
-      const f = item.main_text_matched_substrings[i];
-      if (p < f.offset) {
-        s += item.main_text.substring(p, f.offset - p);
+  private async selectItem(item: Item) {
+    if (item.placePrediction) {
+      try {
+        const place = item.placePrediction.toPlace();
+        await place.fetchFields({ fields: ["viewport", "location"] });
+        if (place.viewport) {
+          this.map.fitBounds(place.viewport);
+        } else if (place.location) {
+          this.map.setCenter(place.location);
+          this.map.setZoom(17);
+        }
+      } catch {
+        // best-effort; failures here don't need to surface to the user
       }
-      s += `<strong>${item.main_text.substring(f.offset, f.offset + f.length)}</strong>`;
-      p = f.offset + f.length;
+    } else if (item.user) {
+      Hash.setInfo({ id: item.user.id });
+      this.map.setCenter(new google.maps.LatLng(item.user.latitude, item.user.longitude));
     }
-    if (p < item.main_text.length) {
-      s += item.main_text.substring(p);
-    }
-    return s;
+    this.sessionToken = null;
+    if (this.element) this.element.value = item.value;
+    window.setTimeout(() => document.getElementById("focus_trick")?.focus(), 0);
   }
 
-  formatUser(req: string, name: string) {
-    const index = name.toLowerCase().indexOf(req);
-    return this.format({
-      main_text: name,
-      main_text_matched_substrings: [{ offset: index, length: req.length }],
-    });
+  private renderItem(item: Item): HTMLDivElement {
+    const row = document.createElement("div");
+    row.className = `autocomplete-item item-${item.type}`;
+
+    const content = document.createElement("span");
+
+    const icon = document.createElement("i");
+    icon.className = `bi bi-${item.type}`;
+    icon.setAttribute("aria-hidden", "true");
+    content.appendChild(icon);
+
+    let pos = 0;
+    for (const m of item.matches) {
+      if (m.offset > pos) {
+        content.appendChild(document.createTextNode(item.mainText.substring(pos, m.offset)));
+      }
+      const strong = document.createElement("strong");
+      strong.textContent = item.mainText.substring(m.offset, m.offset + m.length);
+      content.appendChild(strong);
+      pos = m.offset + m.length;
+    }
+    if (pos < item.mainText.length) {
+      content.appendChild(document.createTextNode(item.mainText.substring(pos)));
+    }
+
+    if (item.secondaryText) {
+      const secondary = document.createElement("span");
+      secondary.className = "secondary";
+      secondary.textContent = item.secondaryText;
+      content.appendChild(secondary);
+    }
+
+    row.appendChild(content);
+    return row;
   }
 }
