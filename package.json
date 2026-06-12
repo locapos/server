@@ -46,7 +46,7 @@
     "@types/google.maps": "^3.58.1",
     "@types/node": "^22.14.1",
     "drizzle-kit": "^0.31.0",
-    "esbuild": "^0.25.2",
+    "esbuild": "^0.28.1",
     "wrangler": "^4.80.0"
   }
 }
